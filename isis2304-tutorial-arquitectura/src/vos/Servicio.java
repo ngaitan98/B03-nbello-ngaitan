@@ -22,7 +22,7 @@ public class Servicio
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
-	public Servicio (Long id, String nombre, String descripcion, Integer costoAgregado, String tipo) {
+	public Servicio (@JsonProperty(value = "id")Long id,@JsonProperty(value = "nombre")	 String nombre, @JsonProperty(value = "descripcion") String descripcion, @JsonProperty(value = "costoAgregado")	Integer costoAgregado, @JsonProperty(value = "tipo") String tipo) {
 		this.id = id;
 		this.nombre = nombre; 
 		this.descripcion = descripcion;

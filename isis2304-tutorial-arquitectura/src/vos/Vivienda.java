@@ -28,7 +28,8 @@ public class Vivienda
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 
-	private Vivienda( Long id, String direccion, String tipo, Integer costoBase, String ubicacion) {
+	private Vivienda(@JsonProperty(value = "id") Long id, @JsonProperty(value = "direccion")String direccion, @JsonProperty(value = "tipo")String tipo, 
+			@JsonProperty(value = "costoBase")Integer costoBase, @JsonProperty(value = "ubicacion") String ubicacion) {
 		this.id = id;
 		this.direccion = direccion;
 		this.costoBase = costoBase;
