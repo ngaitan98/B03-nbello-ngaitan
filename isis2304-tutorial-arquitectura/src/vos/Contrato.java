@@ -1,6 +1,75 @@
 package vos;
 
+import java.sql.Date;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class Contrato 
 {
-	Integer BelloSapo;
+	//----------------------------------------------------------------------------------------------------------------------------------
+		// ATRIBUTOS
+		//----------------------------------------------------------------------------------------------------------------------------------
+		@JsonProperty(value = "id")
+		private Long id;
+		@JsonProperty(value = "fechainicio")
+		private Date fechainicio;
+		@JsonProperty(value = "fechafin")
+		private Date fechafin;
+		@JsonProperty(value = "ubicacion")
+		private String ubicacion;
+		@JsonProperty(value = "ocupada")
+		private boolean ocupada;
+		//----------------------------------------------------------------------------------------------------------------------------------
+		// METODO CONSTRUCTOR
+		//----------------------------------------------------------------------------------------------------------------------------------
+		public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin, @JsonProperty( value = "ubicacion")String ubicacion, @JsonProperty(value = "ocupada") String ocupada)
+		{
+			this.id = id;
+			this.fechainicio = fechainicio;
+			this.fechafin = fechafin;
+			this.ubicacion= ubicacion;
+			if (ocupada.equals("T"))
+			{
+				this.ocupada = true;
+			}
+			else
+			{
+				this.ocupada = false;
+			}
+		}
+		//----------------------------------------------------------------------------------------------------------------------------------
+		// METODOS DE LA CLASE
+		//----------------------------------------------------------------------------------------------------------------------------------
+		public Long getId() {
+			return id;
+		}
+		public void setId(Long id) {
+			this.id = id;
+		}
+		public Date getFechainicio() {
+			return fechainicio;
+		}
+		public void setFechainicio(Date fechainicio) {
+			this.fechainicio = fechainicio;
+		}
+		public Date getFechafin() {
+			return fechafin;
+		}
+		public void setFechafin(Date fechafin) {
+			this.fechafin = fechafin;
+		}
+		public String getUbicacion() {
+			return ubicacion;
+		}
+		public void setUbicacion(String ubicacion) {
+			this.ubicacion = ubicacion;
+		}
+		public boolean isOcupada() {
+			return ocupada;
+		}
+		public void setOcupada(boolean ocupada) {
+			this.ocupada = ocupada;
+		}
+
+		
 }
