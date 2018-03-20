@@ -75,27 +75,15 @@ public class DAOContrato
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public Contrato findContratoById(Long id) throws SQLException, Exception 
+	public ResultSet findContratoById(Long id) throws SQLException, Exception 
 	{
-		Contrato Contrato = null;
-
 		String sql = String.format("SELECT * FROM %1$s.CONTRATOS WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		if(rs.next()) 
-		{
-			Date inicio = rs.getDate(2);
-			Date fin = rs.getDate(3);
-			Date comienzo = rs.getDate(4);
-			Double costo = rs.getDouble(5);
-			Integer finalizado = rs.getInt(6);
-
-			Contrato = new Contrato(id, inicio, fin, comienzo, costo, finalizado);
-		}
-		return Contrato;
+		return rs;
 	}
 	public void finalizar(Long id, Double precio) throws SQLException
 	{

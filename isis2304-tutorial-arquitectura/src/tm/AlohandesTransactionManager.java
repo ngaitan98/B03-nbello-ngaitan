@@ -2,6 +2,7 @@ package tm;
 
 import java.io.File;
 
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,7 +11,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
-import dao.DAOBebedor;
+import dao.DAOJoins;
+import vos.*;
 
 /**
  * Clase que representa al Manejador de Transacciones de la Aplicacion (Fachada en patron singleton de la aplicacion)
@@ -135,93 +137,6 @@ public class AlohandesTransactionManager
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS TRANSACCIONALES
 	//----------------------------------------------------------------------------------------------------------------------------------
-	/**
-	 * Metodo que modela la transaccion que busca el bebedor en la base de datos que tiene el ID dado por parametro. <br/>
-	 * @param name -id del bebedor a buscar. id != null
-	 * @return Bebedor - Bebedor que se obtiene como resultado de la consulta.
-	 * @throws Exception -  cualquier error que se genere durante la transaccion
-	 */
-	public Bebedor getBebedorById(Long id) throws Exception {
-		DAOBebedor daoBebedor = new DAOBebedor();
-		Bebedor bebedor = null;
-		try 
-		{
-			this.conn = darConexion();
-			daoBebedor.setConn(conn);
-			bebedor = daoBebedor.findBebedorById(id);
-			if(bebedor == null)
-			{
-				throw new Exception("El bebedor con el id = " + id + " no se encuentra persistido en la base de datos.");				
-			}
-		} 
-		catch (SQLException sqlException) {
-			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
-			sqlException.printStackTrace();
-			throw sqlException;
-		} 
-		catch (Exception exception) {
-			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
-			exception.printStackTrace();
-			throw exception;
-		} 
-		finally {
-			try {
-				daoBebedor.cerrarRecursos();
-				if(this.conn!=null){
-					this.conn.close();					
-				}
-			}
-			catch (SQLException exception) {
-				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}
-		return bebedor;
-	}
-
-	/**
-	 * Metodo que modela la transaccion que busca en la base de datos el/los bebedores que son de la ciudad y tienen el presupuesto dados por parametro. <br/>
-	 * @param ciudad - Ciudad de los bebedores a buscar. ciudad != null
-	 * @param presupuesto - Presupuesto de los bebedores a buscar. presupuesto != null
-	 * @return List<Bebedor> - Lista de bebedores que contiene el resultado de la consulta.
-	 * @throws Exception -  Cualquier error que se genere durante la transaccion
-	 */
-	public List<Bebedor> getBebedoresByCiudadAndPresupuesto(String ciudad, String presupuesto) throws Exception {		
-		DAOBebedor daoBebedor = new DAOBebedor();
-		List<Bebedor> bebedores;
-		try 
-		{
-			this.conn = darConexion();
-			daoBebedor.setConn(conn);
-			bebedores = daoBebedor.getBebedoresByCiudadAndPresupuesto(ciudad, presupuesto);
-		}
-		catch (SQLException sqlException) {
-			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
-			sqlException.printStackTrace();
-			throw sqlException;
-		} 
-		catch (Exception exception) {
-			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
-			exception.printStackTrace();
-			throw exception;
-		} 
-		finally {
-			try {
-				daoBebedor.cerrarRecursos();
-				if(this.conn!=null){
-					this.conn.close();					
-				}
-			}
-			catch (SQLException exception) {
-				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}
-		return bebedores;
-	}
-
 
 	/**
 	 * Metodo que modela la transaccion que agrega un bebedor a la base de datos. <br/>
@@ -229,17 +144,17 @@ public class AlohandesTransactionManager
 	 * @param bebedor - el bebedor a agregar. bebedor != null
 	 * @throws Exception - Cualquier error que se genere agregando el bebedor
 	 */
-	public void addBebedor(Bebedor bebedor) throws Exception 
+	public void addBebedor(Hotel hotel) throws Exception 
 	{
 
-		DAOBebedor daoBebedor = new DAOBebedor( );
+		DAOJoins joins = new DAOJoins( );
 		try
 		{
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
-			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOBebedor (revise los metodos de la clase DAOBebedor)
-			daoBebedor.setConn(this.conn);
-			daoBebedor.addBebedor(bebedor);
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.addBebedor(joins);
 
 		}
 		catch (SQLException sqlException) {
@@ -254,7 +169,7 @@ public class AlohandesTransactionManager
 		} 
 		finally {
 			try {
-				daoBebedor.cerrarRecursos();
+				joins.cerrarRecursos();
 				if(this.conn!=null){
 					this.conn.close();					
 				}
@@ -277,19 +192,19 @@ public class AlohandesTransactionManager
 	 */
 	public void addBebedorWithLimitations(Bebedor bebedor) throws Exception 
 	{
-		DAOBebedor daoBebedor = new DAOBebedor( );
+		DAOJoins DAOJoins = new DAOJoins( );
 		try
 		{
 			//TODO Requerimiento 4B: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
-			//TODO Requerimiento 4C: Establezca la conexion del DaoBebedor a la Base de datos (revise los metodos de DAOBebedor)
-			daoBebedor.setConn(this.conn);
+			//TODO Requerimiento 4C: Establezca la conexion del DAOJoins a la Base de datos (revise los metodos de DAOJoins)
+			DAOJoins.setConn(this.conn);
 
 			//TODO Requerimiento 4C: Verifique la regla de negocio descrita en la documentacion. En caso que no se cumpla, lance una excepcion explicando lo sucedido
 			//						 (Solo se agrega el bebedor si la cantidad de bebedores, en la Base de Datos, de su misma ciudad es inferior al valor de la constante CANTIDAD_MAXIMA.
-			if(daoBebedor.getCountBebedoresByCiudad(bebedor.getCiudad()) < CANTIDAD_MAXIMA)
+			if(DAOJoins.getCountBebedoresByCiudad(bebedor.getCiudad()) < CANTIDAD_MAXIMA)
 			{
-				daoBebedor.addBebedor(bebedor);
+				DAOJoins.addBebedor(bebedor);
 			}
 			else
 			{
@@ -313,7 +228,7 @@ public class AlohandesTransactionManager
 		} 
 		finally {
 			try {
-				daoBebedor.cerrarRecursos();
+				DAOJoins.cerrarRecursos();
 				if(this.conn!=null){
 					this.conn.close();					
 				}
@@ -337,21 +252,21 @@ public class AlohandesTransactionManager
 	 */
 	public void updateBebedor(Bebedor bebedor) throws Exception 
 	{
-		DAOBebedor daoBebedor = new DAOBebedor( );
+		DAOJoins joins = new DAOJoins( );
 		try
 		{
 			this.conn = darConexion();
-			daoBebedor.setConn( conn );
-			//TODO Requerimiento 5C: Utilizando los Metodos de DaoBebedor, verifique que exista el bebedor con el ID dado en el parametro. 
+			DAOJoins.setConn( conn );
+			//TODO Requerimiento 5C: Utilizando los Metodos de DAOJoins, verifique que exista el bebedor con el ID dado en el parametro. 
 			//						 Si no existe un bebedor con el ID ingresado, lance una excepcion en donde se explique lo sucedido
 			//						 De lo contrario, se actualiza la informacion del bebedor de la Base de Datos
-			if(daoBebedor.findBebedorById(bebedor.getId()) == null)
+			if(DAOJoins.findBebedorById(bebedor.getId()) == null)
 			{
 				String msj = "No es posible completar está acción.\nEl bebedor con el id " + bebedor.getId() + " no está registrado en la base de datos.";
 				System.err.println("[EXCEPTION] General Exception:" + msj);
 				throw new Exception(msj);
 			}
-			daoBebedor.updateBebedor(bebedor);
+			joins.updateBebedor(bebedor);
 
 		}
 		catch (SQLException sqlException) {
@@ -366,7 +281,7 @@ public class AlohandesTransactionManager
 		} 
 		finally {
 			try {
-				daoBebedor.cerrarRecursos();
+				DAOJoins.cerrarRecursos();
 				if(this.conn!=null){
 					this.conn.close();					
 				}
@@ -387,21 +302,21 @@ public class AlohandesTransactionManager
 	 */
 	public void deleteBebedor(Bebedor bebedor) throws Exception 
 	{
-		DAOBebedor daoBebedor = new DAOBebedor( );
+		DAOJoins joins = new DAOJoins( );
 		try
 		{
 			this.conn = darConexion();
-			daoBebedor.setConn( conn );
-			//TODO Requerimiento 6D: Utilizando los Metodos de DaoBebedor, verifique que exista el bebedor con el ID dado en el parametro. 
+			joins.setConn( conn );
+			//TODO Requerimiento 6D: Utilizando los Metodos de DAOJoins, verifique que exista el bebedor con el ID dado en el parametro. 
 			//						 Si no existe un bebedor con el ID ingresado, lance una excepcion en donde se explique lo sucedido
 			//						 De lo contrario, se elimina la informacion del bebedor de la Base de Datos
-			if(daoBebedor.findBebedorById(bebedor.getId()) == null)
+			if(joins.findBebedorById(bebedor.getId()) == null)
 			{
 				String msj = "No es posible completar está acción.\nEl bebedor con el id " + bebedor.getId() + " no está registrado en la base de datos.";
 				System.err.println("[EXCEPTION] General Exception:" + msj);
 				throw new Exception(msj);
 			}
-			daoBebedor.deleteBebedor(bebedor);
+			joins.deleteBebedor(bebedor);
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -415,7 +330,7 @@ public class AlohandesTransactionManager
 		} 
 		finally {
 			try {
-				daoBebedor.cerrarRecursos();
+				joins.cerrarRecursos();
 				if(this.conn!=null){
 					this.conn.close();					
 				}

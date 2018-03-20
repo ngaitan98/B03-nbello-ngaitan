@@ -75,9 +75,8 @@ public class DAOAlojamiento
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public Alojamiento findAlojamientoById(Long id) throws SQLException, Exception 
+	public ResultSet findAlojamientoById(Long id) throws SQLException, Exception 
 	{
-		Alojamiento alojamiento = null;
 
 		String sql = String.format("SELECT * FROM %1$s.ALOJAMIENTOS WHERE ID = %2$d", USUARIO, id); 
 
@@ -85,16 +84,7 @@ public class DAOAlojamiento
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		if(rs.next()) 
-		{
-			Integer cantidad = rs.getInt(2);
-			String tipo = rs.getString(3);
-			Integer costoBase = rs.getInt(4);
-			Integer ocupado = rs.getInt(5);
-			String ubicacion = rs.getString(6);
-			alojamiento = new Alojamiento(id, cantidad, costoBase, ubicacion, tipo, ocupado);
-		}
-		return alojamiento;
+		return rs;
 	}
 	/**
 	 * Metodo que elimina a un alojamiento por el id que llega por parametro<br/>

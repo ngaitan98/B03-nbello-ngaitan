@@ -7,76 +7,94 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Contrato 
 {
 	//----------------------------------------------------------------------------------------------------------------------------------
-		// ATRIBUTOS
-		//----------------------------------------------------------------------------------------------------------------------------------
-		@JsonProperty(value = "id")
-		private Long id;
-		@JsonProperty(value = "fechainicio")
-		private Date fechainicio;
-		@JsonProperty(value = "fechafin")
-		private Date fechafin;
-		@JsonProperty(value = "fechaCreacion")
-		private Date fechaCreacion;
-		@JsonProperty(value = "precio")
-		private Double precio;
-		@JsonProperty(value =  "finalizado")
-		private Integer finalizado;
-		//----------------------------------------------------------------------------------------------------------------------------------
-		// METODO CONSTRUCTOR
-		//----------------------------------------------------------------------------------------------------------------------------------
-		public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin,
-				@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, @JsonProperty(value =  "finalizado")Integer finalizado)
-		{
-			this.id = id;
-			this.fechainicio = fechainicio;
-			this.fechafin = fechafin;
-			this.precio= precio;
-			this.fechaCreacion = fechaCreacion;
-			this.finalizado = finalizado;
-		}
-		//----------------------------------------------------------------------------------------------------------------------------------
-		// METODOS DE LA CLASE
-		//----------------------------------------------------------------------------------------------------------------------------------
-		public Long getId() {
-			return id;
-		}
-		public void setId(Long id) {
-			this.id = id;
-		}
-		public Date getFechainicio() {
-			return fechainicio;
-		}
-		public void setFechainicio(Date fechainicio) {
-			this.fechainicio = fechainicio;
-		}
-		public Date getFechafin() {
-			return fechafin;
-		}
-		public void setFechafin(Date fechafin) {
-			this.fechafin = fechafin;
-		}
-		public Double getPrecio() {
-			return precio;
-		}
-		public void setPrecio(Double precio) {
-			this.precio = precio;
-		}
-		public Date getFechaCreacion() {
-			return fechaCreacion;
-		}
-		public void setFechaCreacion(Date fechaCreacion) {
-			this.fechaCreacion = fechaCreacion;
-		}
-		
-		public Integer getFinalizado() {
-			return finalizado;
-		}
-		public void setFinalizado(Integer finalizado) {
-			this.finalizado = finalizado;
-		}
-		public boolean isFinalizado()
-		{
-			return finalizado == 1;
-		}
-		
+	// ATRIBUTOS
+	//----------------------------------------------------------------------------------------------------------------------------------
+	@JsonProperty(value = "id")
+	private Long id;
+	@JsonProperty(value = "fechainicio")
+	private Date fechainicio;
+	@JsonProperty(value = "fechafin")
+	private Date fechafin;
+	@JsonProperty(value = "fechaCreacion")
+	private Date fechaCreacion;
+	@JsonProperty(value = "precio")
+	private Double precio;
+	@JsonProperty(value = "finalizado")
+	private Integer finalizado;
+	@JsonProperty(value = "cliente")
+	private Cliente cliente;
+	@JsonProperty(value = "alojamiento")
+	private Alojamiento alojamiento;
+	//----------------------------------------------------------------------------------------------------------------------------------
+	// METODO CONSTRUCTOR
+	//----------------------------------------------------------------------------------------------------------------------------------
+	public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin,
+			@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, 
+			@JsonProperty(value = "finalizado")Integer finalizado,	@JsonProperty(value = "cliente") Cliente cliente, @JsonProperty(value = "alojamiento") Alojamiento alojamiento )
+	{
+		this.id = id;
+		this.fechainicio = fechainicio;
+		this.fechafin = fechafin;
+		this.precio= precio;
+		this.fechaCreacion = fechaCreacion;
+		this.finalizado = finalizado;
+		this.cliente = cliente;
+		this.alojamiento = alojamiento;
+	}
+	//----------------------------------------------------------------------------------------------------------------------------------
+	// METODOS DE LA CLASE
+	//----------------------------------------------------------------------------------------------------------------------------------
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Date getFechainicio() {
+		return fechainicio;
+	}
+	public void setFechainicio(Date fechainicio) {
+		this.fechainicio = fechainicio;
+	}
+	public Date getFechafin() {
+		return fechafin;
+	}
+	public void setFechafin(Date fechafin) {
+		this.fechafin = fechafin;
+	}
+	public Double getPrecio() {
+		return precio;
+	}
+	public void setPrecio(Double precio) {
+		this.precio = precio;
+	}
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+	public Integer getFinalizado() {
+		return finalizado;
+	}
+	public void setFinalizado(Integer finalizado) {
+		this.finalizado = finalizado;
+	}
+	public boolean isFinalizado()
+	{
+		return finalizado == 1;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+	public Alojamiento getAlojamiento() {
+		return alojamiento;
+	}
+	public void setAlojamiento(Alojamiento alojamiento) {
+		this.alojamiento = alojamiento;
+	}
+
 }

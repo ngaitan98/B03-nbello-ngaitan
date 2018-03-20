@@ -74,26 +74,15 @@ public class DAOCliente
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public Cliente findClienteById(Long id) throws SQLException, Exception 
+	public ResultSet findClienteById(Long id) throws SQLException, Exception 
 	{
-		Cliente Cliente = null;
-
 		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		if(rs.next()) 
-		{
-			String login = rs.getString(2);
-			String password = rs.getString(3);
-			String nombre = rs.getString(4);
-			String correo = rs.getString(5);
-			String documento = rs.getString(6);
-			Cliente = new Cliente(id, login, nombre, correo, password, documento);
-		}
-		return Cliente;
+		return rs;
 	}
 	/**
 	 * Metodo que elimina a un Cliente por el id que llega por parametro<br/>

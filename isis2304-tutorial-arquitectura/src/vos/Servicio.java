@@ -16,16 +16,19 @@ public class Servicio
 	private String descripcion;
 	@JsonProperty(value = "costoAgregado")	
 	private Integer costoAgregado;
-
+	@JsonProperty(value = "alojamiento")
+	private Alojamiento alojamiento;
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
-	public Servicio (@JsonProperty(value = "id")Long id,@JsonProperty(value = "nombre")	 String nombre, @JsonProperty(value = "descripcion") String descripcion, @JsonProperty(value = "costoAgregado")	Integer costoAgregado) 
+	public Servicio (@JsonProperty(value = "id")Long id,@JsonProperty(value = "nombre")	 String nombre, @JsonProperty(value = "descripcion") String descripcion, 
+			@JsonProperty(value = "costoAgregado")	Integer costoAgregado, 	@JsonProperty(value = "alojamiento") Alojamiento alojamiento) 
 	{
 		this.id = id;
 		this.nombre = nombre; 
 		this.descripcion = descripcion;
 		this.costoAgregado = costoAgregado;
+		this.alojamiento = alojamiento;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE LA CLASE
@@ -63,4 +66,15 @@ public class Servicio
 	public void setCostoAgregado(Integer costoAgregado) {
 		this.costoAgregado = costoAgregado;
 	}
+
+
+	public Alojamiento getAlojamiento() {
+		return alojamiento;
+	}
+
+
+	public void setAlojamiento(Alojamiento alojamiento) {
+		this.alojamiento = alojamiento;
+	}
+	
 }

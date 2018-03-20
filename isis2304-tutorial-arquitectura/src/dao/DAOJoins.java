@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
@@ -48,8 +49,8 @@ public class DAOJoins
 	}
 	public void agregarAlojamiento(Long idOperador, Alojamiento a) throws SQLException, Exception
 	{
-		Hotel h = hoteles.findHotelById(idOperador);
-		if(h != null)
+		ResultSet h = hoteles.findHotelById(idOperador);
+		if(h.next())
 		{
 			alojamientos.addAlojamiento(a);
 			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
@@ -65,8 +66,8 @@ public class DAOJoins
 	}
 	public void agregarServicio(Long idAlojamiento, Servicio s) throws SQLException, Exception
 	{
-		Alojamiento a = alojamientos.findAlojamientoById(idAlojamiento);
-		if(a != null)
+		ResultSet a = alojamientos.findAlojamientoById(idAlojamiento);
+		if(a.next())
 		{
 			servicios.addServicio(s);
 			String sql = String.format("INSERT INTO %1s.TIENEN VALUES (%2$s, %3$s)", USUARIO, idAlojamiento, s.getId());
@@ -86,9 +87,9 @@ public class DAOJoins
 	}
 	public void agregarContrato(Long idCliente, Long idAlojamiento, Contrato con) throws SQLException, Exception
 	{
-		Alojamiento a = alojamientos.findAlojamientoById(idAlojamiento);
-		Cliente c = clientes.findClienteById(idCliente);
-		if(c != null && a != null)
+		ResultSet a = alojamientos.findAlojamientoById(idAlojamiento);
+		ResultSet c = clientes.findClienteById(idCliente);
+		if(a.next() && c.next())
 		{
 			contratos.addContrato(con);
 			String sql = String.format("INSERT INTO %1s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, con.getId(), idAlojamiento, idCliente);
@@ -121,6 +122,11 @@ public class DAOJoins
 	 */
 	public void setConn(Connection connection){
 		this.conn = connection;
+		alojamientos.setConn(conn);
+		servicios.setConn(conn);
+		hoteles.setConn(conn);
+		clientes.setConn(conn);
+		contratos.setConn(conn);
 	}
 
 	/**

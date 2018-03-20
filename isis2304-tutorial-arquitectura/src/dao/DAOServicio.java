@@ -73,9 +73,8 @@ public class DAOServicio
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public Servicio findServicioById(Long id) throws SQLException, Exception 
+	public ResultSet findServicioById(Long id) throws SQLException, Exception 
 	{
-		Servicio servicio = null;
 
 		String sql = String.format("SELECT * FROM %1$s.SERVICIOS WHERE ID = %2$d", USUARIO, id); 
 
@@ -83,15 +82,7 @@ public class DAOServicio
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		if(rs.next()) 
-		{
-			String nombre = rs.getString(2);
-			String descripcion = rs.getString(3);
-			Integer costo = rs.getInt(4);
-
-			servicio = new Servicio(id, nombre, descripcion, costo);
-		}
-		return servicio;
+		return rs;
 	}
 	/**
 	 * Metodo que elimina a un Servicio por el id que llega por parametro<br/>
