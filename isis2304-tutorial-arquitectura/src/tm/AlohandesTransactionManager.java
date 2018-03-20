@@ -323,6 +323,15 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
+	private String getCurrentDate()
+	{
+		Calendar fechaActual = Calendar.getInstance();
+		String cadenaFecha = String.format("%1$s-%2$s-%3$s",
+		  fechaActual.get(Calendar.YEAR),
+		  fechaActual.get(Calendar.MONTH)+1,
+		  fechaActual.get(Calendar.DAY_OF_MONTH));
+		return cadenaFecha;
+	}
 	
 
 }

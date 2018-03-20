@@ -49,6 +49,7 @@ public class DAOJoins
 	}
 	public void agregarAlojamiento(Long idOperador, Alojamiento a) throws SQLException, Exception
 	{
+		//TODO completar este método para los demás DAOs y sus casos, yo me encargo de la lógica
 		ResultSet h = hoteles.findHotelById(idOperador);
 		if(h.next())
 		{
@@ -70,7 +71,7 @@ public class DAOJoins
 		if(a.next())
 		{
 			servicios.addServicio(s);
-			String sql = String.format("INSERT INTO %1s.TIENEN VALUES (%2$s, %3$s)", USUARIO, idAlojamiento, s.getId());
+			String sql = String.format("INSERT INTO %1$s.TIENEN VALUES (%2$s, %3$s)", USUARIO, idAlojamiento, s.getId());
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -147,5 +148,18 @@ public class DAOJoins
 					ex.printStackTrace();
 				}
 		}
+	}
+	public Integer getCurrentId() throws SQLException, Exception
+	{
+		String sql = String.format("SELECT MAX(ID) FROM %1$s.OFRECEN", USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet s = prepStmt.executeQuery();	
+		if(s.next())
+		{
+			return s.getInt(1);
+		}
+		return 0;
 	}
 }
