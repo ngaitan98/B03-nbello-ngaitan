@@ -3,6 +3,7 @@ package vos;
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -53,5 +54,18 @@ public class Hostal extends Operador
 	public void setHoraFin(Date horaFin) {
 		this.horaFin = horaFin;
 	}
-	
+	private static String getCurrentDate()
+	{
+		Calendar fechaActual = Calendar.getInstance();
+		String cadenaFecha = String.format("%04d-%02d-%02d-%02d",
+		  fechaActual.get(Calendar.YEAR),
+		  fechaActual.get(Calendar.MONTH)+1,
+		  fechaActual.get(Calendar.DAY_OF_MONTH));
+		return cadenaFecha;
+	}
+	public final static void main(String[] args)
+	{
+		System.out.println(1111111);
+		System.out.println(getCurrentDate());
+	}
 }

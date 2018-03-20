@@ -3,12 +3,13 @@ package tm;
 import java.io.File;
 
 
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Calendar;
 import java.util.Properties;
 
 import dao.DAOJoins;
@@ -138,12 +139,6 @@ public class AlohandesTransactionManager
 	// METODOS TRANSACCIONALES
 	//----------------------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * Metodo que modela la transaccion que agrega un bebedor a la base de datos. <br/>
-	 * <b> post: </b> se ha agregado el bebedor que entra como parametro <br/>
-	 * @param bebedor - el bebedor a agregar. bebedor != null
-	 * @throws Exception - Cualquier error que se genere agregando el bebedor
-	 */
 	public void addBebedor(Hotel hotel) throws Exception 
 	{
 
@@ -154,7 +149,7 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
-			joins.addBebedor(joins);
+			joins.agregarHotel(hotel);
 
 		}
 		catch (SQLException sqlException) {
@@ -182,141 +177,17 @@ public class AlohandesTransactionManager
 		}
 	}
 
-	/**
-	 * Metodo que modela la transaccion que agrega un bebedor a la base de datos  <br/>
-	 * unicamente si el n�mero de bebedores que existen en su ciudad es menor la constante CANTIDAD_MAXIMA <br/>
-	 * <b> post: </b> Si se cumple la condicion, se ha agregado el bebedor que entra como parametro  <br/>
-	 * @param bebedor - el bebedor a agregar. bebedor != null
-	 * @param cantidadMaxima -representa la cantidad maxima de bebedores que pueden haber en la misma ciudad
-	 * @throws Exception - Cualquier error que se genere agregando el bebedor
-	 */
-	public void addBebedorWithLimitations(Bebedor bebedor) throws Exception 
-	{
-		DAOJoins DAOJoins = new DAOJoins( );
-		try
-		{
-			//TODO Requerimiento 4B: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
-			this.conn = darConexion();
-			//TODO Requerimiento 4C: Establezca la conexion del DAOJoins a la Base de datos (revise los metodos de DAOJoins)
-			DAOJoins.setConn(this.conn);
-
-			//TODO Requerimiento 4C: Verifique la regla de negocio descrita en la documentacion. En caso que no se cumpla, lance una excepcion explicando lo sucedido
-			//						 (Solo se agrega el bebedor si la cantidad de bebedores, en la Base de Datos, de su misma ciudad es inferior al valor de la constante CANTIDAD_MAXIMA.
-			if(DAOJoins.getCountBebedoresByCiudad(bebedor.getCiudad()) < CANTIDAD_MAXIMA)
-			{
-				DAOJoins.addBebedor(bebedor);
-			}
-			else
-			{
-				String msj = "No es posible completar esta acción.\nYa hay " + (CANTIDAD_MAXIMA - 1) + " bebedores registrados en la ciudad " + 
-						bebedor.getCiudad() + ".";
-				System.err.println("[EXCEPTION] General Exception:" + msj);
-				throw new Exception(msj);
-			}
-
-
-		}
-		catch (SQLException sqlException) {
-			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
-			sqlException.printStackTrace();
-			throw sqlException;
-		} 
-		catch (Exception exception) {
-			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
-			exception.printStackTrace();
-			throw exception;
-		} 
-		finally {
-			try {
-				DAOJoins.cerrarRecursos();
-				if(this.conn!=null){
-					this.conn.close();					
-				}
-			}
-			catch (SQLException exception) {
-				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}
-
-
-	}
-
-	/**
-	 * Metodo que modela la transaccion que actualiza en la base de datos al bebedor que entra por parametro.<br/>
-	 * Solamente se actualiza si existe el bebedor en la Base de Datos <br/>
-	 * <b> post: </b> se ha actualizado el bebedor que entra como parametro <br/>
-	 * @param bebedor - Bebedor a actualizar. bebedor != null
-	 * @throws Exception - Cualquier error que se genere actualizando al bebedor.
-	 */
-	public void updateBebedor(Bebedor bebedor) throws Exception 
+	public void addAlojamiento(Long idOperador, Alojamiento a) throws Exception 
 	{
 		DAOJoins joins = new DAOJoins( );
 		try
 		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
-			DAOJoins.setConn( conn );
-			//TODO Requerimiento 5C: Utilizando los Metodos de DAOJoins, verifique que exista el bebedor con el ID dado en el parametro. 
-			//						 Si no existe un bebedor con el ID ingresado, lance una excepcion en donde se explique lo sucedido
-			//						 De lo contrario, se actualiza la informacion del bebedor de la Base de Datos
-			if(DAOJoins.findBebedorById(bebedor.getId()) == null)
-			{
-				String msj = "No es posible completar está acción.\nEl bebedor con el id " + bebedor.getId() + " no está registrado en la base de datos.";
-				System.err.println("[EXCEPTION] General Exception:" + msj);
-				throw new Exception(msj);
-			}
-			joins.updateBebedor(bebedor);
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarAlojamiento(idOperador, a);
 
-		}
-		catch (SQLException sqlException) {
-			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
-			sqlException.printStackTrace();
-			throw sqlException;
-		} 
-		catch (Exception exception) {
-			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
-			exception.printStackTrace();
-			throw exception;
-		} 
-		finally {
-			try {
-				DAOJoins.cerrarRecursos();
-				if(this.conn!=null){
-					this.conn.close();					
-				}
-			}
-			catch (SQLException exception) {
-				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}	
-	}
-	/**
-	 * Metodo que modela la transaccion que elimina de la base de datos al bebedor que entra por parametro. <br/>
-	 * Solamente se actualiza si existe el bebedor en la Base de Datos <br/>
-	 * <b> post: </b> se ha eliminado el bebedor que entra por parametro <br/>
-	 * @param Bebedor - bebedor a eliminar. bebedor != null
-	 * @throws Exception - Cualquier error que se genere eliminando al bebedor.
-	 */
-	public void deleteBebedor(Bebedor bebedor) throws Exception 
-	{
-		DAOJoins joins = new DAOJoins( );
-		try
-		{
-			this.conn = darConexion();
-			joins.setConn( conn );
-			//TODO Requerimiento 6D: Utilizando los Metodos de DAOJoins, verifique que exista el bebedor con el ID dado en el parametro. 
-			//						 Si no existe un bebedor con el ID ingresado, lance una excepcion en donde se explique lo sucedido
-			//						 De lo contrario, se elimina la informacion del bebedor de la Base de Datos
-			if(joins.findBebedorById(bebedor.getId()) == null)
-			{
-				String msj = "No es posible completar está acción.\nEl bebedor con el id " + bebedor.getId() + " no está registrado en la base de datos.";
-				System.err.println("[EXCEPTION] General Exception:" + msj);
-				throw new Exception(msj);
-			}
-			joins.deleteBebedor(bebedor);
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -340,7 +211,118 @@ public class AlohandesTransactionManager
 				exception.printStackTrace();
 				throw exception;
 			}
-		}	
+		}
+
 	}
+
+	public void addContrato(Long idCliente,Long idAlojamiento, Contrato contrato) throws Exception 
+	{
+		DAOJoins joins = new DAOJoins( );
+		try
+		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarContrato(idCliente, idAlojamiento, contrato);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void addServicio(Long idAlojamiento, Servicio s) throws SQLException, Exception
+	{
+		DAOJoins joins = new DAOJoins( );
+		try
+		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarServicio( idAlojamiento, s);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void addCliente(Cliente c) throws SQLException, Exception
+	{
+		DAOJoins joins = new DAOJoins( );
+		try
+		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarCliente(c);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
 
 }

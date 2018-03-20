@@ -112,8 +112,4 @@ public abstract class Operador
 	public void setHabitaciones(ArrayList<Alojamiento> habitaciones) {
 		this.habitaciones = habitaciones;
 	}
-	public final static void main(String[] args)
-	{
-		
-	}
 }

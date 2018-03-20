@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class PersonaNormal extends Operador
 {
-	public enum TipoPersonaNatural{VECINO, EGRESADO, INVITADO, EMPLEADO, ESTUDIANTE, PROFESOR, PROFESOR_INVITADO};
+	public enum TipoPersonaNatural{VECINO, EGRESADO, INVITADO, EMPLEADO, ESTUDIANTE, PROFESOR};
 	@JsonProperty(value="certificado")
 	private String certificado;
 	@JsonProperty(value="tipo")
