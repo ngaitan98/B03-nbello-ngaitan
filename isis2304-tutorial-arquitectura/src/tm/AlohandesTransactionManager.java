@@ -1,18 +1,7 @@
-/**-------------------------------------------------------------------
- * ISIS2304 - Sistemas Transaccionales
- * Departamento de Ingenieria de Sistemas
- * Universidad de los Andes
- * Bogota, Colombia
- * 
- * Actividad: Tutorial Parranderos: Arquitectura
- * Autores:
- * 			Santiago Cortes Fernandez	-	s.cortes@uniandes.edu.co
- * 			Juan David Vega Guzman		-	jd.vega11@uniandes.edu.co
- * -------------------------------------------------------------------
- */
 package tm;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,18 +11,14 @@ import java.util.List;
 import java.util.Properties;
 
 import dao.DAOBebedor;
-import vos.Bebedor;
 
 /**
- * @author Santiago Cortes Fernandez 	- 	s.cortes@uniandes.edu.co
- * @author Juan David Vega Guzman		-	jd.vega11@uniandes.edu.co
- * 
  * Clase que representa al Manejador de Transacciones de la Aplicacion (Fachada en patron singleton de la aplicacion)
  * Responsabilidades de la clase: 
  * 		Intermediario entre los servicios REST de la aplicacion y la comunicacion con la Base de Datos
  * 		Modelar y manejar autonomamente las transacciones y las reglas de negocio.
  */
-public class ParranderosTransactionManager 
+public class AlohandesTransactionManager 
 {
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -49,7 +34,7 @@ public class ParranderosTransactionManager
 	 * Atributo estatico que contiene el path absoluto del archivo que tiene los datos de la conexion
 	 */
 	private static String CONNECTION_DATA_PATH;
-	
+
 	/**
 	 * Constatne que representa el numero maximo de Bebedores que pueden haber en una ciudad
 	 */
@@ -78,7 +63,7 @@ public class ParranderosTransactionManager
 	 * Atributo que guarda el driver que se va a usar para conectarse a la base de datos.
 	 */
 	private String driver;
-	
+
 	/**
 	 * Atributo que representa la conexion a la base de datos
 	 */
@@ -91,16 +76,16 @@ public class ParranderosTransactionManager
 	//----------------------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * <b>Metodo Contructor de la Clase ParranderosTransactionManager</b> <br/>
-	 * <b>Postcondicion: </b>	Se crea un objeto  ParranderosTransactionManager,
+	 * <b>Metodo Contructor de la Clase AlohandesTransactionManager</b> <br/>
+	 * <b>Postcondicion: </b>	Se crea un objeto  AlohandesTransactionManager,
 	 * 						 	Se inicializa el path absoluto del archivo de conexion,
 	 * 							Se inicializna los atributos para la conexion con la Base de Datos
 	 * @param contextPathP Path absoluto que se encuentra en el servidor del contexto del deploy actual
 	 * @throws IOException Se genera una excepcion al tener dificultades con la inicializacion de la conexion<br/>
 	 * @throws ClassNotFoundException 
 	 */
-	public ParranderosTransactionManager(String contextPathP) {
-		
+	public AlohandesTransactionManager(String contextPathP) {
+
 		try {
 			CONNECTION_DATA_PATH = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
 			initializeConnectionData();
@@ -121,17 +106,17 @@ public class ParranderosTransactionManager
 	 */
 	private void initializeConnectionData() throws IOException, ClassNotFoundException {
 
-		FileInputStream fileInputStream = new FileInputStream(new File(ParranderosTransactionManager.CONNECTION_DATA_PATH));
+		FileInputStream fileInputStream = new FileInputStream(new File(AlohandesTransactionManager.CONNECTION_DATA_PATH));
 		Properties properties = new Properties();
-		
+
 		properties.load(fileInputStream);
 		fileInputStream.close();
-		
+
 		this.url = properties.getProperty("url");
 		this.user = properties.getProperty("usuario");
 		this.password = properties.getProperty("clave");
 		this.driver = properties.getProperty("driver");
-		
+
 		//Class.forName(driver);
 	}
 
@@ -142,57 +127,14 @@ public class ParranderosTransactionManager
 	 * @throws SQLException Cualquier error que se pueda llegar a generar durante la conexion a la base de datos
 	 */
 	private Connection darConexion() throws SQLException {
-		System.out.println("[PARRANDEROS APP] Attempting Connection to: " + url + " - By User: " + user);
+		System.out.println("[ALOHANDES APP] Attempting Connection to: " + url + " - By User: " + user);
 		return DriverManager.getConnection(url, user, password);
 	}
 
-	
+
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS TRANSACCIONALES
 	//----------------------------------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * Metodo que modela la transaccion que retorna todos los bebedores de la base de datos. <br/>
-	 * @return List<Bebedor> - Lista de bebedores que contiene el resultado de la consulta.
-	 * @throws Exception -  Cualquier error que se genere durante la transaccion
-	 */
-	public List<Bebedor> getAllBebedores() throws Exception {
-		DAOBebedor daoBebedor = new DAOBebedor();
-		List<Bebedor> bebedores;
-		try 
-		{
-			this.conn = darConexion();
-			daoBebedor.setConn(conn);
-			
-			//Por simplicidad, solamente se obtienen los primeros 50 resultados de la consulta
-			bebedores = daoBebedor.getBebedores();
-		}
-		catch (SQLException sqlException) {
-			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
-			sqlException.printStackTrace();
-			throw sqlException;
-		} 
-		catch (Exception exception) {
-			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
-			exception.printStackTrace();
-			throw exception;
-		} 
-		finally {
-			try {
-				daoBebedor.cerrarRecursos();
-				if(this.conn!=null){
-					this.conn.close();					
-				}
-			}
-			catch (SQLException exception) {
-				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}
-		return bebedores;
-	}
-	
 	/**
 	 * Metodo que modela la transaccion que busca el bebedor en la base de datos que tiene el ID dado por parametro. <br/>
 	 * @param name -id del bebedor a buscar. id != null
@@ -237,7 +179,7 @@ public class ParranderosTransactionManager
 		}
 		return bebedor;
 	}
-	
+
 	/**
 	 * Metodo que modela la transaccion que busca en la base de datos el/los bebedores que son de la ciudad y tienen el presupuesto dados por parametro. <br/>
 	 * @param ciudad - Ciudad de los bebedores a buscar. ciudad != null
@@ -279,7 +221,7 @@ public class ParranderosTransactionManager
 		}
 		return bebedores;
 	}
-	
+
 
 	/**
 	 * Metodo que modela la transaccion que agrega un bebedor a la base de datos. <br/>
@@ -289,7 +231,7 @@ public class ParranderosTransactionManager
 	 */
 	public void addBebedor(Bebedor bebedor) throws Exception 
 	{
-		
+
 		DAOBebedor daoBebedor = new DAOBebedor( );
 		try
 		{
@@ -324,7 +266,7 @@ public class ParranderosTransactionManager
 			}
 		}
 	}
-	
+
 	/**
 	 * Metodo que modela la transaccion que agrega un bebedor a la base de datos  <br/>
 	 * unicamente si el n�mero de bebedores que existen en su ciudad es menor la constante CANTIDAD_MAXIMA <br/>
@@ -342,7 +284,7 @@ public class ParranderosTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 4C: Establezca la conexion del DaoBebedor a la Base de datos (revise los metodos de DAOBebedor)
 			daoBebedor.setConn(this.conn);
-			
+
 			//TODO Requerimiento 4C: Verifique la regla de negocio descrita en la documentacion. En caso que no se cumpla, lance una excepcion explicando lo sucedido
 			//						 (Solo se agrega el bebedor si la cantidad de bebedores, en la Base de Datos, de su misma ciudad es inferior al valor de la constante CANTIDAD_MAXIMA.
 			if(daoBebedor.getCountBebedoresByCiudad(bebedor.getCiudad()) < CANTIDAD_MAXIMA)
@@ -352,12 +294,12 @@ public class ParranderosTransactionManager
 			else
 			{
 				String msj = "No es posible completar esta acción.\nYa hay " + (CANTIDAD_MAXIMA - 1) + " bebedores registrados en la ciudad " + 
-							 bebedor.getCiudad() + ".";
+						bebedor.getCiudad() + ".";
 				System.err.println("[EXCEPTION] General Exception:" + msj);
 				throw new Exception(msj);
 			}
-			
-			
+
+
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -382,10 +324,10 @@ public class ParranderosTransactionManager
 				throw exception;
 			}
 		}
-		
- 
+
+
 	}
-	
+
 	/**
 	 * Metodo que modela la transaccion que actualiza en la base de datos al bebedor que entra por parametro.<br/>
 	 * Solamente se actualiza si existe el bebedor en la Base de Datos <br/>

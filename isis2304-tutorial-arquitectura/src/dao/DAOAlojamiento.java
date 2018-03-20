@@ -116,7 +116,7 @@ public class DAOAlojamiento
 	}
 	public void alojar(Long id) throws SQLException
 	{
-		String sql = String.format("UPDATE %1s SET OCUPADO = 1 WHERE ID = '%2s'", USUARIO, id);
+		String sql = String.format("UPDATE %1$s.ALOJAMIENTOS SET OCUPADO = 1 WHERE ID = '%2$d'", USUARIO, id);
 		System.out.println(sql);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
@@ -125,7 +125,7 @@ public class DAOAlojamiento
 	}
 	public void desAlojar(Long id) throws SQLException
 	{
-		String sql = String.format("UPDATE %1s SET OCUPADO = 0 WHERE ID = '%2s'", USUARIO, id);
+		String sql = String.format("UPDATE %1$s.ALOJAMIENTOS SET OCUPADO = 0 WHERE ID = '%2$d'", USUARIO, id);
 		System.out.println(sql);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);

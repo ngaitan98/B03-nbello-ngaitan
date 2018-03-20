@@ -29,7 +29,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import tm.ParranderosTransactionManager;
+import tm.AlohandesTransactionManager;
 import vos.Bebedor;
 
 /**
@@ -82,7 +82,7 @@ public class BebedoresService {
 	public Response getBebedores() {
 
 		try {
-			ParranderosTransactionManager tm = new ParranderosTransactionManager(getPath());
+			AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 
 			List<Bebedor> bebedores;
 			//Por simplicidad, solamente se obtienen los primeros 50 resultados de la consulta
@@ -107,7 +107,7 @@ public class BebedoresService {
 	public Response getBebedorById( @PathParam( "id" ) Long id )
 	{
 		try{
-			ParranderosTransactionManager tm = new ParranderosTransactionManager( getPath( ) );
+			AlohandesTransactionManager tm = new AlohandesTransactionManager( getPath( ) );
 
 			Bebedor bebedor = tm.getBebedorById( id );
 			return Response.status( 200 ).entity( bebedor ).build( );			
@@ -136,7 +136,7 @@ public class BebedoresService {
 	public Response getBebedoresByCiudadAndPresupuesto(@QueryParam("ciudad")String ciudad, @QueryParam("presupuesto")String presupuesto){
 
 		try{
-			ParranderosTransactionManager tm = new ParranderosTransactionManager( getPath( ) );
+			AlohandesTransactionManager tm = new AlohandesTransactionManager( getPath( ) );
 			List<Bebedor>bebedores;
 
 			//TODO Requerimiento 2D: Llame al metodo del ParranderosTransactionManager que retorne el resultado esperado a partir de los criterios establecidos
@@ -168,7 +168,7 @@ public class BebedoresService {
 	{	
 		//TODO Requerimiento 3C: Implemente el metodo a partir de los ejemplos anteriores y utilizando el Transaction Manager de Parranderos 
 		try{
-			ParranderosTransactionManager tm = new ParranderosTransactionManager( getPath( ) );
+			AlohandesTransactionManager tm = new AlohandesTransactionManager( getPath( ) );
 			tm.addBebedor(bebedor);
 			return Response.status( 200 ).entity( bebedor ).build( );			
 		}
@@ -197,7 +197,7 @@ public class BebedoresService {
 		//TODO Requerimiento 4A: Implemente el metodo a partir de los ejemplos anteriores y utilizando el Transaction Manager de Parranderos 
 		try
 		{
-			ParranderosTransactionManager tm = new ParranderosTransactionManager( getPath( ) );
+			AlohandesTransactionManager tm = new AlohandesTransactionManager( getPath( ) );
 			tm.addBebedorWithLimitations(bebedor);
 			return Response.status( 200 ).entity( bebedor ).build( );			
 		}
@@ -228,7 +228,7 @@ public class BebedoresService {
 		//TODO Requerimiento 5B: Implemente el metodo a partir de los ejemplos anteriores y utilizando el Transaction Manager de Parranderos 
 		try
 		{
-			ParranderosTransactionManager tm = new ParranderosTransactionManager( getPath( ) );
+			AlohandesTransactionManager tm = new AlohandesTransactionManager( getPath( ) );
 			tm.updateBebedor(bebedor);
 			return Response.status( 200 ).entity( bebedor ).build();			
 		}
@@ -257,7 +257,7 @@ public class BebedoresService {
 		//TODO Requerimiento 6C: Implemente el metodo a partir de los ejemplos anteriores y utilizando el Transaction Manager de Parranderos 
 		try
 		{
-			ParranderosTransactionManager tm = new ParranderosTransactionManager( getPath( ) );
+			AlohandesTransactionManager tm = new AlohandesTransactionManager( getPath( ) );
 			tm.deleteBebedor(bebedor);
 			return Response.status( 200 ).entity( bebedor ).build();			
 		}

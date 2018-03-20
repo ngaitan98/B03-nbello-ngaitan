@@ -51,14 +51,16 @@ public class DAOContrato
 	 */
 	public void addContrato(Contrato contrato) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.CONTRATOS (ID, FECHAINICIO, FECHAFIN, COSTO) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s')", 
+		String sql = String.format("INSERT INTO %1$s.CONTRATOS (ID, FECHAINICIO, FECHAFIN, FECHACREACION, COSTO, FINALIZADO) "
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s')", 
 				USUARIO, 
 				contrato.getId(), 
 				contrato.getFechainicio().toString(),
 				contrato.getFechafin().toString(),
-				contrato.getPrecio());
-		
+				contrato.getFechaCreacion().toString(),
+				contrato.getPrecio(),
+				contrato.getFinalizado());
+
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -87,13 +89,24 @@ public class DAOContrato
 		{
 			Date inicio = rs.getDate(2);
 			Date fin = rs.getDate(3);
-			Double costo = rs.getDouble(4);
+			Date comienzo = rs.getDate(4);
+			Double costo = rs.getDouble(5);
+			Integer finalizado = rs.getInt(6);
 
-			Contrato = new Contrato(id, inicio, fin, costo);
+			Contrato = new Contrato(id, inicio, fin, comienzo, costo, finalizado);
 		}
 		return Contrato;
 	}
-	
+	public void finalizar(Long id, Double precio) throws SQLException
+	{
+		String sql = String.format("UPDATE %1$s.CONTRATOS SET FINALIZADO = 1, COSTO = %3$d WHERE ID = '%2$s'", USUARIO, id, precio);
+		System.out.println(sql);
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+	}
+
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
 	//----------------------------------------------------------------------------------------------------------------------------------

@@ -15,17 +15,24 @@ public class Contrato
 		private Date fechainicio;
 		@JsonProperty(value = "fechafin")
 		private Date fechafin;
+		@JsonProperty(value = "fechaCreacion")
+		private Date fechaCreacion;
 		@JsonProperty(value = "precio")
 		private Double precio;
+		@JsonProperty(value =  "finalizado")
+		private Integer finalizado;
 		//----------------------------------------------------------------------------------------------------------------------------------
 		// METODO CONSTRUCTOR
 		//----------------------------------------------------------------------------------------------------------------------------------
-		public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin, @JsonProperty(value = "precio") Double precio)
+		public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin,
+				@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, @JsonProperty(value =  "finalizado")Integer finalizado)
 		{
 			this.id = id;
 			this.fechainicio = fechainicio;
 			this.fechafin = fechafin;
 			this.precio= precio;
+			this.fechaCreacion = fechaCreacion;
+			this.finalizado = finalizado;
 		}
 		//----------------------------------------------------------------------------------------------------------------------------------
 		// METODOS DE LA CLASE
@@ -54,6 +61,22 @@ public class Contrato
 		public void setPrecio(Double precio) {
 			this.precio = precio;
 		}
+		public Date getFechaCreacion() {
+			return fechaCreacion;
+		}
+		public void setFechaCreacion(Date fechaCreacion) {
+			this.fechaCreacion = fechaCreacion;
+		}
 		
+		public Integer getFinalizado() {
+			return finalizado;
+		}
+		public void setFinalizado(Integer finalizado) {
+			this.finalizado = finalizado;
+		}
+		public boolean isFinalizado()
+		{
+			return finalizado == 1;
+		}
 		
 }

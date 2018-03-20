@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.sql.Date;
 
 import vos.*;
@@ -53,7 +52,7 @@ public class DAOJoins
 		if(h != null)
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2s, %3s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
+			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -70,7 +69,7 @@ public class DAOJoins
 		if(a != null)
 		{
 			servicios.addServicio(s);
-			String sql = String.format("INSERT INTO %1s.TIENEN VALUES (%2s, %3s)", USUARIO, idAlojamiento, s.getId());
+			String sql = String.format("INSERT INTO %1s.TIENEN VALUES (%2$s, %3$s)", USUARIO, idAlojamiento, s.getId());
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -92,24 +91,12 @@ public class DAOJoins
 		if(c != null && a != null)
 		{
 			contratos.addContrato(con);
-			String sql = String.format("INSERT INTO %1s.CONTRATARON VALUES (%2s, %3s, %4s)", USUARIO, con.getId(), idAlojamiento, idCliente);
+			String sql = String.format("INSERT INTO %1s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, con.getId(), idAlojamiento, idCliente);
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
 			prepStmt.executeQuery();
 		}
-	}
-	public void deleteHotel(Long id) throws SQLException, Exception
-	{
-		hoteles.deleteHotel(id);
-	}
-	public void deleteCliente(Long id) throws SQLException, Exception
-	{
-		clientes.deleteCliente(id);
-	}
-	public void deleteServicio(Long id) throws SQLException, Exception
-	{
-		servicios.deleteServicio(id);
 	}
 	public void ocuparAlojamiento(Long id) throws SQLException
 	{
@@ -118,6 +105,10 @@ public class DAOJoins
 	public void desOcuparAlojamiento(Long id) throws SQLException
 	{
 		alojamientos.desAlojar(id);
+	}
+	public void finalizarContrato(Long id, Double precio) throws SQLException
+	{
+		contratos.finalizar(id, precio);
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
