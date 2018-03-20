@@ -12,17 +12,14 @@ public class PersonaNormal extends Operador
 	private String certificado;
 	@JsonProperty(value="tipo")
 	private String tipo;
-	@JsonProperty(value="viviendas")
-	private ArrayList<Vivienda> viviendas;
-	public PersonaNormal(@JsonProperty(value="id") Integer id , @JsonProperty(value="login") String login,	@JsonProperty(value="nombre") String nombre, 
+	public PersonaNormal(@JsonProperty(value="id") Long id , @JsonProperty(value="login") String login,	@JsonProperty(value="nombre") String nombre, 
 			@JsonProperty(value="correo") String correo, @JsonProperty(value="password") String password, 
 			@JsonProperty(value="cuentaBancaria")String cuentaBancaria, @JsonProperty(value="documento")String documento, @JsonProperty(value="clienteEquivalente") Cliente clienteEquivalente,
-			@JsonProperty(value="habitaciones")ArrayList<Habitacion> habitaciones,@JsonProperty(value="tipo") String tipo,	
-			@JsonProperty(value="certificado") String certificado, @JsonProperty(value="viviendas") ArrayList<Vivienda> viviendas) 
+			@JsonProperty(value="habitaciones")ArrayList<Alojamiento> habitaciones,@JsonProperty(value="tipo") String tipo,	
+			@JsonProperty(value="certificado") String certificado) 
 	{
 		super(id, login, nombre, correo, password, cuentaBancaria, documento, clienteEquivalente, habitaciones);
 		this.certificado = certificado;
-		this.viviendas = viviendas;
 		this.tipo = tipo;
 	}
 	public String getCertificado() {
@@ -37,11 +34,4 @@ public class PersonaNormal extends Operador
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	public ArrayList<Vivienda> getViviendas() {
-		return viviendas;
-	}
-	public void setViviendas(ArrayList<Vivienda> viviendas) {
-		this.viviendas = viviendas;
-	}
-	
 }

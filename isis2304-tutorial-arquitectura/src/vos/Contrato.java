@@ -15,27 +15,17 @@ public class Contrato
 		private Date fechainicio;
 		@JsonProperty(value = "fechafin")
 		private Date fechafin;
-		@JsonProperty(value = "ubicacion")
-		private String ubicacion;
-		@JsonProperty(value = "ocupada")
-		private boolean ocupada;
+		@JsonProperty(value = "precio")
+		private Double precio;
 		//----------------------------------------------------------------------------------------------------------------------------------
 		// METODO CONSTRUCTOR
 		//----------------------------------------------------------------------------------------------------------------------------------
-		public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin, @JsonProperty( value = "ubicacion")String ubicacion, @JsonProperty(value = "ocupada") String ocupada)
+		public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin, @JsonProperty(value = "precio") Double precio)
 		{
 			this.id = id;
 			this.fechainicio = fechainicio;
 			this.fechafin = fechafin;
-			this.ubicacion= ubicacion;
-			if (ocupada.equals("T"))
-			{
-				this.ocupada = true;
-			}
-			else
-			{
-				this.ocupada = false;
-			}
+			this.precio= precio;
 		}
 		//----------------------------------------------------------------------------------------------------------------------------------
 		// METODOS DE LA CLASE
@@ -58,18 +48,12 @@ public class Contrato
 		public void setFechafin(Date fechafin) {
 			this.fechafin = fechafin;
 		}
-		public String getUbicacion() {
-			return ubicacion;
+		public Double getPrecio() {
+			return precio;
 		}
-		public void setUbicacion(String ubicacion) {
-			this.ubicacion = ubicacion;
+		public void setPrecio(Double precio) {
+			this.precio = precio;
 		}
-		public boolean isOcupada() {
-			return ocupada;
-		}
-		public void setOcupada(boolean ocupada) {
-			this.ocupada = ocupada;
-		}
-
+		
 		
 }

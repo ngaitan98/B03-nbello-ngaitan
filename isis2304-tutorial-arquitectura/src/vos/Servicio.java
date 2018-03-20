@@ -5,72 +5,62 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Servicio 
 {
 	//----------------------------------------------------------------------------------------------------------------------------------
-		// ATRIBUTOS
-		//----------------------------------------------------------------------------------------------------------------------------------
-		
-		@JsonProperty(value = "id")
-		private Long id;
-		@JsonProperty(value = "nombre")	
-		private String nombre;
-		@JsonProperty(value = "descripcion")	
-		private String descripcion;
-		@JsonProperty(value = "costoAgregado")	
-		private Integer costoAgregado;
-		@JsonProperty(value = "tipo")	
-		private String tipo;
-		
-		//----------------------------------------------------------------------------------------------------------------------------------
-		// METODO CONSTRUCTOR
-		//----------------------------------------------------------------------------------------------------------------------------------
-		public Servicio (@JsonProperty(value = "id")Long id,@JsonProperty(value = "nombre")	 String nombre, @JsonProperty(value = "descripcion") String descripcion, @JsonProperty(value = "costoAgregado")	Integer costoAgregado, @JsonProperty(value = "tipo") String tipo) {
-			this.id = id;
-			this.nombre = nombre; 
-			this.descripcion = descripcion;
-			this.costoAgregado = costoAgregado;
-			this.tipo = tipo;
-		}
-		//----------------------------------------------------------------------------------------------------------------------------------
-		// METODOS DE LA CLASE
-		//----------------------------------------------------------------------------------------------------------------------------------
-				
+	// ATRIBUTOS
+	//----------------------------------------------------------------------------------------------------------------------------------
 
-		public Long getId() {
-			return id;
-		}
+	@JsonProperty(value = "id")
+	private Long id;
+	@JsonProperty(value = "nombre")	
+	private String nombre;
+	@JsonProperty(value = "descripcion")	
+	private String descripcion;
+	@JsonProperty(value = "costoAgregado")	
+	private Integer costoAgregado;
 
-		public void setId(Long id) {
-			this.id = id;
-		}
+	//----------------------------------------------------------------------------------------------------------------------------------
+	// METODO CONSTRUCTOR
+	//----------------------------------------------------------------------------------------------------------------------------------
+	public Servicio (@JsonProperty(value = "id")Long id,@JsonProperty(value = "nombre")	 String nombre, @JsonProperty(value = "descripcion") String descripcion, @JsonProperty(value = "costoAgregado")	Integer costoAgregado) 
+	{
+		this.id = id;
+		this.nombre = nombre; 
+		this.descripcion = descripcion;
+		this.costoAgregado = costoAgregado;
+	}
+	//----------------------------------------------------------------------------------------------------------------------------------
+	// METODOS DE LA CLASE
+	//----------------------------------------------------------------------------------------------------------------------------------
 
-		public String getNombre() {
-			return nombre;
-		}
 
-		public void setNombre(String nombre) {
-			this.nombre = nombre;
-		}
+	public Long getId() {
+		return id;
+	}
 
-		public String getDescripcion() {
-			return descripcion;
-		}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-		public void setDescripcion(String descripcion) {
-			this.descripcion = descripcion;
-		}
+	public String getNombre() {
+		return nombre;
+	}
 
-		public Integer getCostoAgregado() {
-			return costoAgregado;
-		}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-		public void setCostoAgregado(Integer costoAgregado) {
-			this.costoAgregado = costoAgregado;
-		}
+	public String getDescripcion() {
+		return descripcion;
+	}
 
-		public String getTipo() {
-			return tipo;
-		}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
-		public void setTipo(String tipo) {
-			this.tipo = tipo;
-		}
+	public Integer getCostoAgregado() {
+		return costoAgregado;
+	}
+
+	public void setCostoAgregado(Integer costoAgregado) {
+		this.costoAgregado = costoAgregado;
+	}
 }

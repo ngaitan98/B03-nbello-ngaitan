@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public abstract class Operador 
 {
 	@JsonProperty(value="id")
-	protected Integer id;
+	protected Long id;
 	@JsonProperty(value="login")
 	protected String login;
 	@JsonProperty(value="nombre")
@@ -23,12 +23,12 @@ public abstract class Operador
 	@JsonProperty(value="clienteEquivalente")
 	protected Cliente clienteEquivalente;
 	@JsonProperty(value="habitaciones")
-	protected ArrayList<Habitacion> habitaciones;
+	protected ArrayList<Alojamiento> habitaciones;
 	
-	protected Operador(	@JsonProperty(value="id") Integer id , 	@JsonProperty(value="login") String login,	@JsonProperty(value="nombre")
+	protected Operador(	@JsonProperty(value="id") Long id , 	@JsonProperty(value="login") String login,	@JsonProperty(value="nombre")
 	String nombre, @JsonProperty(value="correo") String correo, @JsonProperty(value="password") String password, 
 	@JsonProperty(value="cuentaBancaria")String cuentaBancaria, @JsonProperty(value="documento")String documento, @JsonProperty(value="clienteEquivalente") Cliente clienteEquivalente,
-	@JsonProperty(value="habitaciones")ArrayList<Habitacion> habitaciones) 
+	@JsonProperty(value="habitaciones")ArrayList<Alojamiento> habitaciones) 
 	{
 		this.id = id;
 		this.login = login;
@@ -41,11 +41,11 @@ public abstract class Operador
 		this.habitaciones = habitaciones;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -105,11 +105,15 @@ public abstract class Operador
 		this.clienteEquivalente = clienteEquivalente;
 	}
 
-	public ArrayList<Habitacion> getHabitaciones() {
+	public ArrayList<Alojamiento> getHabitaciones() {
 		return habitaciones;
 	}
 
-	public void setHabitaciones(ArrayList<Habitacion> habitaciones) {
+	public void setHabitaciones(ArrayList<Alojamiento> habitaciones) {
 		this.habitaciones = habitaciones;
+	}
+	public final static void main(String[] args)
+	{
+		
 	}
 }
