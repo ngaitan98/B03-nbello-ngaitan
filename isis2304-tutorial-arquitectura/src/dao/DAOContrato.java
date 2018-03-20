@@ -93,25 +93,6 @@ public class DAOContrato
 		}
 		return Contrato;
 	}
-	/**
-	 * Metodo que elimina a un Contrato por el id que llega por parametro<br/>
-	 * <b>Precondicion: </b> la conexion a sido inicializadoa <br/>  
-	 * @param id Id del Contrato que se desea eliminar
-	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
-	 * @throws Exception Si se genera un error dentro del metodo.
-	 */
-	public void deleteContrato(Integer id) throws SQLException, Exception 
-	{
-
-		String sql = String.format("DELETE FROM %1$s.CONTRATOS WHERE ID = %2$d", USUARIO, id);
-
-		System.out.println(sql);
-		
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();
-		
-	}
 	
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES

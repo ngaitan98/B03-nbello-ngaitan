@@ -105,7 +105,7 @@ public class DAOHotel
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public void deleteHotel(Integer id) throws SQLException, Exception 
+	public void deleteHotel(Long id) throws SQLException, Exception 
 	{
 
 		String sql = String.format("DELETE FROM %1$s.HOTELES WHERE ID = %2$d", USUARIO, id);

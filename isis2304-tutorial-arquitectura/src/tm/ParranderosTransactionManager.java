@@ -83,7 +83,9 @@ public class ParranderosTransactionManager
 	 * Atributo que representa la conexion a la base de datos
 	 */
 	private Connection conn;
-
+	/**
+	 * Los DAOs necesarios para realizar transaccion
+	 */
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE CONEXION E INICIALIZACION
 	//----------------------------------------------------------------------------------------------------------------------------------
