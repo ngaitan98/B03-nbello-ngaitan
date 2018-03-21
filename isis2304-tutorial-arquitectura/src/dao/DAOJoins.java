@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.sql.Date;
 
 import vos.*;
@@ -33,9 +34,15 @@ public class DAOJoins
 	private DAOCliente clientes;
 	private DAOContrato contratos;
 	private DAOServicio servicios;
+	private DAODuenoVivienda duenos;
+	private DAOPersonaNormal personas;
+	private DAOHostal hostales;
 
 	public DAOJoins()
 	{
+		duenos = new DAODuenoVivienda();
+		hostales = new DAOHostal();
+		personas = new DAOPersonaNormal();
 		hoteles = new DAOHotel();
 		alojamientos = new DAOAlojamiento();
 		clientes = new DAOCliente();
@@ -47,14 +54,57 @@ public class DAOJoins
 	{
 		hoteles.addHotel(h);
 	}
+	public void agregarPersonaNormal(PersonaNormal h) throws SQLException, Exception
+	{
+		personas.addPersonaNormal(h);
+	}
+	public void agregarHostal(Hostal h) throws SQLException, Exception
+	{
+		hostales.addHostal(h);
+	}
+	public void agregarDuenoVivienda(DuenoVivienda h) throws SQLException, Exception
+	{
+		duenos.addDuenoVivienda(h);
+	}
 	public void agregarAlojamiento(Long idOperador, Alojamiento a) throws SQLException, Exception
 	{
 		//TODO completar este m�todo para los dem�s DAOs y sus casos, yo me encargo de la l�gica
 		ResultSet h = hoteles.findHotelById(idOperador);
+		ResultSet p = personas.findPersonaNormalById(idOperador);
+		ResultSet d = duenos.findDuenoViviendaById(idOperador);
+		ResultSet hl = hostales.findHostalById(idOperador);
+
 		if(h.next())
 		{
 			alojamientos.addAlojamiento(a);
 			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
+			System.out.println(sql);
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+			prepStmt.executeQuery();
+		}
+		else if(p.next())
+		{
+			alojamientos.addAlojamiento(a);
+			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "PERSONASNORMALES");
+			System.out.println(sql);
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+			prepStmt.executeQuery();
+		}
+		else if(hl.next())
+		{
+			alojamientos.addAlojamiento(a);
+			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOSTALES");
+			System.out.println(sql);
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+			prepStmt.executeQuery();
+		}
+		else if(d.next())
+		{
+			alojamientos.addAlojamiento(a);
+			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "DUENOVIVIENDA");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -136,6 +186,9 @@ public class DAOJoins
 		hoteles.setConn(conn);
 		clientes.setConn(conn);
 		contratos.setConn(conn);
+		personas.setConn(conn);
+		duenos.setConn(conn);
+		hostales.setConn(conn);
 	}
 
 	/**
@@ -148,6 +201,9 @@ public class DAOJoins
 		hoteles.cerrarRecursos();
 		clientes.cerrarRecursos();
 		contratos.cerrarRecursos();
+		personas.cerrarRecursos();
+		duenos.cerrarRecursos();
+		hostales.cerrarRecursos();
 		for(Object ob : recursos){
 			if(ob instanceof PreparedStatement)
 				try {
@@ -170,4 +226,11 @@ public class DAOJoins
 		}
 		return (long) 0;
 	}
+	public Date getCurrentDate()
+	{		
+		Calendar fechaActual = Calendar.getInstance();
+		System.out.println(fechaActual.getTimeInMillis());
+		return new Date(fechaActual.getTimeInMillis());
+	}
+	
 }
