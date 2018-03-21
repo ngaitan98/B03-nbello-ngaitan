@@ -55,7 +55,7 @@ public class DAOPersonaNormal {
 		String sentencia = String.format("INSERT INTO %1$s.HOSTALES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, TIPOPERSONANORMAL, CERTIFICADO) "
 				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6s', '%7s', '%8s','%9s', %10s')", 
 				USUARIO,
-				personanormal.getId(),personanormal.getLogin(),personanormal.getPassword(),personanormal.getNombre(),personanormal.getCuentaBancaria(),personanormal.getCorreo(),personanormal.getDocumento(),personanormal.getTipo(),personanormal.getCertificado());
+				personanormal.getId(),personanormal.getLogin(),personanormal.getPassword(),personanormal.getNombre(),personanormal.getCuentaBancaria(),personanormal.getCorreo(),personanormal.getDocumento(),personanormal.getTipo(), "Pendiente de aprobación");
 		System.out.println(sentencia);
 		PreparedStatement prepStmt = conn.prepareStatement(sentencia);
 		recursos.add(prepStmt);

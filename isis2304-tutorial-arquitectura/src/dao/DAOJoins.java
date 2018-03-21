@@ -49,7 +49,7 @@ public class DAOJoins
 	}
 	public void agregarAlojamiento(Long idOperador, Alojamiento a) throws SQLException, Exception
 	{
-		//TODO completar este método para los demás DAOs y sus casos, yo me encargo de la lógica
+		//TODO completar este mï¿½todo para los demï¿½s DAOs y sus casos, yo me encargo de la lï¿½gica
 		ResultSet h = hoteles.findHotelById(idOperador);
 		if(h.next())
 		{
@@ -112,6 +112,14 @@ public class DAOJoins
 	{
 		contratos.finalizar(id, precio);
 	}
+	public boolean existeLoginCliente(String login) throws SQLException, Exception
+	{
+		return clientes.findClienteByLogin(login).next();
+	}
+	public boolean existeCorreoCliente(String correo) throws SQLException, Exception
+	{
+		return clientes.findClienteByCorreo(correo).next();
+	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -149,7 +157,7 @@ public class DAOJoins
 				}
 		}
 	}
-	public Integer getCurrentId() throws SQLException, Exception
+	public Long getCurrentId() throws SQLException, Exception
 	{
 		String sql = String.format("SELECT MAX(ID) FROM %1$s.OFRECEN", USUARIO);
 		System.out.println(sql);
@@ -158,8 +166,8 @@ public class DAOJoins
 		ResultSet s = prepStmt.executeQuery();	
 		if(s.next())
 		{
-			return s.getInt(1);
+			return s.getLong(1);
 		}
-		return 0;
+		return (long) 0;
 	}
 }

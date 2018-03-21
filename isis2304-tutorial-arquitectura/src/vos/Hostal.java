@@ -1,9 +1,7 @@
 package vos;
 
 import java.io.File;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -13,16 +11,16 @@ public class Hostal extends Operador
 	private ArrayList<File> documentos;
 	
 	@JsonProperty(value="horaInicio")
-	private Date horaInicio;
+	private Integer horaInicio;
 	
 	@JsonProperty(value="horaFin")
-	private Date horaFin;
+	private Integer horaFin;
 
 	public Hostal(	@JsonProperty(value="id") Long id , 	@JsonProperty(value="login") String login,	@JsonProperty(value="nombre")
 	String nombre, @JsonProperty(value="correo") String correo, @JsonProperty(value="password") String password, 
 	@JsonProperty(value="cuentaBancaria")String cuentaBancaria, @JsonProperty(value="documento")String documento, @JsonProperty(value="clienteEquivalente") Cliente clienteEquivalente,
 	@JsonProperty(value="habitaciones")ArrayList<Alojamiento> habitaciones,@JsonProperty(value="documentos") ArrayList<File> documentos,
-	@JsonProperty(value="horaInicio") Date horaInicio, @JsonProperty(value="horaFin") Date horaFin) 
+	@JsonProperty(value="horaInicio") Integer horaInicio, @JsonProperty(value="horaFin") Integer horaFin) 
 	{
 		super(id, login, nombre, correo, password, cuentaBancaria, documento, clienteEquivalente, habitaciones);
 		this.documentos = documentos;
@@ -39,33 +37,19 @@ public class Hostal extends Operador
 		this.documentos = documentos;
 	}
 
-	public Date getHoraInicio() {
+	public Integer getHoraInicio() {
 		return horaInicio;
 	}
 
-	public void setHoraInicio(Date horaInicio) {
+	public void setHoraInicio(Integer horaInicio) {
 		this.horaInicio = horaInicio;
 	}
 
-	public Date getHoraFin() {
+	public Integer getHoraFin() {
 		return horaFin;
 	}
 
-	public void setHoraFin(Date horaFin) {
+	public void setHoraFin(Integer horaFin) {
 		this.horaFin = horaFin;
-	}
-	private static String getCurrentDate()
-	{
-		Calendar fechaActual = Calendar.getInstance();
-		String cadenaFecha = String.format("%04d-%02d-%02d-%02d",
-		  fechaActual.get(Calendar.YEAR),
-		  fechaActual.get(Calendar.MONTH)+1,
-		  fechaActual.get(Calendar.DAY_OF_MONTH));
-		return cadenaFecha;
-	}
-	public final static void main(String[] args)
-	{
-		System.out.println(1111111);
-		System.out.println(getCurrentDate());
 	}
 }

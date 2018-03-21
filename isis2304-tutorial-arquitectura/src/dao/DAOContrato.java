@@ -51,15 +51,16 @@ public class DAOContrato
 	 */
 	public void addContrato(Contrato contrato) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.CONTRATOS (ID, FECHAINICIO, FECHAFIN, FECHACREACION, COSTO, FINALIZADO) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s')", 
+		String sql = String.format("INSERT INTO %1$s.CONTRATOS (ID, FECHAINICIO, FECHAFIN, PRECIO, FECHACREACION, FINALIZADO, CANTIDADPERSONAS) "
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', %8$s)", 
 				USUARIO, 
 				contrato.getId(), 
-				contrato.getFechainicio().toString(),
-				contrato.getFechafin().toString(),
-				contrato.getFechaCreacion().toString(),
+				contrato.getFechainicio(),
+				contrato.getFechafin(),
 				contrato.getPrecio(),
-				contrato.getFinalizado());
+				contrato.getFechaCreacion(),
+				contrato.getFinalizado(),
+				contrato.getCanitadPersonas());
 
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);

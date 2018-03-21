@@ -50,7 +50,7 @@ public class DAOCliente
 	 */
 	public void addCliente(Cliente cliente) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.CLIENTES (ID, LOGIN, PASSWORD, NOMBRE, CORREO, IDENTIFICACION) "
+		String sql = String.format("INSERT INTO %1$s.CLIENTES (ID, LOGIN, PASSWORD, NOMBRE, CORREO, DOCUMENTO) "
 				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6s', '%7s')", 
 				USUARIO, 
 				cliente.getId(),
@@ -102,7 +102,44 @@ public class DAOCliente
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
-	
+	/**
+	 * Metodo que obtiene la informacion del Cliente en la Base de Datos que tiene el identificador dado por parametro<br/>
+	 * <b>Precondicion: </b> la conexion a sido inicializadoa <br/> 
+	 * @param id el identificador del Cliente
+	 * @return la informacion del Cliente que cumple con los criterios de la sentecia SQL
+	 * 			Null si no existe el Cliente con los criterios establecidos
+	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
+	 * @throws Exception Si se genera un error dentro del metodo.
+	 */
+	public ResultSet findClienteByLogin(String login) throws SQLException, Exception 
+	{
+		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE LOGIN = %2$d", USUARIO, login); 
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		return rs;
+	}
+	/**
+	 * Metodo que obtiene la informacion del Cliente en la Base de Datos que tiene el identificador dado por parametro<br/>
+	 * <b>Precondicion: </b> la conexion a sido inicializadoa <br/> 
+	 * @param id el identificador del Cliente
+	 * @return la informacion del Cliente que cumple con los criterios de la sentecia SQL
+	 * 			Null si no existe el Cliente con los criterios establecidos
+	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
+	 * @throws Exception Si se genera un error dentro del metodo.
+	 */
+	public ResultSet findClienteByCorreo(String correo) throws SQLException, Exception 
+	{
+		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE CORREO = %2$d", USUARIO, correo); 
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		return rs;
+	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
 	//----------------------------------------------------------------------------------------------------------------------------------

@@ -28,17 +28,14 @@ public class Cliente
 	@JsonProperty(value = "documento")
 	private String documento;
 
-	@JsonProperty(value = "operador")
-	private Operador operadorEquivalente;
-
 	@JsonProperty(value = "contratos")
 	private ArrayList<Contrato> contratos;
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 	public Cliente ( @JsonProperty(value = "id") long id, @JsonProperty(value = "login") String login, @JsonProperty (value = "password") String password, 
-			@JsonProperty(value = "nombre") String nombre, @JsonProperty (value = "correo") String correo, @JsonProperty(value = "documento") String documento,
-			@JsonProperty(value = "operador") Operador operadorEquivalente, @JsonProperty(value = "contratos") ArrayList<Contrato> contratos)
+			@JsonProperty(value = "nombre") String nombre, @JsonProperty (value = "correo") String correo, @JsonProperty(value = "documento") String documento, 
+			@JsonProperty(value = "contratos") ArrayList<Contrato> contratos)
 	{
 		this.id = id;
 		this.login = login;
@@ -46,7 +43,6 @@ public class Cliente
 		this.nombre = nombre;
 		this.correo = correo;
 		this.documento = documento;
-		this.operadorEquivalente = operadorEquivalente;
 		this.contratos = contratos;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -100,15 +96,7 @@ public class Cliente
 	public void setDocumento(String documento) {
 		this.documento = documento;
 	}
-
-	public Operador getOperadorEquivalente() {
-		return operadorEquivalente;
-	}
-
-	public void setOperadorEquivalente(Operador operadorEquivalente) {
-		this.operadorEquivalente = operadorEquivalente;
-	}
-
+	
 	public ArrayList<Contrato> getContratos() {
 		return contratos;
 	}

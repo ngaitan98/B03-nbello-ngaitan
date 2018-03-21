@@ -21,6 +21,8 @@ public class Contrato
 	private Double precio;
 	@JsonProperty(value = "finalizado")
 	private Integer finalizado;
+	@JsonProperty(value = "cantidadPersonas")
+	private Integer cantidadPersonas;
 	@JsonProperty(value = "cliente")
 	private Cliente cliente;
 	@JsonProperty(value = "alojamiento")
@@ -29,7 +31,7 @@ public class Contrato
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 	public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin,
-			@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, 
+			@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, @JsonProperty(value = "cantidadPersonas") Integer cantidadPersonas,
 			@JsonProperty(value = "finalizado")Integer finalizado,	@JsonProperty(value = "cliente") Cliente cliente, @JsonProperty(value = "alojamiento") Alojamiento alojamiento )
 	{
 		this.id = id;
@@ -40,6 +42,7 @@ public class Contrato
 		this.finalizado = finalizado;
 		this.cliente = cliente;
 		this.alojamiento = alojamiento;
+		this.cantidadPersonas = cantidadPersonas;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE LA CLASE
@@ -95,6 +98,13 @@ public class Contrato
 	}
 	public void setAlojamiento(Alojamiento alojamiento) {
 		this.alojamiento = alojamiento;
+	}
+	public Integer getCanitadPersonas() {
+		return cantidadPersonas;
+	}
+	public void setCantidadPersonas(Integer cantidadPersonas)
+	{
+		this.cantidadPersonas = cantidadPersonas;
 	}
 
 }

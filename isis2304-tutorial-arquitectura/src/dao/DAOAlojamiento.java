@@ -51,20 +51,20 @@ public class DAOAlojamiento
 	 */
 	public void addAlojamiento(Alojamiento alojamiento) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.ALOJAMIENTOS (ID, NUMEROCUPOS, TIPO, COSTOBASE, OCUPADO, DIRECCION)"
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6s', '%7s')", 
+		String sql = String.format("INSERT INTO %1$s.ALOJAMIENTOS (ID, NUMEROCUPOS, TIPO, COSTOBASE, DIRECCION, OCUPADO)"
+				+ "VALUES (%2$s, %3$s, '%4$s', %5$s, '%6s', '%7s')", 
 				USUARIO, 
 				alojamiento.getId(),
 				alojamiento.getNumeroCupos(),
 				alojamiento.getTipo(),
 				alojamiento.getCostoBase(),
-				alojamiento.getOcupado(),
-				alojamiento.getUbicacion());
-		
-		System.out.println(sql);
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();
+				alojamiento.getUbicacion(),
+				alojamiento.getOcupado());
+
+				System.out.println(sql);
+				PreparedStatement prepStmt = conn.prepareStatement(sql);
+				recursos.add(prepStmt);
+				prepStmt.executeQuery();
 	}
 	/**
 	 * Metodo que obtiene la informacion del hotel en la Base de Datos que tiene el identificador dado por parametro<br/>
@@ -99,7 +99,7 @@ public class DAOAlojamiento
 		String sql = String.format("DELETE FROM %1$s.ALOJAMIENTOS WHERE ID = %2$d", USUARIO, id);
 
 		System.out.println(sql);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
@@ -108,7 +108,7 @@ public class DAOAlojamiento
 	{
 		String sql = String.format("UPDATE %1$s.ALOJAMIENTOS SET OCUPADO = 1 WHERE ID = '%2$d'", USUARIO, id);
 		System.out.println(sql);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
@@ -117,7 +117,7 @@ public class DAOAlojamiento
 	{
 		String sql = String.format("UPDATE %1$s.ALOJAMIENTOS SET OCUPADO = 0 WHERE ID = '%2$d'", USUARIO, id);
 		System.out.println(sql);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();

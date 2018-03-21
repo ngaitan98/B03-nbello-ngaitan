@@ -289,7 +289,28 @@ public class AlohandesTransactionManager
 	}
 	public void addCliente(Cliente c) throws SQLException, Exception
 	{
+		try {
+			
+			if(!c.getCorreo().split("@")[2].equals("uniandes.edu.co"))
+			{
+				System.err.println("[EXCEPTION] Logic Exception:" + "Es necesario que envie un documento que demustre su relación con la universidad.");
+				throw new Exception("Es necesario que envie un documento que demustre su relación con la universidad.");
+			}
+		} catch (Exception e) {
+			System.err.println("[EXCEPTION] General Exception: " + "El correo no tiene un formato válido");
+			throw new Exception("El correo no tiene un formato válido");
+		}
 		DAOJoins joins = new DAOJoins( );
+		if(joins.existeCorreoCliente(c.getCorreo()))
+		{
+			System.err.println("[EXCEPTION] Logic Exception: " + "Ya existe un usuario con el correo: " + c.getCorreo());
+			throw new Exception("Ya existe un usuario con el correo: " + c.getCorreo());
+		}
+		if(joins.existeLoginCliente(c.getLogin()))
+		{
+			System.err.println("[EXCEPTION] Logic Exception: " + "Ya existe un usuario con el login: " + c.getLogin());
+			throw new Exception("Ya existe un usuario con el login: " + c.getLogin());
+		}
 		try
 		{
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
