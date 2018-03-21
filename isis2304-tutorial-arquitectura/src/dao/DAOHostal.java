@@ -39,7 +39,7 @@ public class DAOHostal
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE COMUNICACION CON LA BASE DE DATOS
 	//----------------------------------------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Metodo que agrega la informacion de un nuevo hostal a la base de datos a partir de un parametro que ingresa
 	 * <br>
@@ -69,7 +69,7 @@ public class DAOHostal
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
-	
+
 	/**
 	 * metodo que obtiene la informacion de un hostal que se encuentra en la base de datos que tiene el identificador dado por parametro.
 	 * <br>
@@ -80,7 +80,7 @@ public class DAOHostal
 	 * @throws SQLException SQLException se lanza cuando existe un error en la conexion con la base de datos o en la sentencia SQL
 	 * @throws Exception Exception que se lanza si hay errores en el codigo.
 	 */
-	
+
 	public ResultSet findHostalById (Long id) throws SQLException, Exception
 	{
 		String sentencia = String.format("SELECT * FROM %1$s.HOSTALES WHERE ID = %2$d", USUARIO, id); 
@@ -89,7 +89,7 @@ public class DAOHostal
 		ResultSet result = prepStmt.executeQuery();
 		return result;
 	}
-	
+
 	/**
 	 * Metodo que elimina un hostal que tenga el id que llega por parametro de la base de datos
 	 * <br>
@@ -99,11 +99,11 @@ public class DAOHostal
 	 * @throws SQLException SQLException que se lanza cuando hay error de conexion con la base de datos o en la sentencia SQL
 	 * @throws Exception Exception que se lanza que cuando hay errores del codigo
 	 */
-	
+
 	public void deleteHostal(Long id) throws SQLException, Exception
 	{
 		String sentencia = String.format("DELETE FROM %1$s.HOSTALES WHERE ID = %2$d", USUARIO, id); 
-		
+
 		System.out.println(sentencia);
 		PreparedStatement prepStmt = conn.prepareStatement(sentencia);
 		recursos.add(prepStmt);
@@ -111,30 +111,30 @@ public class DAOHostal
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------------
-		// METODOS AUXILIARES
-		//----------------------------------------------------------------------------------------------------------------------------------
+	// METODOS AUXILIARES
+	//----------------------------------------------------------------------------------------------------------------------------------
 
-		/**
-		 * Metodo encargado de inicializar la conexion del DAO a la Base de Datos a partir del parametro <br/>
-		 * <b>Postcondicion: </b> el atributo conn es inicializado <br/>
-		 * @param connection la conexion generada en el TransactionManager para la comunicacion con la Base de Datos
-		 */
-		public void setConn(Connection connection){
-			this.conn = connection;
-		}
+	/**
+	 * Metodo encargado de inicializar la conexion del DAO a la Base de Datos a partir del parametro <br/>
+	 * <b>Postcondicion: </b> el atributo conn es inicializado <br/>
+	 * @param connection la conexion generada en el TransactionManager para la comunicacion con la Base de Datos
+	 */
+	public void setConn(Connection connection){
+		this.conn = connection;
+	}
 
-		/**
-		 * Metodo que cierra todos los recursos que se encuentran en el arreglo de recursos<br/>
-		 * <b>Postcondicion: </b> Todos los recurso del arreglo de recursos han sido cerrados.
-		 */
-		public void cerrarRecursos() {
-			for(Object ob : recursos){
-				if(ob instanceof PreparedStatement)
-					try {
-						((PreparedStatement) ob).close();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-			}
+	/**
+	 * Metodo que cierra todos los recursos que se encuentran en el arreglo de recursos<br/>
+	 * <b>Postcondicion: </b> Todos los recurso del arreglo de recursos han sido cerrados.
+	 */
+	public void cerrarRecursos() {
+		for(Object ob : recursos){
+			if(ob instanceof PreparedStatement)
+				try {
+					((PreparedStatement) ob).close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 		}
+	}
 }

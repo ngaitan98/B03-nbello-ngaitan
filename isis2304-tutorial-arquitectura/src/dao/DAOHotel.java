@@ -52,7 +52,7 @@ public class DAOHotel
 	public void addHotel(Hotel hotel) throws SQLException, Exception 
 	{
 		String sql = String.format("INSERT INTO %1$s.HOTELES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, DOCUMENTOS) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6s', '%7s', '%8s')", 
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s')", 
 				USUARIO, 
 				hotel.getId(),
 				hotel.getLogin(),
@@ -62,7 +62,7 @@ public class DAOHotel
 				hotel.getCorreo(),
 				hotel.getDocumento(),
 				"Pendiente de verificación");
-		
+
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -101,12 +101,12 @@ public class DAOHotel
 		String sql = String.format("DELETE FROM %1$s.HOTELES WHERE ID = %2$d", USUARIO, id);
 
 		System.out.println(sql);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
-	
+
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
 	//----------------------------------------------------------------------------------------------------------------------------------

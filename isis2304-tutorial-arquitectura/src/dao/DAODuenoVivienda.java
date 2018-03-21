@@ -52,7 +52,7 @@ public class DAODuenoVivienda {
 	public void addDuenoVivienda (DuenoVivienda duenovivienda) throws SQLException, Exception
 	{
 		String sentencia = String.format("INSERT INTO %1$s.HOSTALES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, DOCUMENTOS) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6s', '%7s', '%8s','%9s')", 
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s','%9$s')", 
 				USUARIO,
 				duenovivienda.getId(),duenovivienda.getLogin(),duenovivienda.getPassword(),duenovivienda.getNombre(),duenovivienda.getCuentaBancaria(),duenovivienda.getCorreo(),duenovivienda.getDocumento(),"Pendiente de aprobación");
 		System.out.println(sentencia);
