@@ -77,7 +77,7 @@ public class DAOJoins
 		if(h.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -86,7 +86,7 @@ public class DAOJoins
 		else if(p.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "PERSONASNORMALES");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "PERSONASNORMALES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -95,7 +95,7 @@ public class DAOJoins
 		else if(hl.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOSTALES");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOSTALES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -104,7 +104,7 @@ public class DAOJoins
 		else if(d.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "DUENOVIVIENDA");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "DUENOVIVIENDA");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -143,7 +143,7 @@ public class DAOJoins
 		if(a.next() && c.next())
 		{
 			contratos.addContrato(con);
-			String sql = String.format("INSERT INTO %1s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, con.getId(), idAlojamiento, idCliente);
+			String sql = String.format("INSERT INTO %1$s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, con.getId(), idAlojamiento, idCliente);
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -169,6 +169,36 @@ public class DAOJoins
 	public boolean existeCorreoCliente(String correo) throws SQLException, Exception
 	{
 		return clientes.findClienteByCorreo(correo).next();
+	}
+	public boolean estaOcupado(Long idAlojamiento, Date fechaInicio) throws SQLException, Exception
+	{
+		ResultSet alojamiento = alojamientos.findAlojamientoById(idAlojamiento);
+		if(alojamiento.next())
+		{
+			String sql = String.format("SELECT ID_CONTRATO FROM %1$s.CONTRATARON WHERE ID_ALOJAMIENTO = %2$S", 
+					USUARIO, 
+					idAlojamiento);
+			System.out.println(sql);
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+			ResultSet rs1 = prepStmt.executeQuery();
+			if(rs1.next())
+			{
+				Long id = rs1.getLong(1);
+				String sql2 = String.format("SELECT FECHAINICIO,FECHAFIN FROM %1$s.CONTRATOS WHERE ID = %2$S", 
+						USUARIO, 
+						id);
+				System.out.println(sql2);
+				PreparedStatement prepStm2 = conn.prepareStatement(sql2);
+				recursos.add(prepStm2);
+				ResultSet rs2 = prepStm2.executeQuery();
+				if(fechaInicio.after(rs2.getDate(1)) && fechaInicio.before(rs2.getDate(2)))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
@@ -232,5 +262,5 @@ public class DAOJoins
 		System.out.println(fechaActual.getTimeInMillis());
 		return new Date(fechaActual.getTimeInMillis());
 	}
-	
+
 }

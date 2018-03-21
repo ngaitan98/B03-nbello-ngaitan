@@ -218,6 +218,22 @@ public class AlohandesTransactionManager
 	public void addContrato(Long idCliente,Long idAlojamiento, Contrato contrato) throws Exception 
 	{
 		DAOJoins joins = new DAOJoins( );
+		if(contrato.getFechainicio().getTime() < joins.getCurrentDate().getTime())
+		{
+			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio debería ser después de la fecha actual.");
+			throw new Exception("La fecha de inicio debería ser después de la fecha actual.");
+		}
+		if(contrato.getFechainicio().getTime() > contrato.getFechafin().getTime())
+		{
+			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio debería ser antés de la fecha final.");
+			throw new Exception("la fecha de inicio debería ser antés de la fecha final.");
+		}
+		if(joins.estaOcupado(idAlojamiento, contrato.getFechainicio()))
+		{
+			//TODO verificar los que sobran y las fechas de fin.
+			System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
+			throw new Exception("Ya hay una reserva para estas fechas.");
+		}
 		try
 		{
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
@@ -227,7 +243,7 @@ public class AlohandesTransactionManager
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
 
 		}
-		catch (SQLException sqlException) {
+		catch (SQLException sqlException) {            
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
