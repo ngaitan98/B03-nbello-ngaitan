@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -139,10 +140,13 @@ public class AlohandesTransactionManager
 	// METODOS TRANSACCIONALES
 	//----------------------------------------------------------------------------------------------------------------------------------
 
-	public void addBebedor(Hotel hotel) throws Exception 
+	public void addHotel(Hotel hotel) throws Exception 
 	{
-
 		DAOJoins joins = new DAOJoins( );
+		if(joins.existeOperador(hotel.getId()))
+		{
+			throw new Exception("Ya existe un operador con el id " + hotel.getId());
+		}
 		try
 		{
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
@@ -176,7 +180,129 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
+	public void addPersona(PersonaNormal persona) throws Exception 
+	{
 
+		DAOJoins joins = new DAOJoins( );
+		if(joins.existeOperador(persona.getId()))
+		{
+			throw new Exception("Ya existe un operador con el id " + persona.getId());
+		}
+		try
+		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarPersonaNormal(persona);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void addDueno(DuenoVivienda dueno) throws Exception 
+	{
+
+		DAOJoins joins = new DAOJoins( );
+		if(joins.existeOperador(dueno.getId()))
+		{
+			throw new Exception("Ya existe un operador con el id " + dueno.getId());
+		}
+		try
+		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarDuenoVivienda(dueno);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void addHostal(Hostal hostal) throws Exception 
+	{
+
+		DAOJoins joins = new DAOJoins( );
+		if(joins.existeOperador(hostal.getId()))
+		{
+			throw new Exception("Ya existe un operador con el id " + hostal.getId());
+		}
+		try
+		{
+			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			joins.agregarHostal(hostal);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 	public void addAlojamiento(Long idOperador, Alojamiento a) throws Exception 
 	{
 		DAOJoins joins = new DAOJoins( );
@@ -218,17 +344,17 @@ public class AlohandesTransactionManager
 	public void addContrato(Long idCliente,Long idAlojamiento, Contrato contrato) throws Exception 
 	{
 		DAOJoins joins = new DAOJoins( );
-		if(contrato.getFechainicio().getTime() < joins.getCurrentDate().getTime())
+		if(contrato.getFechainicio().compareTo(getCurrentDate()) < 0)
 		{
-			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio debería ser después de la fecha actual.");
-			throw new Exception("La fecha de inicio debería ser después de la fecha actual.");
+			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deberï¿½a ser despuï¿½s de la fecha actual.");
+			throw new Exception("La fecha de inicio deberï¿½a ser despuï¿½s de la fecha actual.");
 		}
-		if(contrato.getFechainicio().getTime() > contrato.getFechafin().getTime())
+		if(contrato.getFechainicio().compareTo(contrato.getFechafin()) < 0)
 		{
-			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio debería ser antés de la fecha final.");
-			throw new Exception("la fecha de inicio debería ser antés de la fecha final.");
+			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deberï¿½a ser antï¿½s de la fecha final.");
+			throw new Exception("la fecha de inicio deberï¿½a ser antï¿½s de la fecha final.");
 		}
-		if(joins.estaOcupado(idAlojamiento, contrato.getFechainicio()))
+		if(joins.estaOcupado(idAlojamiento, contrato.getFechainicio(),contrato.getFechafin()))
 		{
 			//TODO verificar los que sobran y las fechas de fin.
 			System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
@@ -274,7 +400,6 @@ public class AlohandesTransactionManager
 		{
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
-			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
 			joins.agregarServicio( idAlojamiento, s);
 
@@ -329,9 +454,7 @@ public class AlohandesTransactionManager
 		}
 		try
 		{
-			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
-			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
 			joins.agregarCliente(c);
 
@@ -360,15 +483,112 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
-	private String getCurrentDate()
+	public void retirarOferta(Date fecha, Long idAlojamiento) throws Exception
 	{
-		Calendar fechaActual = Calendar.getInstance();
-		String cadenaFecha = String.format("%1$s-%2$s-%3$s",
-		  fechaActual.get(Calendar.YEAR),
-		  fechaActual.get(Calendar.MONTH)+1,
-		  fechaActual.get(Calendar.DAY_OF_MONTH));
-		return cadenaFecha;
+		DAOJoins joins = new DAOJoins();
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.ocultarAlojamiento(idAlojamiento, fecha);
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
 	}
-	
-
+	public void cancelarReserva(Long idContrato) throws Exception
+	{
+		DAOJoins joins = new DAOJoins();
+		double precio = 0;
+		Date[] inicioFin = joins.getContrato(idContrato);
+		if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 3)
+		{
+			if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 3)
+			{
+				precio = 0.1;
+			}
+			else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
+			{
+				precio = 0.3;
+			}
+			else
+			{
+				precio = 0.5;
+			}
+		}
+		else if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 7)
+		{
+			if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 7)
+			{
+				precio = 0.1;
+			}
+			else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
+			{
+				precio = 0.3;
+			}
+			else
+			{
+				precio = 0.5;
+			}
+		}
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.finalizarContrato(idContrato, precio);
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public Date getCurrentDate()
+	{		
+		Calendar fechaActual = Calendar.getInstance();
+		return new Date(fechaActual.getTimeInMillis());
+	}
+	public Integer diferenciaDias(Date fecha1, Date fecha2)
+	{
+		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24l));
+		return daysApart;
+	}
 }

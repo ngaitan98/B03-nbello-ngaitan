@@ -154,9 +154,39 @@ public class DAOJoins
 	{
 		alojamientos.alojar(id);
 	}
-	public void desOcuparAlojamiento(Long id) throws SQLException
+	public void ocultarAlojamiento(Long idAlojamiento, Date fecha) throws SQLException, Exception
 	{
-		alojamientos.desAlojar(id);
+		ResultSet alojamiento = alojamientos.findAlojamientoById(idAlojamiento);
+		if(alojamiento.next())
+		{
+			String sql = String.format("SELECT ID_CONTRATO FROM %1$s.CONTRATARON WHERE ID_ALOJAMIENTO = %2$S", 
+					USUARIO, 
+					idAlojamiento);
+			System.out.println(sql);
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+			ResultSet rs1 = prepStmt.executeQuery();
+			while(rs1.next())
+			{
+				Long id = rs1.getLong(1);
+				String sql2 = String.format("SELECT FECHAINICIO,FECHAFIN FROM %1$s.CONTRATOS WHERE ID = %2$S", 
+						USUARIO, 
+						id);
+				System.out.println(sql2);
+				PreparedStatement prepStm2 = conn.prepareStatement(sql2);
+				recursos.add(prepStm2);
+				ResultSet rs2 = prepStm2.executeQuery();
+				if(rs2.next())
+				{					
+					if((fecha.after(rs2.getDate(1)) && fecha.before(rs2.getDate(2)))||
+							fecha.equals(rs2.getDate(1)) || fecha.equals(rs2.getDate(2)))
+					{
+						throw new Exception("Aún existen reservas o ofertas en curso para la fecha indicada");
+					}
+				}
+			}
+		}
+		alojamientos.desAlojar(idAlojamiento);
 	}
 	public void finalizarContrato(Long id, Double precio) throws SQLException
 	{
@@ -170,7 +200,7 @@ public class DAOJoins
 	{
 		return clientes.findClienteByCorreo(correo).next();
 	}
-	public boolean estaOcupado(Long idAlojamiento, Date fechaInicio) throws SQLException, Exception
+	public boolean estaOcupado(Long idAlojamiento, Date fechaInicio, Date fechaFin) throws SQLException, Exception
 	{
 		ResultSet alojamiento = alojamientos.findAlojamientoById(idAlojamiento);
 		if(alojamiento.next())
@@ -182,7 +212,7 @@ public class DAOJoins
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
 			ResultSet rs1 = prepStmt.executeQuery();
-			if(rs1.next())
+			while(rs1.next())
 			{
 				Long id = rs1.getLong(1);
 				String sql2 = String.format("SELECT FECHAINICIO,FECHAFIN FROM %1$s.CONTRATOS WHERE ID = %2$S", 
@@ -192,13 +222,38 @@ public class DAOJoins
 				PreparedStatement prepStm2 = conn.prepareStatement(sql2);
 				recursos.add(prepStm2);
 				ResultSet rs2 = prepStm2.executeQuery();
-				if(fechaInicio.after(rs2.getDate(1)) && fechaInicio.before(rs2.getDate(2)))
-				{
-					return true;
+				if(rs2.next())
+				{					
+					if((fechaInicio.after(rs2.getDate(1)) && fechaInicio.before(rs2.getDate(2)))||
+							(fechaFin.after(rs2.getDate(1)) && fechaFin.before(rs2.getDate(2)))
+							|| fechaFin.equals(rs2.getDate(1)) || fechaFin.equals(rs2.getDate(2))
+							|| fechaInicio.equals(rs2.getDate(1)) || fechaInicio.equals(rs2.getDate(2)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 		return false;
+	}
+	public boolean existeOperador(Long id) throws SQLException, Exception
+	{
+		return hoteles.findHotelById(id).next() || hostales.findHostalById(id).next() || personas.findPersonaNormalById(id).next() || duenos.findDuenoViviendaById(id).next();
+	}
+	public Date[] getContrato(Long id) throws SQLException, Exception
+	{
+		ResultSet rs = contratos.findContratoById(id);
+		if(rs.next())
+		{
+			Date[] answ = new Date[2];
+			answ[0] = rs.getDate(2);
+			answ[1] = rs.getDate(3);
+			return answ;
+		}
+		else
+		{
+			throw new Exception("No existe un contrato con el id ingresado");
+		}
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
@@ -256,11 +311,4 @@ public class DAOJoins
 		}
 		return (long) 0;
 	}
-	public Date getCurrentDate()
-	{		
-		Calendar fechaActual = Calendar.getInstance();
-		System.out.println(fechaActual.getTimeInMillis());
-		return new Date(fechaActual.getTimeInMillis());
-	}
-
 }
