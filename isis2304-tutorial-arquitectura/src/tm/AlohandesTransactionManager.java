@@ -591,4 +591,84 @@ public class AlohandesTransactionManager
 		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24l));
 		return daysApart;
 	}
+
+	public ListaPersonaNormal darPersonasNormales() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public PersonaNormal darPersonaNormal(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaHotel darHoteles() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Hotel darHotel(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaHostal darHostales() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Hostal darHostal(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaDuenoVivienda darDuenosViviendas() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public DuenoVivienda darDuenoVivienda(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaContrato darContratos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Contrato darContrato(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaCliente darClientes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Cliente darCliente(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaServicio darServicios() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Servicio darServicio(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaAlojamientos darAlojamientos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Alojamiento darAlojamiento(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
