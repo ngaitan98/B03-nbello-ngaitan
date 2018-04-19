@@ -3,7 +3,7 @@ package rest;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -57,11 +57,11 @@ public class ClienteService
 		}
 		return Response.status(200).entity(cliente).build();
 	}
-	@PUT
-	@Path("/usuario")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addCliente(Long IdOperador, Cliente cliente) {
+		System.out.println("A");
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.addCliente(cliente);

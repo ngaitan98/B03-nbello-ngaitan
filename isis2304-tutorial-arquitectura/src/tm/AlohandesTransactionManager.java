@@ -37,7 +37,7 @@ public class AlohandesTransactionManager
 	/**
 	 * Atributo estatico que contiene el path absoluto del archivo que tiene los datos de la conexion
 	 */
-	private static String CONNECTION_DATA_PATH;
+	private String connectionDataPath;
 
 	/**
 	 * Constatne que representa el numero maximo de Bebedores que pueden haber en una ciudad
@@ -91,7 +91,7 @@ public class AlohandesTransactionManager
 	public AlohandesTransactionManager(String contextPathP) {
 
 		try {
-			CONNECTION_DATA_PATH = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
+			connectionDataPath = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
 			initializeConnectionData();
 		} 
 		catch (ClassNotFoundException e) {			
@@ -110,7 +110,7 @@ public class AlohandesTransactionManager
 	 */
 	private void initializeConnectionData() throws IOException, ClassNotFoundException {
 
-		FileInputStream fileInputStream = new FileInputStream(new File(AlohandesTransactionManager.CONNECTION_DATA_PATH));
+		FileInputStream fileInputStream = new FileInputStream(new File(this.connectionDataPath));
 		Properties properties = new Properties();
 
 		properties.load(fileInputStream);
