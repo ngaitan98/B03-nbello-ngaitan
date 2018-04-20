@@ -88,7 +88,7 @@ public class DAOContrato
 	}
 	public void finalizar(Long id, Double nuevoPrecio) throws SQLException
 	{
-		String sql = String.format("UPDATE %1$s.CONTRATOS SET FINALIZADO = 1, COSTO = COSTO*%3$d WHERE ID = '%2$s'", USUARIO, id, nuevoPrecio);
+		String sql = String.format("UPDATE %1$s.CONTRATOS SET FINALIZADO = 1, PRECIO = PRECIO * %3$s WHERE ID = %2$s", USUARIO, id, nuevoPrecio);
 		System.out.println(sql);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);

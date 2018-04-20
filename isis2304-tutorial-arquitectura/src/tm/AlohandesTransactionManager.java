@@ -222,10 +222,6 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			joins = new DAOJoins( );
 			joins.setConn(this.conn);
-			if(joins.existeOperador(dueno.getId()))
-			{
-				throw new Exception("Ya existe un operador con el id " + dueno.getId());
-			}
 		}
 
 		catch (SQLException sqlException) {
@@ -490,14 +486,16 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
-	public void retirarOferta(Date fecha, Long idAlojamiento) throws Exception
+	public void retirarOferta(String a, Long idAlojamiento) throws Exception
 	{
 		DAOJoins joins = new DAOJoins();
 		try
 		{
 			this.conn = darConexion();
 			joins.setConn(this.conn);
-			joins.ocultarAlojamiento(idAlojamiento, fecha);
+			System.out.println(a);
+			System.out.println(parseDateTime(a));
+			joins.ocultarAlojamiento(idAlojamiento, parseDateTime(a));
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -526,42 +524,42 @@ public class AlohandesTransactionManager
 	public void cancelarReserva(Long idContrato) throws Exception
 	{
 		DAOJoins joins = new DAOJoins();
-		double precio = 0;
-		Date[] inicioFin = joins.getContrato(idContrato);
-		if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 3)
-		{
-			if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 3)
-			{
-				precio = 0.1;
-			}
-			else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
-			{
-				precio = 0.3;
-			}
-			else
-			{
-				precio = 0.5;
-			}
-		}
-		else if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 7)
-		{
-			if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 7)
-			{
-				precio = 0.1;
-			}
-			else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
-			{
-				precio = 0.3;
-			}
-			else
-			{
-				precio = 0.5;
-			}
-		}
 		try
 		{
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			double precio = 1;
+			Date[] inicioFin = joins.getContrato(idContrato);
+			if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 3)
+			{
+				if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 3)
+				{
+					precio = 0.1;
+				}
+				else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
+				{
+					precio = 0.3;
+				}
+				else
+				{
+					precio = 0.5;
+				}
+			}
+			else if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 7)
+			{
+				if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 7)
+				{
+					precio = 0.1;
+				}
+				else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
+				{
+					precio = 0.3;
+				}
+				else
+				{
+					precio = 0.5;
+				}
+			}
 			joins.finalizarContrato(idContrato, precio);
 		}
 		catch (SQLException sqlException) {
@@ -595,7 +593,7 @@ public class AlohandesTransactionManager
 	}
 	public static Date parseDateTime(String dateString) {
 	    if (dateString == null) return null;
-	    DateFormat fmt = new SimpleDateFormat("yyyy-mm-dd");
+	    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 	    try {
 	        return new Date(fmt.parse(dateString).getTime());
 	    }

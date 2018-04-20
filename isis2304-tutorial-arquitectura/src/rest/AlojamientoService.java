@@ -1,5 +1,7 @@
 package rest;
 
+import java.sql.Date;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,7 +17,7 @@ import tm.AlohandesTransactionManager;
 import vos.Alojamiento;
 import vos.ListaAlojamientos;
 
-@Path("/operadores/{idOperador}/alojamientos")
+@Path("/operadores/{idOperador}/alojamientos/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AlojamientoService 
@@ -71,5 +73,17 @@ public class AlojamientoService
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		return Response.status(200).entity(alojamiento).build();
+	}
+	@PUT
+	@Path("{idAlojamiento}/fecha/{fec}")
+	public Response retirarOferta(@javax.ws.rs.PathParam("idAlojamiento")Long id,@javax.ws.rs.PathParam("fec")String fecha)
+	{
+		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+		try {
+			tm.retirarOferta(fecha, id);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).build();
 	}
 }

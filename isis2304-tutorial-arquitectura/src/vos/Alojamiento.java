@@ -22,12 +22,14 @@ public class Alojamiento
 	private String tipo;
 	@JsonProperty(value = "ocupado")
 	private Integer ocupado;
+	@JsonProperty(value = "fechaRetiro")
+	private String fechaRetiro;
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 	public Alojamiento( @JsonProperty(value = "id")Long id, @JsonProperty(value = "numeroCupos")Integer numeroCupos, 
 			@JsonProperty(value = "costoBase")Integer costoBase, @JsonProperty(value = "ubicacion") String ubicacion, 	@JsonProperty(value = "tipo") String tipo,
-			@JsonProperty(value = "ocupado") Integer ocupado)
+			@JsonProperty(value = "ocupado") Integer ocupado, @JsonProperty(value = "fechaRetiro") String fechaRetiro)
 	{
 		this.id = id;
 		this.numeroCupos = numeroCupos;
@@ -35,11 +37,20 @@ public class Alojamiento
 		this.ubicacion = ubicacion;
 		this.tipo = tipo;
 		this.ocupado = ocupado;
+		this.fechaRetiro = fechaRetiro;
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE LA CLASE
 	//----------------------------------------------------------------------------------------------------------------------------------
+
+	public String getFechaRetiro() {
+		return fechaRetiro;
+	}
+
+	public void setFechaRetiro(String fechaRetiro) {
+		this.fechaRetiro = fechaRetiro;
+	}
 
 	public long getId() {
 		return id;

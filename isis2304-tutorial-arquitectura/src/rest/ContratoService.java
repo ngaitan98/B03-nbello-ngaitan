@@ -17,7 +17,7 @@ import vos.Contrato;
 import vos.ListaAlojamientos;
 import vos.ListaContrato;
 
-@Path("/clientes/{idCliente}/alojamientos/{idAlojamiento}/contratos")
+@Path("/clientes/{idCliente}")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ContratoService {
@@ -33,17 +33,29 @@ public class ContratoService {
 	}
 	
 	@POST
+	@Path("/alojamientos/{idAlojamiento}/contratos")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addContrato(@javax.ws.rs.PathParam("idCliente")Long idCliente, @javax.ws.rs.PathParam("idAlojamiento") Long idAlojamiento, Contrato contrato) {
-		System.out.println("bout 2 start");
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			System.out.println("bout 2 add");
 			tm.addContrato(idCliente, idAlojamiento, contrato);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e) + "Hola").build();
 		}
 		return Response.status(200).entity(contrato).build();
+	}
+	@PUT
+	@Path("/contratos/{idContrato}")
+	public Response cancelarContrato(@javax.ws.rs.PathParam("idContrato") Long id)
+	{
+		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+		try {
+			System.out.println(":)");
+			tm.cancelarReserva(id);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e) + "Hola").build();
+		}
+		return Response.status(200).build();
 	}
 }

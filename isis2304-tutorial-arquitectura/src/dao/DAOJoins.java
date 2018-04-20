@@ -183,9 +183,12 @@ public class DAOJoins
 				System.out.println(sql2);
 				PreparedStatement prepStm2 = conn.prepareStatement(sql2);
 				recursos.add(prepStm2);
-				ResultSet rs2 = prepStm2.executeQuery();
+				ResultSet rs2 = prepStm2.executeQuery();getClass();
 				if(rs2.next())
-				{					
+				{		
+					System.out.println(fecha);
+					System.out.println(rs2.getDate(1));
+					System.out.println(rs2.getDate(2));
 					if((fecha.after(rs2.getDate(1)) && fecha.before(rs2.getDate(2)))||
 							fecha.equals(rs2.getDate(1)) || fecha.equals(rs2.getDate(2)))
 					{
@@ -245,7 +248,7 @@ public class DAOJoins
 		}
 		return false;
 	}
-	public boolean existeOperador(Long id) throws SQLException, Exception
+	public boolean existeCorreoOperador(Long id) throws SQLException, Exception
 	{
 		return hoteles.findHotelById(id).next() || hostales.findHostalById(id).next() || personas.findPersonaNormalById(id).next() || duenos.findDuenoViviendaById(id).next();
 	}
