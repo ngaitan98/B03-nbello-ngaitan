@@ -238,6 +238,7 @@ public class DAOJoins
 							|| fechaFin.equals(rs2.getDate(1)) || fechaFin.equals(rs2.getDate(2))
 							|| fechaInicio.equals(rs2.getDate(1)) || fechaInicio.equals(rs2.getDate(2)))
 					{
+						System.out.println("Holiwi");
 						return true;
 					}
 				}
@@ -257,6 +258,7 @@ public class DAOJoins
 			Date[] answ = new Date[2];
 			answ[0] = rs.getDate(2);
 			answ[1] = rs.getDate(3);
+			
 			return answ;
 		}
 		else

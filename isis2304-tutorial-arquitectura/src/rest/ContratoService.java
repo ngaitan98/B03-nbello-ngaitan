@@ -31,47 +31,18 @@ public class ContratoService {
 	private String doErrorMessage (Exception e) {
 		return "{\"ERROR\": \"" + e.getMessage() + "\"}";
 	}
-	@GET 
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response getContratos()
-	{
-		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
-		ListaContrato contratos;
-		try {
-			contratos = tm.darContratos();
-		}
-		catch (Exception e)
-		{
-			return Response.status(500).entity(doErrorMessage(e)).build();
-		}
-		return Response.status(200).entity(contratos).build();
-	}
-	@GET 
-	@Path("/{id}")
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response getContrato(@javax.ws.rs.PathParam("id") String id)
-	{
-		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
-		Contrato contratos;
-		try {
-			contratos = tm.darContrato(id);
-		}
-		catch (Exception e)
-		{
-			return Response.status(500).entity(doErrorMessage(e)).build();
-		}
-		return Response.status(200).entity(contratos).build();
-	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addContrato(@javax.ws.rs.PathParam("idCliente")Long idCliente, @javax.ws.rs.PathParam("idAlojamiento") Long idAlojamiento, Contrato contrato) {
+		System.out.println("bout 2 start");
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
+			System.out.println("bout 2 add");
 			tm.addContrato(idCliente, idAlojamiento, contrato);
 		} catch (Exception e) {
-			return Response.status(500).entity(doErrorMessage(e)).build();
+			return Response.status(500).entity(doErrorMessage(e) + "Hola").build();
 		}
 		return Response.status(200).entity(contrato).build();
 	}

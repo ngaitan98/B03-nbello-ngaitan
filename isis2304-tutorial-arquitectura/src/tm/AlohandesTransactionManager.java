@@ -10,6 +10,9 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 
@@ -342,9 +345,12 @@ public class AlohandesTransactionManager
 
 	public void addContrato(Long idCliente,Long idAlojamiento, Contrato contrato) throws Exception 
 	{
+		Date fi = parseDateTime(contrato.getFechainicio());
+		Date ff = parseDateTime(contrato.getFechafin());
+		contrato.setFechaCreacion(getCurrentDate().toString());
+		Date fc = parseDateTime(contrato.getFechaCreacion());
 		DAOJoins joins = null;
 		try{
-
 			joins = new DAOJoins( );
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
@@ -352,22 +358,20 @@ public class AlohandesTransactionManager
 			if(this.conn!=null){
 				this.conn.close();					
 			}
-			if(contrato.getFechainicio().compareTo(getCurrentDate()) < 0)
+			System.out.println(diferenciaDias(fi, fc) + "@@@@@@@@@@@");
+			System.out.println(diferenciaDias(fi, ff)+ "@@@@@@@@@@@");
+			if(diferenciaDias(fi, ff) < 0)
 			{
-				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser despu�s de la fecha actual.");
-				throw new Exception("La fecha de inicio deber�a ser despu�s de la fecha actual.");
-			}
-			if(contrato.getFechainicio().compareTo(contrato.getFechafin()) < 0)
-			{
-				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final.");
+				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
 			}
-			if(joins.estaOcupado(idAlojamiento, contrato.getFechainicio(),contrato.getFechafin()))
+			if(joins.estaOcupado(idAlojamiento, fi,ff))
 			{
 				//TODO verificar los que sobran y las fechas de fin.
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
 				throw new Exception("Ya hay una reserva para estas fechas.");
 			}
+			System.out.println("Ba bai filters");
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
 		}
 		catch (SQLException sqlException) {            
@@ -592,9 +596,21 @@ public class AlohandesTransactionManager
 		Calendar fechaActual = Calendar.getInstance();
 		return new Date(fechaActual.getTimeInMillis());
 	}
+	public static Date parseDateTime(String dateString) {
+	    if (dateString == null) return null;
+	    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	    try {
+	        return new Date(fmt.parse(dateString).getTime());
+	    }
+	    catch (ParseException e) {
+	    	e.printStackTrace();
+	        System.out.println( "Could not parse datetime: " + dateString);
+	        return null;
+	    }
+	}
 	public Integer diferenciaDias(Date fecha1, Date fecha2)
 	{
-		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24l));
+		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
 		return daysApart;
 	}
 

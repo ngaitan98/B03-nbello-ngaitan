@@ -12,11 +12,11 @@ public class Contrato
 	@JsonProperty(value = "id")
 	private Long id;
 	@JsonProperty(value = "fechainicio")
-	private Date fechainicio;
+	private String fechainicio;
 	@JsonProperty(value = "fechafin")
-	private Date fechafin;
+	private String fechafin;
 	@JsonProperty(value = "fechaCreacion")
-	private Date fechaCreacion;
+	private String fechaCreacion;
 	@JsonProperty(value = "precio")
 	private Double precio;
 	@JsonProperty(value = "finalizado")
@@ -25,9 +25,8 @@ public class Contrato
 	private Integer cantidadPersonas;
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
-	//----------------------------------------------------------------------------------------------------------------------------------
-	public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin,
-			@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, @JsonProperty(value = "cantidadPersonas") Integer cantidadPersonas,
+	public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")String fechainicio, @JsonProperty(value = "fechafin") String fechafin,
+			@JsonProperty(value = "fechaCreacion") String fechaCreacion, @JsonProperty(value = "precio") Double precio, @JsonProperty(value = "cantidadPersonas") Integer cantidadPersonas,
 			@JsonProperty(value = "finalizado")Integer finalizado)
 	{
 		this.id = id;
@@ -47,16 +46,16 @@ public class Contrato
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Date getFechainicio() {
+	public String getFechainicio() {
 		return fechainicio;
 	}
-	public void setFechainicio(Date fechainicio) {
+	public void setFechainicio(String fechainicio) {
 		this.fechainicio = fechainicio;
 	}
-	public Date getFechafin() {
+	public String getFechafin() {
 		return fechafin;
 	}
-	public void setFechafin(Date fechafin) {
+	public void setFechafin(String fechafin) {
 		this.fechafin = fechafin;
 	}
 	public Double getPrecio() {
@@ -65,10 +64,10 @@ public class Contrato
 	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
-	public Date getFechaCreacion() {
+	public String getFechaCreacion() {
 		return fechaCreacion;
 	}
-	public void setFechaCreacion(Date fechaCreacion) {
+	public void setFechaCreacion(String fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 	public Integer getFinalizado() {
