@@ -347,19 +347,26 @@ public class AlohandesTransactionManager
 	{
 		Date fi = parseDateTime(contrato.getFechainicio());
 		Date ff = parseDateTime(contrato.getFechafin());
-		contrato.setFechaCreacion(getCurrentDate().toString());
-		Date fc = parseDateTime(contrato.getFechaCreacion());
+		Date fc = getCurrentDate();
+		System.out.println(fi);
+		System.out.println(ff);
+		System.out.println(fc);
+		contrato.setFechaCreacion(fc.toString());
+		contrato.setFechainicio(fi.toString());
+		contrato.setFechafin(ff.toString());
+
 		DAOJoins joins = null;
 		try{
 			joins = new DAOJoins( );
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
-			if(this.conn!=null){
-				this.conn.close();					
+			
+			if(diferenciaDias(fc, fi) > 0)
+			{
+				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser después de la fecha de creacion del contrato." + diferenciaDias(fi, ff));
+				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
 			}
-			System.out.println(diferenciaDias(fi, fc) + "@@@@@@@@@@@");
-			System.out.println(diferenciaDias(fi, ff)+ "@@@@@@@@@@@");
 			if(diferenciaDias(fi, ff) < 0)
 			{
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final." + diferenciaDias(fi, ff));
@@ -368,11 +375,14 @@ public class AlohandesTransactionManager
 			if(joins.estaOcupado(idAlojamiento, fi,ff))
 			{
 				//TODO verificar los que sobran y las fechas de fin.
+				System.out.println("Holiwis Filters");
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
 				throw new Exception("Ya hay una reserva para estas fechas.");
 			}
-			System.out.println("Ba bai filters");
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
+			if(this.conn!=null){
+				this.conn.close();					
+			}
 		}
 		catch (SQLException sqlException) {            
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -598,7 +608,7 @@ public class AlohandesTransactionManager
 	}
 	public static Date parseDateTime(String dateString) {
 	    if (dateString == null) return null;
-	    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	    DateFormat fmt = new SimpleDateFormat("yyyy-mm-dd");
 	    try {
 	        return new Date(fmt.parse(dateString).getTime());
 	    }

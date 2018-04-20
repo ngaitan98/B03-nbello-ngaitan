@@ -81,8 +81,7 @@ public class DAOAlojamiento
 	public ResultSet findAlojamientoById(Long id) throws SQLException, Exception 
 	{
 
-		String sql = String.format("SELECT * FROM %1$s.ALOJAMIENTOS WHERE ID = %2$d", USUARIO, id); 
-
+		String sql = String.format("SELECT * FROM %1$s.ALOJAMIENTOS WHERE ID = %2$s", USUARIO, id.toString()); 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();

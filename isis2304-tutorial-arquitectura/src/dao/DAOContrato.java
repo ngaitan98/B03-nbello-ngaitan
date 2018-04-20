@@ -52,7 +52,7 @@ public class DAOContrato
 	public void addContrato(Contrato contrato) throws SQLException, Exception 
 	{
 		String sql = String.format("INSERT INTO %1$s.CONTRATOS (ID, FECHAINICIO, FECHAFIN, PRECIO, FECHACREACION, FINALIZADO, CANTIDADPERSONAS) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', %8$s)", 
+				+ "VALUES (%2$s, TO_DATE('%3$s', 'YYYY-MM-DD'), TO_DATE('%4$s', 'YYYY-MM-DD'), %5$s, TO_DATE('%6$s', 'YYYY-MM-DD'), '%7$s', %8$s)", 
 				USUARIO, 
 				contrato.getId(), 
 				contrato.getFechainicio(),

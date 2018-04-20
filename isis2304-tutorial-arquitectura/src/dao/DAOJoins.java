@@ -211,9 +211,11 @@ public class DAOJoins
 	}
 	public boolean estaOcupado(Long idAlojamiento, Date fechaInicio, Date fechaFin) throws SQLException, Exception
 	{
+		System.out.println("Holiwis ocupadines");
 		ResultSet alojamiento = alojamientos.findAlojamientoById(idAlojamiento);
 		if(alojamiento.next())
 		{
+			System.out.println("Holiwis primer next");
 			String sql = String.format("SELECT ID_CONTRATO FROM %1$s.CONTRATARON WHERE ID_ALOJAMIENTO = %2$S", 
 					USUARIO, 
 					idAlojamiento);
