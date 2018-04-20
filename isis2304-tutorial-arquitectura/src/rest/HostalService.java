@@ -3,6 +3,7 @@ package rest;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,7 +24,7 @@ public class HostalService {
 	private ServletContext context;
 	
 	private String getPath() {
-		return context.getRealPath("WEB_INF/ConnectionData");
+		return context.getRealPath("WEB-INF/ConnectionData");
 	}
 	private String doErrorMessage (Exception e) {
 		return "{\"ERROR\": \"" + e.getMessage() + "\"}";
@@ -59,8 +60,7 @@ public class HostalService {
 		}
 		return Response.status(200).entity(hostales).build();
 	}
-	@PUT
-	@Path("/hostal")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addHostal( Hostal hostales) {

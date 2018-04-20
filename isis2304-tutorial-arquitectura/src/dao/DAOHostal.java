@@ -52,7 +52,7 @@ public class DAOHostal
 	public void addHostal (Hostal hostal) throws SQLException, Exception
 	{
 		String sentencia = String.format("INSERT INTO %1$s.HOSTALES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, DOCUMENTO, HORAINICIO, HORAFIN) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s', %9$s, %10$s)", 
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s', '%9$s', %10$s, %11$s)", 
 				USUARIO,
 				hostal.getId(),
 				hostal.getLogin(),

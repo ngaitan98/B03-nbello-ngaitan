@@ -206,16 +206,13 @@ public class DAOJoins
 	}
 	public boolean existeCorreoCliente(String correo) throws SQLException, Exception
 	{
-		System.out.println("Existe");
 		return clientes.findClienteByCorreo(correo).next();
 	}
 	public boolean estaOcupado(Long idAlojamiento, Date fechaInicio, Date fechaFin) throws SQLException, Exception
 	{
-		System.out.println("Holiwis ocupadines");
 		ResultSet alojamiento = alojamientos.findAlojamientoById(idAlojamiento);
 		if(alojamiento.next())
 		{
-			System.out.println("Holiwis primer next");
 			String sql = String.format("SELECT ID_CONTRATO FROM %1$s.CONTRATARON WHERE ID_ALOJAMIENTO = %2$S", 
 					USUARIO, 
 					idAlojamiento);
@@ -260,7 +257,7 @@ public class DAOJoins
 			Date[] answ = new Date[2];
 			answ[0] = rs.getDate(2);
 			answ[1] = rs.getDate(3);
-			
+
 			return answ;
 		}
 		else
@@ -314,7 +311,7 @@ public class DAOJoins
 	}
 	public Long getCurrentIdOperador() throws SQLException, Exception
 	{
-		String sql = String.format("SELECT MAX(ID_OPERADOR) FROM %1$s.OFRECEN", USUARIO);
+		String sql = String.format("SELECT MAX(IND) FROM (SELECT MAX(HOTELES.ID) AS IND FROM HOTELES UNION ALL SELECT MAX(HOSTALES.ID) AS IND FROM HOSTALES UNION ALL SELECT MAX(DUENOVIVIENDA.ID) AS IND FROM DUENOVIVIENDA UNION ALL SELECT MAX(PERSONASNORMALES.ID) AS IND FROM PERSONASNORMALES)");
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);

@@ -258,16 +258,13 @@ public class AlohandesTransactionManager
 	{
 
 		DAOJoins joins = new DAOJoins( );
-		if(joins.existeOperador(hostal.getId()))
-		{
-			throw new Exception("Ya existe un operador con el id " + hostal.getId());
-		}
 		try
 		{
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			hostal.setId(joins.getCurrentIdOperador());
 			joins.agregarHostal(hostal);
 
 		}
