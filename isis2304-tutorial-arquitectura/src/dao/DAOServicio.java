@@ -52,7 +52,7 @@ public class DAOServicio
 	public void addServicio(Servicio servicio) throws SQLException, Exception 
 	{
 		String sql = String.format("INSERT INTO %1$s.SERVICIOS (ID, NOMBRE, DESCRIPCION, COSTOAGREGADO) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s')", 
+				+ "VALUES (%2$s, '%3$s', '%4$s', %5$s)", 
 				USUARIO, 
 				servicio.getId(),
 				servicio.getNombre(),

@@ -17,6 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/Users/pandac/Downloads/wildfly-10.1.0.Final/jboss-modules.jar"/>
+	<classpathentry kind="lib" path="/Users/pandac/Desktop/wildfly-10.1.0.Final/jboss-modules.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

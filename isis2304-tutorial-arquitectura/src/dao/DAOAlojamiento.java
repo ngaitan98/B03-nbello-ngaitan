@@ -51,20 +51,23 @@ public class DAOAlojamiento
 	 */
 	public void addAlojamiento(Alojamiento alojamiento) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.ALOJAMIENTOS (ID, NUMEROCUPOS, TIPO, COSTOBASE, DIRECCION, OCUPADO)"
-				+ "VALUES (%2$s, %3$s, '%4$s', %5$s, '%6s', '%7s')", 
+		System.out.println(alojamiento.getOcupado().toString().trim());
+		System.out.println(alojamiento.getUbicacion());
+		String sql = String.format("INSERT INTO %1$s.ALOJAMIENTOS (ID, NUMERODECUPOS, TIPOALOJAMIENTO, COSTOBASE, DIRECCION, OCUPADA)"
+				+ "VALUES (%2$s, %3$s, '%4$s', %5$s, '%6$s', '%7$s')", 
 				USUARIO, 
 				alojamiento.getId(),
 				alojamiento.getNumeroCupos(),
 				alojamiento.getTipo(),
 				alojamiento.getCostoBase(),
 				alojamiento.getUbicacion(),
-				alojamiento.getOcupado());
+				alojamiento.getOcupado().toString().charAt(alojamiento.getOcupado().toString().length() - 1));
 
 				System.out.println(sql);
 				PreparedStatement prepStmt = conn.prepareStatement(sql);
 				recursos.add(prepStmt);
 				prepStmt.executeQuery();
+				System.out.println("agrega");
 	}
 	/**
 	 * Metodo que obtiene la informacion del hotel en la Base de Datos que tiene el identificador dado por parametro<br/>

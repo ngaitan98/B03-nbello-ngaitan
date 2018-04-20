@@ -51,7 +51,7 @@ public class DAOCliente
 	public void addCliente(Cliente cliente) throws SQLException, Exception 
 	{
 		String sql = String.format("INSERT INTO %1$s.CLIENTES (ID, LOGIN, PASSWORD, NOMBRE, CORREO, DOCUMENTO) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6s', '%7s')", 
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s')", 
 				USUARIO, 
 				cliente.getId(),
 				cliente.getLogin(),
@@ -94,7 +94,7 @@ public class DAOCliente
 	public void deleteCliente(Long id) throws SQLException, Exception 
 	{
 
-		String sql = String.format("DELETE FROM %1$s.CLIENTES WHERE ID = %2$d", USUARIO, id);
+		String sql = String.format("DELETE FROM %1$s.CLIENTES WHERE ID = %2$s", USUARIO, id);
 
 		System.out.println(sql);
 		
@@ -113,7 +113,7 @@ public class DAOCliente
 	 */
 	public ResultSet findClienteByLogin(String login) throws SQLException, Exception 
 	{
-		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE LOGIN = %2$d", USUARIO, login); 
+		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE LOGIN = '%2$s'", USUARIO, login); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -131,9 +131,9 @@ public class DAOCliente
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
 	public ResultSet findClienteByCorreo(String correo) throws SQLException, Exception 
-	{
-		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE CORREO = %2$d", USUARIO, correo); 
-
+	{		
+		String sql = String.format("SELECT * FROM %1$s.CLIENTES WHERE CORREO = '%2$s'", USUARIO, correo); 
+		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();

@@ -23,16 +23,12 @@ public class Contrato
 	private Integer finalizado;
 	@JsonProperty(value = "cantidadPersonas")
 	private Integer cantidadPersonas;
-	@JsonProperty(value = "cliente")
-	private Cliente cliente;
-	@JsonProperty(value = "alojamiento")
-	private Alojamiento alojamiento;
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 	public Contrato(@JsonProperty(value = "id")Long id, @JsonProperty(value = "fechainicio")Date fechainicio, @JsonProperty(value = "fechafin") Date fechafin,
 			@JsonProperty(value = "fechaCreacion") Date fechaCreacion, @JsonProperty(value = "precio") Double precio, @JsonProperty(value = "cantidadPersonas") Integer cantidadPersonas,
-			@JsonProperty(value = "finalizado")Integer finalizado,	@JsonProperty(value = "cliente") Cliente cliente, @JsonProperty(value = "alojamiento") Alojamiento alojamiento )
+			@JsonProperty(value = "finalizado")Integer finalizado)
 	{
 		this.id = id;
 		this.fechainicio = fechainicio;
@@ -40,8 +36,6 @@ public class Contrato
 		this.precio= precio;
 		this.fechaCreacion = fechaCreacion;
 		this.finalizado = finalizado;
-		this.cliente = cliente;
-		this.alojamiento = alojamiento;
 		this.cantidadPersonas = cantidadPersonas;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -86,18 +80,6 @@ public class Contrato
 	public boolean isFinalizado()
 	{
 		return finalizado == 1;
-	}
-	public Cliente getCliente() {
-		return cliente;
-	}
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-	public Alojamiento getAlojamiento() {
-		return alojamiento;
-	}
-	public void setAlojamiento(Alojamiento alojamiento) {
-		this.alojamiento = alojamiento;
 	}
 	public Integer getCanitadPersonas() {
 		return cantidadPersonas;

@@ -80,8 +80,8 @@ public class DAOHotel
 	public ResultSet findHotelById(Long id) throws SQLException, Exception 
 	{
 
-		String sql = String.format("SELECT * FROM %1$s.HOTELES WHERE ID = %2$d", USUARIO, id); 
-
+		String sql = String.format("SELECT * FROM %1$s.HOTELES WHERE ID = %2$s", USUARIO, id); 
+		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();

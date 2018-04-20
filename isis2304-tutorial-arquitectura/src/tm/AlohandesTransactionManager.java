@@ -37,7 +37,7 @@ public class AlohandesTransactionManager
 	/**
 	 * Atributo estatico que contiene el path absoluto del archivo que tiene los datos de la conexion
 	 */
-	private String connectionDataPath;
+	private static String connectionDataPath;
 
 	/**
 	 * Constatne que representa el numero maximo de Bebedores que pueden haber en una ciudad
@@ -223,21 +223,18 @@ public class AlohandesTransactionManager
 	}
 	public void addDueno(DuenoVivienda dueno) throws Exception 
 	{
-
-		DAOJoins joins = new DAOJoins( );
-		if(joins.existeOperador(dueno.getId()))
-		{
-			throw new Exception("Ya existe un operador con el id " + dueno.getId());
-		}
+		DAOJoins joins = null;
 		try
-		{
-			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+		{			
 			this.conn = darConexion();
-			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins = new DAOJoins( );
 			joins.setConn(this.conn);
-			joins.agregarDuenoVivienda(dueno);
-
+			if(joins.existeOperador(dueno.getId()))
+			{
+				throw new Exception("Ya existe un operador con el id " + dueno.getId());
+			}
 		}
+
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
@@ -250,6 +247,8 @@ public class AlohandesTransactionManager
 		} 
 		finally {
 			try {
+				dueno.setId(joins.getCurrentIdOperador());
+				joins.agregarDuenoVivienda(dueno);
 				joins.cerrarRecursos();
 				if(this.conn!=null){
 					this.conn.close();					
@@ -343,31 +342,33 @@ public class AlohandesTransactionManager
 
 	public void addContrato(Long idCliente,Long idAlojamiento, Contrato contrato) throws Exception 
 	{
-		DAOJoins joins = new DAOJoins( );
-		if(contrato.getFechainicio().compareTo(getCurrentDate()) < 0)
-		{
-			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser despu�s de la fecha actual.");
-			throw new Exception("La fecha de inicio deber�a ser despu�s de la fecha actual.");
-		}
-		if(contrato.getFechainicio().compareTo(contrato.getFechafin()) < 0)
-		{
-			System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final.");
-			throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
-		}
-		if(joins.estaOcupado(idAlojamiento, contrato.getFechainicio(),contrato.getFechafin()))
-		{
-			//TODO verificar los que sobran y las fechas de fin.
-			System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
-			throw new Exception("Ya hay una reserva para estas fechas.");
-		}
-		try
-		{
-			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+		DAOJoins joins = null;
+		try{
+
+			joins = new DAOJoins( );
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			if(this.conn!=null){
+				this.conn.close();					
+			}
+			if(contrato.getFechainicio().compareTo(getCurrentDate()) < 0)
+			{
+				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser despu�s de la fecha actual.");
+				throw new Exception("La fecha de inicio deber�a ser despu�s de la fecha actual.");
+			}
+			if(contrato.getFechainicio().compareTo(contrato.getFechafin()) < 0)
+			{
+				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final.");
+				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
+			}
+			if(joins.estaOcupado(idAlojamiento, contrato.getFechainicio(),contrato.getFechafin()))
+			{
+				//TODO verificar los que sobran y las fechas de fin.
+				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
+				throw new Exception("Ya hay una reserva para estas fechas.");
+			}
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
-
 		}
 		catch (SQLException sqlException) {            
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -431,8 +432,7 @@ public class AlohandesTransactionManager
 	public void addCliente(Cliente c) throws SQLException, Exception
 	{
 		try {
-			
-			if(!c.getCorreo().split("@")[2].equals("uniandes.edu.co"))
+			if(!c.getCorreo().split("@")[1].equals("uniandes.edu.co"))
 			{
 				System.err.println("[EXCEPTION] Logic Exception:" + "Es necesario que envie un documento que demustre su relación con la universidad.");
 				throw new Exception("Es necesario que envie un documento que demustre su relación con la universidad.");
@@ -441,7 +441,14 @@ public class AlohandesTransactionManager
 			System.err.println("[EXCEPTION] General Exception: " + "El correo no tiene un formato válido");
 			throw new Exception("El correo no tiene un formato válido");
 		}
-		DAOJoins joins = new DAOJoins( );
+		DAOJoins joins;
+		try {
+			joins = new DAOJoins( );
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+		} catch (Exception e) {
+			throw e;
+		}
 		if(joins.existeCorreoCliente(c.getCorreo()))
 		{
 			System.err.println("[EXCEPTION] Logic Exception: " + "Ya existe un usuario con el correo: " + c.getCorreo());
@@ -454,8 +461,7 @@ public class AlohandesTransactionManager
 		}
 		try
 		{
-			this.conn = darConexion();
-			joins.setConn(this.conn);
+			c.setId(joins.getCurrentIdCliente());
 			joins.agregarCliente(c);
 
 		}
@@ -646,12 +652,6 @@ public class AlohandesTransactionManager
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public Cliente darCliente(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public ListaServicio darServicios() {
 		// TODO Auto-generated method stub
 		return null;

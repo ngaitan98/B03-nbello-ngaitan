@@ -83,7 +83,7 @@ public class DAOHostal
 
 	public ResultSet findHostalById (Long id) throws SQLException, Exception
 	{
-		String sentencia = String.format("SELECT * FROM %1$s.HOSTALES WHERE ID = %2$d", USUARIO, id); 
+		String sentencia = String.format("SELECT * FROM %1$s.HOSTALES WHERE ID = %2$s", USUARIO, id); 
 		PreparedStatement prepStmt = conn.prepareStatement(sentencia);
 		recursos.add(prepStmt);
 		ResultSet result = prepStmt.executeQuery();

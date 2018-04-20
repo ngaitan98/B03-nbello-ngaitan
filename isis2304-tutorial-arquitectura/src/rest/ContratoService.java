@@ -3,6 +3,7 @@ package rest;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,14 +17,16 @@ import vos.Contrato;
 import vos.ListaAlojamientos;
 import vos.ListaContrato;
 
-@Path("/contratos")
+@Path("/clientes/{idCliente}/alojamientos/{idAlojamiento}/contratos")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ContratoService {
 
 	@Context
 	private ServletContext context;
 	
 	private String getPath() {
-		return context.getRealPath("WEB_INF/ConnectionData");
+		return context.getRealPath("WEB-INF/ConnectionData");
 	}
 	private String doErrorMessage (Exception e) {
 		return "{\"ERROR\": \"" + e.getMessage() + "\"}";
@@ -60,11 +63,10 @@ public class ContratoService {
 		return Response.status(200).entity(contratos).build();
 	}
 	
-	@PUT
-	@Path("/contrato")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addContrato(Long idCliente, Long idAlojamiento, Contrato contrato) {
+	public Response addContrato(@javax.ws.rs.PathParam("idCliente")Long idCliente, @javax.ws.rs.PathParam("idAlojamiento") Long idAlojamiento, Contrato contrato) {
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.addContrato(idCliente, idAlojamiento, contrato);

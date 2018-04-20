@@ -11,7 +11,7 @@ public class Cliente
 	//----------------------------------------------------------------------------------------------------------------------------------
 
 	@JsonProperty(value = "id")
-	private long id;
+	private Long id;
 
 	@JsonProperty(value = "login")
 	private String login;

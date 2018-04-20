@@ -3,6 +3,7 @@ package rest;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,14 +15,16 @@ import tm.AlohandesTransactionManager;
 import vos.Alojamiento;
 import vos.ListaAlojamientos;
 
-@Path("/alojamientos")
+@Path("/operadores/{idOperador}/alojamientos")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class AlojamientoService 
 {
 	@Context
 	private ServletContext context;
 	
 	private String getPath() {
-		return context.getRealPath("WEB_INF/ConnectionData");
+		return context.getRealPath("WEB-INF/ConnectionData");
 	}
 	private String doErrorMessage (Exception e) {
 		return "{\"ERROR\": \"" + e.getMessage() + "\"}";
@@ -57,11 +60,10 @@ public class AlojamientoService
 		}
 		return Response.status(200).entity(alojamientos).build();
 	}
-	@PUT
-	@Path("/usuario")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addAlojamiento(Long IdOperador, Alojamiento alojamiento) {
+	public Response addAlojamiento(@javax.ws.rs.PathParam("idOperador")Long IdOperador, Alojamiento alojamiento) {
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.addAlojamiento(IdOperador,alojamiento);

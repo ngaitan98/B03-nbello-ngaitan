@@ -75,7 +75,7 @@ public class DAOPersonaNormal {
 	
 	public ResultSet findPersonaNormalById (Long id) throws SQLException, Exception
 	{
-		String sentencia = String.format("SELECT * FROM %1$s.PERSONASNORMALES WHERE ID = %2$d", USUARIO, id); 
+		String sentencia = String.format("SELECT * FROM %1$s.PERSONASNORMALES WHERE ID = %2$s", USUARIO, id); 
 		PreparedStatement prepStmt = conn.prepareStatement(sentencia);
 		recursos.add(prepStmt);
 		ResultSet result = prepStmt.executeQuery();

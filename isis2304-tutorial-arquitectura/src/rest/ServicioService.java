@@ -3,6 +3,7 @@ package rest;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,14 +17,14 @@ import vos.ListaAlojamientos;
 import vos.ListaServicio;
 import vos.Servicio;
 
-@Path("servicios")
+@Path("alojamientos/{idAlojamiento}/servicios")
 public class ServicioService {
 	
 	@Context
 	private ServletContext context;
 	
 	private String getPath() {
-		return context.getRealPath("WEB_INF/ConnectionData");
+		return context.getRealPath("WEB-INF/ConnectionData");
 	}
 	private String doErrorMessage (Exception e) {
 		return "{\"ERROR\": \"" + e.getMessage() + "\"}";
@@ -59,11 +60,10 @@ public class ServicioService {
 		}
 		return Response.status(200).entity(servicios).build();
 	}
-	@PUT
-	@Path("/usuario")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addServicio(Long idAlojamiento, Servicio servicios) {
+	public Response addServicio(@javax.ws.rs.PathParam("idAlojamiento")Long idAlojamiento, Servicio servicios) {
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.addServicio(idAlojamiento, servicios);

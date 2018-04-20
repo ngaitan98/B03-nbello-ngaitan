@@ -1,5 +1,7 @@
 package rest;
 
+import java.io.File;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,53 +17,31 @@ import vos.Cliente;
 import vos.ListaCliente;
 
 @Path("/clientes")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ClienteService 
 {
 	@Context
 	private ServletContext context;
 	
 	private String getPath() {
-		return context.getRealPath("WEB_INF/ConnectionData");
+		if(new File(context.getContextPath()).exists())
+		{
+			System.out.println("@@@@@@@@@ Existe la ruta @@@@@@@@");
+		}
+		if(new File(context.getContextPath() +"/conexion.properties").exists())
+		{
+			System.out.println("@@@@@@@@@ Existe el file @@@@@@@@");
+		}
+		return context.getRealPath("WEB-INF/ConnectionData");
 	}
 	private String doErrorMessage (Exception e) {
 		return "{\"ERROR\": \"" + e.getMessage() + "\"}";
 	}
-	@GET 
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response getClientes()
-	{
-		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
-		ListaCliente clientes;
-		try {
-			clientes = tm.darClientes();
-		}
-		catch (Exception e)
-		{
-			return Response.status(500).entity(doErrorMessage(e)).build();
-		}
-		return Response.status(200).entity(clientes).build();
-	}
-	@GET 
-	@Path("/{id}")
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response getCliente(@javax.ws.rs.PathParam("id") String id)
-	{
-		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
-		Cliente cliente;
-		try {
-			cliente = tm.darCliente(id);
-		}
-		catch (Exception e)
-		{
-			return Response.status(500).entity(doErrorMessage(e)).build();
-		}
-		return Response.status(200).entity(cliente).build();
-	}
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addCliente(Long IdOperador, Cliente cliente) {
-		System.out.println("A");
+	public Response addCliente( Cliente cliente) {
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.addCliente(cliente);

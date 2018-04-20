@@ -77,7 +77,11 @@ public class DAOJoins
 		if(h.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOTELES");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s,%3$s,'%4$s')", 
+					USUARIO,
+					a.getId(), 
+					idOperador, 
+					"HOTELES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -86,7 +90,7 @@ public class DAOJoins
 		else if(p.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "PERSONASNORMALES");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4$s')", USUARIO, a.getId(), idOperador, "PERSONASNORMALES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -95,7 +99,7 @@ public class DAOJoins
 		else if(hl.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "HOSTALES");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4$s')", USUARIO, a.getId(), idOperador, "HOSTALES");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -104,7 +108,7 @@ public class DAOJoins
 		else if(d.next())
 		{
 			alojamientos.addAlojamiento(a);
-			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4s')", USUARIO, a.getId(), idOperador, "DUENOVIVIENDA");
+			String sql = String.format("INSERT INTO %1$s.OFRECEN VALUES (%2$s, %3$s, '%4$s')", USUARIO, a.getId(), idOperador, "DUENOVIVIENDA");
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -148,6 +152,10 @@ public class DAOJoins
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
 			prepStmt.executeQuery();
+		}
+		else
+		{
+			throw new Exception("El cliente o el alojamiento no existen en la base de datos.");
 		}
 	}
 	public void ocuparAlojamiento(Long id) throws SQLException
@@ -198,6 +206,7 @@ public class DAOJoins
 	}
 	public boolean existeCorreoCliente(String correo) throws SQLException, Exception
 	{
+		System.out.println("Existe");
 		return clientes.findClienteByCorreo(correo).next();
 	}
 	public boolean estaOcupado(Long idAlojamiento, Date fechaInicio, Date fechaFin) throws SQLException, Exception
@@ -266,6 +275,7 @@ public class DAOJoins
 	 */
 	public void setConn(Connection connection){
 		this.conn = connection;
+		System.out.println(conn + "En DAOJOINS");
 		alojamientos.setConn(conn);
 		servicios.setConn(conn);
 		hoteles.setConn(conn);
@@ -298,17 +308,30 @@ public class DAOJoins
 				}
 		}
 	}
-	public Long getCurrentId() throws SQLException, Exception
+	public Long getCurrentIdOperador() throws SQLException, Exception
 	{
-		String sql = String.format("SELECT MAX(ID) FROM %1$s.OFRECEN", USUARIO);
+		String sql = String.format("SELECT MAX(ID_OPERADOR) FROM %1$s.OFRECEN", USUARIO);
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet s = prepStmt.executeQuery();	
 		if(s.next())
 		{
-			return s.getLong(1);
+			return s.getLong(1) + 1;
 		}
-		return (long) 0;
+		return (long) 0 + 1;
+	}
+	public Long getCurrentIdCliente() throws SQLException, Exception
+	{
+		String sql = String.format("SELECT MAX(ID) FROM %1$s.CLIENTES", USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet s = prepStmt.executeQuery();	
+		if(s.next())
+		{
+			return s.getLong(1) + 1;
+		}
+		return (long) 0 + 1;
 	}
 }
