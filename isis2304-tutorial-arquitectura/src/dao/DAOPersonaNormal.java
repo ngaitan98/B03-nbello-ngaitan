@@ -52,10 +52,18 @@ public class DAOPersonaNormal {
 	 */
 	public void addPersonaNormal (PersonaNormal personanormal) throws SQLException, Exception
 	{
-		String sentencia = String.format("INSERT INTO %1$s.HOSTALES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, TIPOPERSONANORMAL, CERTIFICADO) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s','%9$s', %10$s')", 
+		String sentencia = String.format("INSERT INTO %1$s.PERSONASNORMALES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, TIPOPERSONANORMAL, CERTIFICADO) "
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s','%9$s', '%10$s')", 
 				USUARIO,
-				personanormal.getId(),personanormal.getLogin(),personanormal.getPassword(),personanormal.getNombre(),personanormal.getCuentaBancaria(),personanormal.getCorreo(),personanormal.getDocumento(),personanormal.getTipo(), "Pendiente de aprobación");
+				personanormal.getId(),
+				personanormal.getLogin(),
+				personanormal.getPassword(),
+				personanormal.getNombre(),
+				personanormal.getCuentaBancaria(),
+				personanormal.getCorreo(),
+				personanormal.getDocumento(),
+				personanormal.getTipo(), 
+				"Pendiente de aprobación");
 		System.out.println(sentencia);
 		PreparedStatement prepStmt = conn.prepareStatement(sentencia);
 		recursos.add(prepStmt);

@@ -145,19 +145,14 @@ public class AlohandesTransactionManager
 
 	public void addHotel(Hotel hotel) throws Exception 
 	{
-		DAOJoins joins = new DAOJoins( );
-		if(joins.existeOperador(hotel.getId()))
-		{
-			throw new Exception("Ya existe un operador con el id " + hotel.getId());
-		}
+		DAOJoins joins = null;;
 		try
 		{
-			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
-			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins = new DAOJoins();
 			joins.setConn(this.conn);
+			hotel.setId(joins.getCurrentIdOperador());
 			joins.agregarHotel(hotel);
-
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -185,18 +180,13 @@ public class AlohandesTransactionManager
 	}
 	public void addPersona(PersonaNormal persona) throws Exception 
 	{
-
-		DAOJoins joins = new DAOJoins( );
-		if(joins.existeOperador(persona.getId()))
-		{
-			throw new Exception("Ya existe un operador con el id " + persona.getId());
-		}
+		DAOJoins joins = null;
 		try
 		{
-			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
+			joins = new DAOJoins( );
 			this.conn = darConexion();
-			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			persona.setId(joins.getCurrentIdOperador());
 			joins.agregarPersonaNormal(persona);
 
 		}

@@ -52,7 +52,7 @@ public class DAOHotel
 	public void addHotel(Hotel hotel) throws SQLException, Exception 
 	{
 		String sql = String.format("INSERT INTO %1$s.HOTELES (ID, LOGIN, PASSWORD, NOMBRE, CUENTABANCARIA, CORREO, IDENTIFICACION, DOCUMENTOS) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s')", 
+				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s','%8$s', 'Pendiente de verificación')", 
 				USUARIO, 
 				hotel.getId(),
 				hotel.getLogin(),
@@ -60,9 +60,7 @@ public class DAOHotel
 				hotel.getNombre(),
 				hotel.getCuentaBancaria(),
 				hotel.getCorreo(),
-				hotel.getDocumento(),
-				"Pendiente de verificación");
-
+				hotel.getDocumento());
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);

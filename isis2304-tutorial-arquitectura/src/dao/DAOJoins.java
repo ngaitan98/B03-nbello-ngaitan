@@ -321,8 +321,10 @@ public class DAOJoins
 		ResultSet s = prepStmt.executeQuery();	
 		if(s.next())
 		{
+			System.out.println(s.getLong(1) + 1);
 			return s.getLong(1) + 1;
 		}
+		System.out.println("ret 0");
 		return (long) 0 + 1;
 	}
 	public Long getCurrentIdCliente() throws SQLException, Exception
