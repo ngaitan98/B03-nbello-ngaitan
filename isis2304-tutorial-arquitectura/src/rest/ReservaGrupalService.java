@@ -45,11 +45,11 @@ public class ReservaGrupalService {
 	{
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			System.out.println(":)");
 			tm.cancelarReservaGrupal(id);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e) + "Hola").build();
 		}
 		return Response.status(200).build();
+		
 	}
 }

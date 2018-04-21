@@ -50,10 +50,9 @@ public class DAOCliente
 	 */
 	public void addCliente(Cliente cliente) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.CLIENTES (ID, LOGIN, PASSWORD, NOMBRE, CORREO, DOCUMENTO) "
-				+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s')", 
+		String sql = String.format("INSERT INTO %1$s.CLIENTES (LOGIN, PASSWORD, NOMBRE, CORREO, DOCUMENTO) "
+				+ "VALUES ('%2$s', '%3$s', '%4$s', '%5$s', '%6$s')", 
 				USUARIO, 
-				cliente.getId(),
 				cliente.getLogin(),
 				cliente.getPassword(),
 				cliente.getNombre(),

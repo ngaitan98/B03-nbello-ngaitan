@@ -37,6 +37,8 @@ public class DAOJoins
 	private DAODuenoVivienda duenos;
 	private DAOPersonaNormal personas;
 	private DAOHostal hostales;
+	private DAOReservaGrupal grupales;
+
 
 	public DAOJoins()
 	{
@@ -48,6 +50,8 @@ public class DAOJoins
 		clientes = new DAOCliente();
 		contratos = new DAOContrato();
 		servicios = new DAOServicio();
+		grupales = new DAOReservaGrupal();
+		
 		recursos = new ArrayList<Object>();
 	}
 	public void agregarHotel(Hotel h) throws SQLException, Exception
@@ -147,7 +151,7 @@ public class DAOJoins
 		if(a.next() && c.next())
 		{
 			contratos.addContrato(con);
-			String sql = String.format("INSERT INTO %1$s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, con.getId(), idAlojamiento, idCliente);
+			String sql = String.format("INSERT INTO %1$s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, idAlojamiento, con.getId(), idCliente);
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
@@ -268,6 +272,33 @@ public class DAOJoins
 			throw new Exception("No existe un contrato con el id ingresado");
 		}
 	}
+	public void agregarGrupal(ReservaGrupal rg)
+	{
+		
+	}
+	public Integer countAlojamientosByTipoAndCantidad(String tipo, Integer cantidad) throws SQLException
+	{
+		String sql = String.format("SELECT COUNT(ID) FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		return result.next()? result.getInt(1):0;
+	}
+	public ArrayList<Long> findAlojamientosByTipoAndCantidad(String tipo, Integer cantidad) throws SQLException
+	{
+		ArrayList<Long> ids = new ArrayList<Long>();
+		String sql = String.format("SELECT ID FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		while(result.next())
+		{
+			ids.add(result.getLong(1));
+		}
+		return ids;
+	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -288,6 +319,7 @@ public class DAOJoins
 		personas.setConn(conn);
 		duenos.setConn(conn);
 		hostales.setConn(conn);
+		grupales.setConn(conn);
 	}
 
 	/**
@@ -303,6 +335,7 @@ public class DAOJoins
 		personas.cerrarRecursos();
 		duenos.cerrarRecursos();
 		hostales.cerrarRecursos();
+		grupales.cerrarRecursos();
 		for(Object ob : recursos){
 			if(ob instanceof PreparedStatement)
 				try {
@@ -327,9 +360,61 @@ public class DAOJoins
 		System.out.println("ret 0");
 		return (long) 0 + 1;
 	}
+	public Long getCurrentIdAlojamiento() throws SQLException, Exception
+	{
+		String sql = String.format("SELECT MAX(ID) FROM %1$s.ALOJAMIENTOS", USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet s = prepStmt.executeQuery();	
+		if(s.next())
+		{
+			return s.getLong(1) + 1;
+		}
+		return (long) 0 + 1;
+	}
+	public Long getCurrentIdContrato() throws SQLException, Exception
+	{
+		String sql = String.format("SELECT MAX(ID) FROM %1$s.CONTRATOS", USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet s = prepStmt.executeQuery();	
+		if(s.next())
+		{
+			return s.getLong(1) + 1;
+		}
+		return (long) 0 + 1;
+	}
 	public Long getCurrentIdCliente() throws SQLException, Exception
 	{
 		String sql = String.format("SELECT MAX(ID) FROM %1$s.CLIENTES", USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet s = prepStmt.executeQuery();	
+		if(s.next())
+		{
+			return s.getLong(1) + 1;
+		}
+		return (long) 0 + 1;
+	}
+	public Long getCurrentIdServicio() throws SQLException, Exception
+	{
+		String sql = String.format("SELECT MAX(ID) FROM %1$s.SERVICIOS", USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet s = prepStmt.executeQuery();	
+		if(s.next())
+		{
+			return s.getLong(1) + 1;
+		}
+		return (long) 0 + 1;
+	}
+	public Long getCurrentIdReservasGrupales() throws SQLException, Exception
+	{
+		String sql = String.format("SELECT MAX(ID) FROM %1$s.RESERVASGRUPALES", USUARIO);
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);

@@ -49,12 +49,12 @@ public class DAOReservaGrupal {
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public void addContrato(ReservaGrupal reservagrupal) throws SQLException, Exception 
+	public void addReservaGrupal(ReservaGrupal reservagrupal) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.RESERVAGRUPAL (ID, CANTIDAD) "
-				+ "VALUES (%2$s, '%3$s')", 
+		String sql = String.format("INSERT INTO %1$s.RESERVAGRUPAL (TIPO,CANTIDAD) "
+				+ "VALUES ( '%2$s', %3$s)", 
 				USUARIO, 
-				reservagrupal.getId(), 
+				reservagrupal.getTipo(),
 				reservagrupal.getCantidad());
 
 		System.out.println(sql);
@@ -80,5 +80,32 @@ public class DAOReservaGrupal {
 		ResultSet rs = prepStmt.executeQuery();
 
 		return rs;
+	}
+	//----------------------------------------------------------------------------------------------------------------------------------
+	// METODOS AUXILIARES
+	//----------------------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Metodo encargado de inicializar la conexion del DAO a la Base de Datos a partir del parametro <br/>
+	 * <b>Postcondicion: </b> el atributo conn es inicializado <br/>
+	 * @param connection la conexion generada en el TransactionManager para la comunicacion con la Base de Datos
+	 */
+	public void setConn(Connection connection){
+		this.conn = connection;
+	}
+
+	/**
+	 * Metodo que cierra todos los recursos que se encuentran en el arreglo de recursos<br/>
+	 * <b>Postcondicion: </b> Todos los recurso del arreglo de recursos han sido cerrados.
+	 */
+	public void cerrarRecursos() {
+		for(Object ob : recursos){
+			if(ob instanceof PreparedStatement)
+				try {
+					((PreparedStatement) ob).close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+		}
 	}
 }

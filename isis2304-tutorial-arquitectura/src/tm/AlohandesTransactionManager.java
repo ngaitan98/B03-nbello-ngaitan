@@ -297,6 +297,7 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			a.setId(joins.getCurrentIdAlojamiento());
 			joins.agregarAlojamiento(idOperador, a);
 
 		}
@@ -344,6 +345,7 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			contrato.setId(joins.getCurrentIdContrato());
 			
 			if(diferenciaDias(fc, fi) > 0)
 			{
@@ -399,6 +401,7 @@ public class AlohandesTransactionManager
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			s.setId(joins.getCurrentIdServicio());
 			joins.agregarServicio( idAlojamiento, s);
 
 		}

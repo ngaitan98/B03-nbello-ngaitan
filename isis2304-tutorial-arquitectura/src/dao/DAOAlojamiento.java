@@ -53,10 +53,9 @@ public class DAOAlojamiento
 	{
 		System.out.println(alojamiento.getOcupado().toString().trim());
 		System.out.println(alojamiento.getUbicacion());
-		String sql = String.format("INSERT INTO %1$s.ALOJAMIENTOS (ID, NUMERODECUPOS, TIPOALOJAMIENTO, COSTOBASE, DIRECCION, OCUPADA)"
-				+ "VALUES (%2$s, %3$s, '%4$s', %5$s, '%6$s', '%7$s')", 
+		String sql = String.format("INSERT INTO %1$s.ALOJAMIENTOS (NUMERODECUPOS, TIPOALOJAMIENTO, COSTOBASE, DIRECCION, OCUPADA)"
+				+ "VALUES (%2$s, '%3$s', %4$s, '%5$s', '%6$s')", 
 				USUARIO, 
-				alojamiento.getId(),
 				alojamiento.getNumeroCupos(),
 				alojamiento.getTipo(),
 				alojamiento.getCostoBase(),
@@ -67,7 +66,6 @@ public class DAOAlojamiento
 				PreparedStatement prepStmt = conn.prepareStatement(sql);
 				recursos.add(prepStmt);
 				prepStmt.executeQuery();
-				System.out.println("agrega");
 	}
 	/**
 	 * Metodo que obtiene la informacion del hotel en la Base de Datos que tiene el identificador dado por parametro<br/>

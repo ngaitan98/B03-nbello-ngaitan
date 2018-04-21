@@ -15,12 +15,25 @@ public class ReservaGrupal {
 	private Integer cantidad;
 	@JsonProperty(value = "contratos")
 	private ArrayList<Contrato> contratos;
+	@JsonProperty(value = "tipo")
+	private String tipo;
 	
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 	
-	public ReservaGrupal (@JsonProperty(value = "id")Long id, @JsonProperty(value = "cantidad")Integer cantidad, @JsonProperty(value = "contratos")ArrayList<Contrato> contratos)
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public ReservaGrupal (@JsonProperty(value = "id")Long id, 
+			@JsonProperty(value = "cantidad")Integer cantidad,
+			@JsonProperty(value = "contratos")ArrayList<Contrato> contratos,
+			@JsonProperty(value = "tipo")String tipo)
 	{
 		this.id = id;
 		this.cantidad = cantidad;
