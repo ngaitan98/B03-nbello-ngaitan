@@ -151,15 +151,19 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			joins = new DAOJoins();
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			hotel.setId(joins.getCurrentIdOperador());
 			joins.agregarHotel(hotel);
+			joins.commit();
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -172,6 +176,7 @@ public class AlohandesTransactionManager
 				}
 			}
 			catch (SQLException exception) {
+				
 				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
 				exception.printStackTrace();
 				throw exception;
@@ -186,16 +191,20 @@ public class AlohandesTransactionManager
 			joins = new DAOJoins( );
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			persona.setId(joins.getCurrentIdOperador());
 			joins.agregarPersonaNormal(persona);
+			joins.commit();
 
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -236,14 +245,17 @@ public class AlohandesTransactionManager
 		} 
 		finally {
 			try {
+				joins.setAutoCommitFalse();
 				dueno.setId(joins.getCurrentIdOperador());
 				joins.agregarDuenoVivienda(dueno);
+				joins.commit();
 				joins.cerrarRecursos();
 				if(this.conn!=null){
 					this.conn.close();					
 				}
 			}
 			catch (SQLException exception) {
+				joins.rollBack();
 				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
 				exception.printStackTrace();
 				throw exception;
@@ -260,16 +272,20 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			hostal.setId(joins.getCurrentIdOperador());
 			joins.agregarHostal(hostal);
+			joins.commit();
 
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -297,16 +313,20 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			a.setId(joins.getCurrentIdAlojamiento());
 			joins.agregarAlojamiento(idOperador, a);
+			joins.commit();
 
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -345,36 +365,43 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			contrato.setId(joins.getCurrentIdContrato());
 			
 			if(diferenciaDias(fc, fi) < 0)
 			{
+				joins.rollBack();
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser después de la fecha de creacion del contrato." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
 			}
 			if(diferenciaDias(fi, ff) < 0)
 			{
+				joins.rollBack();
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
 			}
 			if(joins.estaOcupado(idAlojamiento, fi,ff))
 			{
 				//TODO verificar los que sobran y las fechas de fin.
+				joins.rollBack();
 				System.out.println("Holiwis Filters");
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
 				throw new Exception("Ya hay una reserva para estas fechas.");
 			}
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
+			joins.commit();
 			if(this.conn!=null){
 				this.conn.close();					
 			}
 		}
-		catch (SQLException sqlException) {            
+		catch (SQLException sqlException) {    
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -401,16 +428,19 @@ public class AlohandesTransactionManager
 			//TODO Requerimiento 3D: Obtenga la conexion a la Base de Datos (revise los metodos de la clase)
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			s.setId(joins.getCurrentIdServicio());
 			joins.agregarServicio( idAlojamiento, s);
-
+			joins.commit();
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -446,16 +476,19 @@ public class AlohandesTransactionManager
 			joins = new DAOJoins( );
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 		} catch (Exception e) {
 			throw e;
 		}
 		if(joins.existeCorreoCliente(c.getCorreo()))
 		{
+			joins.rollBack();
 			System.err.println("[EXCEPTION] Logic Exception: " + "Ya existe un usuario con el correo: " + c.getCorreo());
 			throw new Exception("Ya existe un usuario con el correo: " + c.getCorreo());
 		}
 		if(joins.existeLoginCliente(c.getLogin()))
 		{
+			joins.rollBack();
 			System.err.println("[EXCEPTION] Logic Exception: " + "Ya existe un usuario con el login: " + c.getLogin());
 			throw new Exception("Ya existe un usuario con el login: " + c.getLogin());
 		}
@@ -463,14 +496,17 @@ public class AlohandesTransactionManager
 		{
 			c.setId(joins.getCurrentIdCliente());
 			joins.agregarCliente(c);
+			joins.commit();
 
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -496,16 +532,20 @@ public class AlohandesTransactionManager
 		{
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			System.out.println(a);
 			System.out.println(parseDateTime(a));
 			joins.ocultarAlojamiento(idAlojamiento, parseDateTime(a));
+			joins.commit();
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -531,6 +571,7 @@ public class AlohandesTransactionManager
 		{
 			this.conn = darConexion();
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			double precio = 1;
 			Date[] inicioFin = joins.getContrato(idContrato);
 			if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 3)
@@ -564,13 +605,16 @@ public class AlohandesTransactionManager
 				}
 			}
 			joins.finalizarContrato(idContrato, precio);
+			joins.commit();
 		}
 		catch (SQLException sqlException) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
@@ -634,28 +678,34 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
 			rg.setId(joins.getCurrentIdReservasGrupales());
 			if(diferenciaDias(fc, fi) < 0)
 			{
+				joins.rollBack();
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser después de la fecha de creacion del contrato." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
 			}
 			if(diferenciaDias(fi, ff) < 0)
 			{
+				joins.rollBack();
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
 			}
 			joins.agregarGrupal(rg, fi, ff);
+			joins.commit();
 			if(this.conn!=null){
 				this.conn.close();					
 			}
 		}
-		catch (SQLException sqlException) {            
+		catch (SQLException sqlException) {    
+			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
 			throw sqlException;
 		} 
 		catch (Exception exception) {
+			joins.rollBack();
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
 			exception.printStackTrace();
 			throw exception;
