@@ -612,6 +612,62 @@ public class AlohandesTransactionManager
 		return daysApart;
 	}
 
+	public void addReservaGrupal( ReservaGrupal rg) throws Exception 
+	{
+		Date fi = parseDateTime(rg.getFechainicio());
+		Date ff = parseDateTime(rg.getFechafin());
+		Date fc = getCurrentDate();
+
+		rg.setFechaCreacion(fc.toString());
+		rg.setFechainicio(fi.toString());
+		rg.setFechafin(ff.toString());
+
+		DAOJoins joins = null;
+		try{
+			joins = new DAOJoins( );
+			this.conn = darConexion();
+			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
+			joins.setConn(this.conn);
+			rg.setId(joins.getCurrentIdReservasGrupales());
+			if(diferenciaDias(fc, fi) > 0)
+			{
+				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser después de la fecha de creacion del contrato." + diferenciaDias(fi, ff));
+				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
+			}
+			if(diferenciaDias(fi, ff) < 0)
+			{
+				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser ant�s de la fecha final." + diferenciaDias(fi, ff));
+				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
+			}
+			joins.agregarGrupal(rg, fi, ff);
+			if(this.conn!=null){
+				this.conn.close();					
+			}
+		}
+		catch (SQLException sqlException) {            
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 	public ListaPersonaNormal darPersonasNormales() {
 		// TODO Auto-generated method stub
 		return null;

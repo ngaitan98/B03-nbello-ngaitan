@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import vos.Contrato;
 import vos.ReservaGrupal;
 
-public class DAOReservaGrupal {
+public class DAOReservaGrupal 
+{
 
 	public final static String USUARIO = "ISIS2304A471810";
 
@@ -49,14 +50,18 @@ public class DAOReservaGrupal {
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws Exception Si se genera un error dentro del metodo.
 	 */
-	public void addReservaGrupal(ReservaGrupal reservagrupal) throws SQLException, Exception 
+	public void addReservaGrupal(ReservaGrupal rg) throws SQLException, Exception 
 	{
-		String sql = String.format("INSERT INTO %1$s.RESERVAGRUPAL (TIPO,CANTIDAD) "
-				+ "VALUES ( '%2$s', %3$s)", 
+		String sql =  String.format("INSERT INTO %1$s.RESERVASGRUPALES (FECHAINICIO, FECHAFIN, PRECIO, FECHACREACION, FINALIZADO, CANTIDADPERSONAS) "
+				+ "VALUES ( TO_DATE('%2$s', 'YYYY-MM-DD'), TO_DATE('%3$s', 'YYYY-MM-DD'), %4$s, TO_DATE('%5$s', 'YYYY-MM-DD'), '%6$s', %7$s, '%8$s')", 
 				USUARIO, 
-				reservagrupal.getTipo(),
-				reservagrupal.getCantidad());
-
+				rg.getFechainicio(),
+				rg.getFechafin(),
+				rg.getPrecio(),
+				rg.getFechaCreacion(),
+				rg.getFinalizado(),
+				rg.getCanitadPersonas(),
+				rg.getTipo());
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);

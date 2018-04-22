@@ -14,6 +14,9 @@ import tm.AlohandesTransactionManager;
 import vos.Contrato;
 import vos.ReservaGrupal;
 
+@Path("ReservasGrupales")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ReservaGrupalService {
 	
 	@Context
@@ -27,15 +30,14 @@ public class ReservaGrupalService {
 	}
 	
 	@POST
-	@Path("/reservasgrupales/{idreservagrupal}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addContrato(@javax.ws.rs.PathParam("idReservaGrupal")Long idReservaGrupal, ReservaGrupal reservagrupal) {
+	public Response addContrato( ReservaGrupal reservagrupal) {
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			tm.addReservaGrupal(idReservaGrupal, reservagrupal);
+			tm.addReservaGrupal(reservagrupal);
 		} catch (Exception e) {
-			return Response.status(500).entity(doErrorMessage(e) + "Hola").build();
+			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		return Response.status(200).entity(reservagrupal).build();
 	}

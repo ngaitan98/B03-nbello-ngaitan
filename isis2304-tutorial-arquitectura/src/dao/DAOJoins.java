@@ -150,6 +150,7 @@ public class DAOJoins
 		ResultSet c = clientes.findClienteById(idCliente);
 		if(a.next() && c.next())
 		{
+			con.setPrecio(getPrecioAlojamiento(idAlojamiento));
 			contratos.addContrato(con);
 			String sql = String.format("INSERT INTO %1$s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, idAlojamiento, con.getId(), idCliente);
 			System.out.println(sql);
@@ -244,7 +245,6 @@ public class DAOJoins
 							|| fechaFin.equals(rs2.getDate(1)) || fechaFin.equals(rs2.getDate(2))
 							|| fechaInicio.equals(rs2.getDate(1)) || fechaInicio.equals(rs2.getDate(2)))
 					{
-						System.out.println("Holiwi");
 						return true;
 					}
 				}
@@ -264,7 +264,7 @@ public class DAOJoins
 			Date[] answ = new Date[2];
 			answ[0] = rs.getDate(2);
 			answ[1] = rs.getDate(3);
-
+			
 			return answ;
 		}
 		else
@@ -272,20 +272,40 @@ public class DAOJoins
 			throw new Exception("No existe un contrato con el id ingresado");
 		}
 	}
-	public void agregarGrupal(ReservaGrupal rg)
+	public void agregarGrupal(ReservaGrupal rg, Date inicio, Date fin) throws Exception
 	{
-		
+		ArrayList<Long> alojamientosDisponibles = findAlojamientosParaGrupales(rg.getTipo(), rg.getCanitadPersonas(), inicio, fin);
+		if(alojamientosDisponibles.size() < rg.getCanitadPersonas())
+		{
+			throw new Exception("No hay suficientes habitaciones para la cantidad de clientes exigida");
+		}
+		else
+		{
+			grupales.addReservaGrupal(rg);
+			int i = 0;
+			for(Cliente c: rg.getClientes())
+			{
+				if(!existeCorreoCliente(c.getCorreo()))
+				{
+					throw new Exception("Uno de los clientes ingresados no está registrado. Intente Nuevamente.");
+				}
+				else
+				{
+					Contrato nuevo = new Contrato(getCurrentIdContrato(), inicio.toString(), fin.toString(), rg.getFechaCreacion(), 0.0, 4, 0);
+					agregarContrato(c.getId(), alojamientosDisponibles.get(i), nuevo);
+					
+					String sql = String.format("INSERT INTO %1$s.CONTRATOSGRUPALES(ID_RESERVAGRUPAL, ID_CONTRATO)", USUARIO, rg.getId(), nuevo.getId());
+					System.out.println(sql);
+					PreparedStatement prepStmt = conn.prepareStatement(sql);
+					recursos.add(prepStmt);
+					prepStmt.executeQuery();
+					
+					i++;
+				}
+			}
+		}
 	}
-	public Integer countAlojamientosByTipoAndCantidad(String tipo, Integer cantidad) throws SQLException
-	{
-		String sql = String.format("SELECT COUNT(ID) FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
-		System.out.println(sql);
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet result = prepStmt.executeQuery();
-		return result.next()? result.getInt(1):0;
-	}
-	public ArrayList<Long> findAlojamientosByTipoAndCantidad(String tipo, Integer cantidad) throws SQLException
+	public ArrayList<Long> findAlojamientosParaGrupales(String tipo, Integer cantidad, Date inicio, Date fin) throws Exception, SQLException
 	{
 		ArrayList<Long> ids = new ArrayList<Long>();
 		String sql = String.format("SELECT ID FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
@@ -295,7 +315,11 @@ public class DAOJoins
 		ResultSet result = prepStmt.executeQuery();
 		while(result.next())
 		{
-			ids.add(result.getLong(1));
+			Long i = result.getLong(1);
+			if(!estaOcupado(i, inicio, fin))
+			{
+				ids.add(i);
+			}
 		}
 		return ids;
 	}
@@ -424,5 +448,44 @@ public class DAOJoins
 			return s.getLong(1) + 1;
 		}
 		return (long) 0 + 1;
+	}
+	public void setAutoCommitFalse() throws SQLException
+	{
+		PreparedStatement prepStmt = conn.prepareStatement("SET AUTOCOMMIT 0");
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();	
+	}
+	public void commit() throws SQLException
+	{
+		PreparedStatement prepStmt = conn.prepareStatement("COMMIT");
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();	
+	}
+	public void rollBack() throws SQLException
+	{
+		PreparedStatement prepStmt = conn.prepareStatement("ROLLBACK");
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();	
+	}
+	public Double getPrecioAlojamiento(Long id) throws SQLException
+	{
+		String sql = String.format("SELECT PRECIO FROM %1$s.ALOJAMIENTOS WHERE ID = %2$s", USUARIO, id);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		Double base = prepStmt.executeQuery().getDouble(1);
+		Double agregado = 0.0;
+		
+
+		String sql2 = String.format("SELECT COSTOAGREGADO FROM (SELECT ID AS ID_SERVICIO, COSTOAGREGADO FROM %1$s.SERVICIOS)a NATURAL JOIN %1$s.TIENEN WHERE ID_ALOJAMIENTO = %2$s", USUARIO, id);
+		System.out.println(sql2);
+		PreparedStatement prepStmt2 = conn.prepareStatement(sql2);
+		recursos.add(prepStmt2);
+		ResultSet rs = prepStmt.executeQuery();
+		while(rs.next())
+		{
+			agregado += rs.getDouble(1);
+		}
+		return base + agregado;
 	}
 }
