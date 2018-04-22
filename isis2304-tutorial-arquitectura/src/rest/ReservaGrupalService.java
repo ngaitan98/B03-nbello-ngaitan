@@ -14,7 +14,7 @@ import tm.AlohandesTransactionManager;
 import vos.Contrato;
 import vos.ReservaGrupal;
 
-@Path("ReservasGrupales")
+@Path("/ReservasGrupales")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ReservaGrupalService {

@@ -291,10 +291,10 @@ public class DAOJoins
 				}
 				else
 				{
-					Contrato nuevo = new Contrato(getCurrentIdContrato(), inicio.toString(), fin.toString(), rg.getFechaCreacion(), 0.0, 4, 0);
+					Contrato nuevo = new Contrato(getCurrentIdContrato(), inicio.toString(), fin.toString(), rg.getFechaCreacion(), 0.0, 1, 0);
 					agregarContrato(c.getId(), alojamientosDisponibles.get(i), nuevo);
 					
-					String sql = String.format("INSERT INTO %1$s.CONTRATOSGRUPALES(ID_RESERVAGRUPAL, ID_CONTRATO)", USUARIO, rg.getId(), nuevo.getId());
+					String sql = String.format("INSERT INTO %1$s.CONTRATOSGRUPALES (ID_RESERVAGRUPAL, ID_CONTRATO) VALUES (%2$s, %3$s)", USUARIO, rg.getId(), nuevo.getId());
 					System.out.println(sql);
 					PreparedStatement prepStmt = conn.prepareStatement(sql);
 					recursos.add(prepStmt);
@@ -469,22 +469,24 @@ public class DAOJoins
 	}
 	public Double getPrecioAlojamiento(Long id) throws SQLException
 	{
-		String sql = String.format("SELECT PRECIO FROM %1$s.ALOJAMIENTOS WHERE ID = %2$s", USUARIO, id);
+		Double base = 0.0, agregado = 0.0;
+		String sql = String.format("SELECT COSTOBASE FROM %1$s.ALOJAMIENTOS WHERE ID = %2$s", USUARIO, id);
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
-		Double base = prepStmt.executeQuery().getDouble(1);
-		Double agregado = 0.0;
-		
-
-		String sql2 = String.format("SELECT COSTOAGREGADO FROM (SELECT ID AS ID_SERVICIO, COSTOAGREGADO FROM %1$s.SERVICIOS)a NATURAL JOIN %1$s.TIENEN WHERE ID_ALOJAMIENTO = %2$s", USUARIO, id);
-		System.out.println(sql2);
-		PreparedStatement prepStmt2 = conn.prepareStatement(sql2);
-		recursos.add(prepStmt2);
-		ResultSet rs = prepStmt.executeQuery();
-		while(rs.next())
+		ResultSet rs2 = prepStmt.executeQuery();
+		if(rs2.next())
 		{
-			agregado += rs.getDouble(1);
+			base += rs2.getDouble(1);
+			String sql2 = String.format("SELECT COSTOAGREGADO FROM (SELECT ID AS ID_SERVICIO, COSTOAGREGADO FROM %1$s.SERVICIOS)a NATURAL JOIN %1$s.TIENEN WHERE ID_ALOJAMIENTO = %2$s", USUARIO, id);
+			System.out.println(sql2);
+			PreparedStatement prepStmt2 = conn.prepareStatement(sql2);
+			recursos.add(prepStmt2);
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next())
+			{
+				agregado += rs.getDouble(1);
+			}
 		}
 		return base + agregado;
 	}

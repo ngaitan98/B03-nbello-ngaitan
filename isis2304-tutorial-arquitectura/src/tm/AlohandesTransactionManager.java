@@ -347,7 +347,7 @@ public class AlohandesTransactionManager
 			joins.setConn(this.conn);
 			contrato.setId(joins.getCurrentIdContrato());
 			
-			if(diferenciaDias(fc, fi) > 0)
+			if(diferenciaDias(fc, fi) < 0)
 			{
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser después de la fecha de creacion del contrato." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");
@@ -608,6 +608,11 @@ public class AlohandesTransactionManager
 	}
 	public Integer diferenciaDias(Date fecha1, Date fecha2)
 	{
+		System.out.println(fecha2.getTime() > fecha1.getTime());
+		System.out.println( "inicio: " + fecha2.getTime());
+		System.out.println( "fin: " + fecha1.getTime());
+		System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+		
 		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
 		return daysApart;
 	}
@@ -622,6 +627,7 @@ public class AlohandesTransactionManager
 		rg.setFechainicio(fi.toString());
 		rg.setFechafin(ff.toString());
 
+		rg.setCantidadPersonas(rg.getClientes().size());
 		DAOJoins joins = null;
 		try{
 			joins = new DAOJoins( );
@@ -629,7 +635,7 @@ public class AlohandesTransactionManager
 			//TODO Requerimiento 3E: Establezca la conexion en el objeto DAOJoins (revise los metodos de la clase DAOJoins)
 			joins.setConn(this.conn);
 			rg.setId(joins.getCurrentIdReservasGrupales());
-			if(diferenciaDias(fc, fi) > 0)
+			if(diferenciaDias(fc, fi) < 0)
 			{
 				System.err.println("[EXCEPTION] Logic Exception:"   + "la fecha de inicio deber�a ser después de la fecha de creacion del contrato." + diferenciaDias(fi, ff));
 				throw new Exception("la fecha de inicio deber�a ser ant�s de la fecha final.");

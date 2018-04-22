@@ -52,8 +52,8 @@ public class DAOReservaGrupal
 	 */
 	public void addReservaGrupal(ReservaGrupal rg) throws SQLException, Exception 
 	{
-		String sql =  String.format("INSERT INTO %1$s.RESERVASGRUPALES (FECHAINICIO, FECHAFIN, PRECIO, FECHACREACION, FINALIZADO, CANTIDADPERSONAS) "
-				+ "VALUES ( TO_DATE('%2$s', 'YYYY-MM-DD'), TO_DATE('%3$s', 'YYYY-MM-DD'), %4$s, TO_DATE('%5$s', 'YYYY-MM-DD'), '%6$s', %7$s, '%8$s')", 
+		String sql =  String.format("INSERT INTO %1$s.RESERVASGRUPALES (ID, FECHAINICIO, FECHAFIN, PRECIO, FECHACREACION, FINALIZADO, CANTIDADPERSONAS, TIPO) "
+				+ "VALUES ( %9$s, TO_DATE('%2$s', 'YYYY-MM-DD'), TO_DATE('%3$s', 'YYYY-MM-DD'), %4$s, TO_DATE('%5$s', 'YYYY-MM-DD'), '%6$s', %7$s, '%8$s')", 
 				USUARIO, 
 				rg.getFechainicio(),
 				rg.getFechafin(),
@@ -61,7 +61,8 @@ public class DAOReservaGrupal
 				rg.getFechaCreacion(),
 				rg.getFinalizado(),
 				rg.getCanitadPersonas(),
-				rg.getTipo());
+				rg.getTipo(),
+				rg.getId());
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
