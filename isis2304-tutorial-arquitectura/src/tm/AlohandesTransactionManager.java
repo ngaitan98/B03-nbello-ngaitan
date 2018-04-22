@@ -352,9 +352,7 @@ public class AlohandesTransactionManager
 		Date fi = parseDateTime(contrato.getFechainicio());
 		Date ff = parseDateTime(contrato.getFechafin());
 		Date fc = getCurrentDate();
-		System.out.println(fi);
-		System.out.println(ff);
-		System.out.println(fc);
+
 		contrato.setFechaCreacion(fc.toString());
 		contrato.setFechainicio(fi.toString());
 		contrato.setFechafin(ff.toString());
@@ -384,8 +382,13 @@ public class AlohandesTransactionManager
 			{
 				//TODO verificar los que sobran y las fechas de fin.
 				joins.rollBack();
-				System.out.println("Holiwis Filters");
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
+				throw new Exception("Ya hay una reserva para estas fechas.");
+			}
+			if(joins.alojamientoDisponible(idAlojamiento))
+			{
+				joins.rollBack();
+				System.err.println("[EXCEPTION] Logic Exception:"   + "Lo sentimos el alojamiento no está disponible en este momento");
 				throw new Exception("Ya hay una reserva para estas fechas.");
 			}
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
@@ -699,7 +702,6 @@ public class AlohandesTransactionManager
 	}
 	public void cancelarReservaGrupal(Long id) throws Exception, SQLException
 	{
-		System.out.println("1111111111");
 		DAOJoins joins = new DAOJoins();
 		try
 		{
@@ -739,6 +741,80 @@ public class AlohandesTransactionManager
 				}
 			}
 			joins.finalizarReservaGrupal(id, precio);
+			joins.commit();
+		}
+		catch (SQLException sqlException) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void deshabilitarAlojamiento(Long id) throws SQLException, Exception
+	{
+		DAOJoins joins = new DAOJoins();
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
+			joins.deshabilitarOferta(id, getCurrentDate());
+			joins.commit();
+		}
+		catch (SQLException sqlException) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void habilitarAlojamiento(Long id) throws SQLException, Exception
+	{
+		DAOJoins joins = new DAOJoins();
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
+			joins.rehabilitar(id);
 			joins.commit();
 		}
 		catch (SQLException sqlException) {
@@ -857,7 +933,7 @@ public class AlohandesTransactionManager
 	        return null;
 	    }
 	}
-	public Integer diferenciaDias(Date fecha1, Date fecha2)
+	public static Integer diferenciaDias(Date fecha1, Date fecha2)
 	{
 		System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
 		

@@ -24,7 +24,7 @@ public class AlojamientoService
 {
 	@Context
 	private ServletContext context;
-	
+
 	private String getPath() {
 		return context.getRealPath("WEB-INF/ConnectionData");
 	}
@@ -81,6 +81,30 @@ public class AlojamientoService
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.retirarOferta(fecha, id);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).build();
+	}
+	@PUT
+	@Path("/deshabilitar/{idAlojamiento}/fecha/{fec}")
+	public Response deshabilitar(@javax.ws.rs.PathParam("idAlojamiento")Long id,@javax.ws.rs.PathParam("fec")String fecha)
+	{
+		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+		try {
+			tm.deshabilitarAlojamiento(id);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).build();
+	}
+	@PUT
+	@Path("/rehabilitar/{idAlojamiento}")
+	public Response rehabilitar(@javax.ws.rs.PathParam("idAlojamiento") Long id)
+	{
+		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+		try {
+			tm.habilitarAlojamiento(id);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
