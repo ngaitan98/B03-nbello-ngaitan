@@ -245,7 +245,8 @@ public class DAOJoins
 					if((fechaInicio.after(rs2.getDate(1)) && fechaInicio.before(rs2.getDate(2)))||
 							(fechaFin.after(rs2.getDate(1)) && fechaFin.before(rs2.getDate(2)))
 							|| fechaFin.equals(rs2.getDate(1)) || fechaFin.equals(rs2.getDate(2))
-							|| fechaInicio.equals(rs2.getDate(1)) || fechaInicio.equals(rs2.getDate(2)))
+							|| fechaInicio.toString().equals(rs2.getDate(1).toString()) || fechaInicio.toString().equals(rs2.getDate(2).toString())
+							|| (fechaInicio.before(rs2.getDate(1)) && fechaFin.after(rs2.getDate(2))))
 					{
 						return true;
 					}
@@ -274,6 +275,22 @@ public class DAOJoins
 			throw new Exception("No existe un contrato con el id ingresado");
 		}
 	}
+	public Date[] getFechaReservas(Long id) throws SQLException, Exception
+	{
+		ResultSet rs = grupales.findReservaGrupalById(id);
+		if(rs.next())
+		{
+			Date[] answ = new Date[2];
+			answ[0] = rs.getDate(2);
+			answ[1] = rs.getDate(3);
+			
+			return answ;
+		}
+		else
+		{
+			throw new Exception("No existe un contrato con el id ingresado");
+		}
+	}
 	public void agregarGrupal(ReservaGrupal rg, Date inicio, Date fin) throws Exception
 	{
 		ArrayList<Long> alojamientosDisponibles = findAlojamientosParaGrupales(rg.getTipo(), rg.getCanitadPersonas(), inicio, fin);
@@ -283,8 +300,8 @@ public class DAOJoins
 		}
 		else
 		{
-			grupales.addReservaGrupal(rg);
 			int i = 0;
+			grupales.addReservaGrupal(rg);
 			for(Cliente c: rg.getClientes())
 			{
 				if(!existeCorreoCliente(c.getCorreo()))
@@ -293,6 +310,7 @@ public class DAOJoins
 				}
 				else
 				{
+					
 					Contrato nuevo = new Contrato(getCurrentIdContrato(), inicio.toString(), fin.toString(), rg.getFechaCreacion(), 0.0, 1, 0);
 					agregarContrato(c.getId(), alojamientosDisponibles.get(i), nuevo);
 					
@@ -304,26 +322,18 @@ public class DAOJoins
 					
 					i++;
 				}
+
 			}
 		}
 	}
-	public ArrayList<Long> findAlojamientosParaGrupales(String tipo, Integer cantidad, Date inicio, Date fin) throws Exception, SQLException
+	public void finalizarReservaGrupal(Long id, Double nuevoPrecio) throws SQLException
 	{
-		ArrayList<Long> ids = new ArrayList<Long>();
-		String sql = String.format("SELECT ID FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
-		System.out.println(sql);
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet result = prepStmt.executeQuery();
-		while(result.next())
-		{
-			Long i = result.getLong(1);
-			if(!estaOcupado(i, inicio, fin))
-			{
-				ids.add(i);
-			}
+		System.out.println("111111");
+		ArrayList<Long> contratos = contratosDeReserva(id);
+		grupales.finalizar(id);
+		for (Long i : contratos) {
+			finalizarContrato(i, nuevoPrecio);
 		}
-		return ids;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
@@ -453,21 +463,18 @@ public class DAOJoins
 	}
 	public void setAutoCommitFalse() throws SQLException
 	{
-		PreparedStatement prepStmt = conn.prepareStatement("SET AUTOCOMMIT 0");
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();	
+		System.out.println("Set autocommit 0");
+		conn.setAutoCommit(false);
 	}
 	public void commit() throws SQLException
 	{
-		PreparedStatement prepStmt = conn.prepareStatement("COMMIT");
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();	
+		System.out.println("commit");
+		conn.commit();
 	}
 	public void rollBack() throws SQLException
 	{
-		PreparedStatement prepStmt = conn.prepareStatement("ROLLBACK");
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();	
+		System.out.println("rollback");
+		conn.rollback();
 	}
 	public Double getPrecioAlojamiento(Long id) throws SQLException
 	{
@@ -491,5 +498,37 @@ public class DAOJoins
 			}
 		}
 		return base + agregado;
+	}
+	public ArrayList<Long> contratosDeReserva(Long idReserva) throws SQLException
+	{
+		ArrayList<Long> ids = new ArrayList<Long>();
+		String sql = String.format("SELECT ID_CONTRATO FROM %1$s.CONTRATOSGRUPALES WHERE ID_RESERVAGRUPAL = %2$s", USUARIO, idReserva);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		while(result.next())
+		{
+			ids.add(result.getLong(1));
+		}
+		return ids;
+	}
+	public ArrayList<Long> findAlojamientosParaGrupales(String tipo, Integer cantidad, Date inicio, Date fin) throws Exception, SQLException
+	{
+		ArrayList<Long> ids = new ArrayList<Long>();
+		String sql = String.format("SELECT ID FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		while(result.next())
+		{
+			Long i = result.getLong(1);
+			if(!estaOcupado(i, inicio, fin))
+			{
+				ids.add(i);
+			}
+		}
+		return ids;
 	}
 }

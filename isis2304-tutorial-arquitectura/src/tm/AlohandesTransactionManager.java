@@ -633,33 +633,6 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
-	public Date getCurrentDate()
-	{		
-		Calendar fechaActual = Calendar.getInstance();
-		return new Date(fechaActual.getTimeInMillis());
-	}
-	public static Date parseDateTime(String dateString) {
-	    if (dateString == null) return null;
-	    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-	    try {
-	        return new Date(fmt.parse(dateString).getTime());
-	    }
-	    catch (ParseException e) {
-	    	e.printStackTrace();
-	        System.out.println( "Could not parse datetime: " + dateString);
-	        return null;
-	    }
-	}
-	public Integer diferenciaDias(Date fecha1, Date fecha2)
-	{
-		System.out.println(fecha2.getTime() > fecha1.getTime());
-		System.out.println( "inicio: " + fecha2.getTime());
-		System.out.println( "fin: " + fecha1.getTime());
-		System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
-		
-		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
-		return daysApart;
-	}
 
 	public void addReservaGrupal( ReservaGrupal rg) throws Exception 
 	{
@@ -699,6 +672,76 @@ public class AlohandesTransactionManager
 			}
 		}
 		catch (SQLException sqlException) {    
+			joins.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void cancelarReservaGrupal(Long id) throws Exception, SQLException
+	{
+		System.out.println("1111111111");
+		DAOJoins joins = new DAOJoins();
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
+			double precio = 1;
+			Date[] inicioFin = joins.getFechaReservas(id);
+			if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 3)
+			{
+				if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 3)
+				{
+					precio = 0.1;
+				}
+				else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
+				{
+					precio = 0.3;
+				}
+				else
+				{
+					precio = 0.5;
+				}
+			}
+			else if(diferenciaDias(inicioFin[0], inicioFin[1]) >= 7)
+			{
+				if(diferenciaDias(getCurrentDate(), inicioFin[0]) <= 7)
+				{
+					precio = 0.1;
+				}
+				else if(diferenciaDias(getCurrentDate(), inicioFin[0]) >= 0)
+				{
+					precio = 0.3;
+				}
+				else
+				{
+					precio = 0.5;
+				}
+			}
+			joins.finalizarReservaGrupal(id, precio);
+			joins.commit();
+		}
+		catch (SQLException sqlException) {
 			joins.rollBack();
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
@@ -797,4 +840,29 @@ public class AlohandesTransactionManager
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public Date getCurrentDate()
+	{		
+		Calendar fechaActual = Calendar.getInstance();
+		return new Date(fechaActual.getTimeInMillis());
+	}
+	public static Date parseDateTime(String dateString) {
+	    if (dateString == null) return null;
+	    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	    try {
+	        return new Date(fmt.parse(dateString).getTime());
+	    }
+	    catch (ParseException e) {
+	    	e.printStackTrace();
+	        System.out.println( "Could not parse datetime: " + dateString);
+	        return null;
+	    }
+	}
+	public Integer diferenciaDias(Date fecha1, Date fecha2)
+	{
+		System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+		
+		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+		return daysApart;
+	}
+
 }

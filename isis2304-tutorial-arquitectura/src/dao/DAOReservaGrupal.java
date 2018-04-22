@@ -79,13 +79,22 @@ public class DAOReservaGrupal
 	 */
 	public ResultSet findReservaGrupalById(Long id) throws SQLException, Exception 
 	{
-		String sql = String.format("SELECT * FROM %1$s.RESERVAGRUPAL WHERE ID = %2$d", USUARIO, id); 
+		String sql = String.format("SELECT * FROM %1$s.RESERVASGRUPALES WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		return rs;
+	}
+	public void finalizar(Long id) throws SQLException
+	{
+		String sql = String.format("UPDATE %1$s.RESERVASGRUPALES SET FINALIZADO = 1, PRECIO = -1 WHERE ID = %2$s", USUARIO, id);
+		System.out.println(sql);
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
