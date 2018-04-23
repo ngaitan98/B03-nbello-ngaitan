@@ -87,9 +87,10 @@ public class AlojamientoService
 		return Response.status(200).build();
 	}
 	@PUT
-	@Path("/deshabilitar/{idAlojamiento}/fecha/{fec}")
-	public Response deshabilitar(@javax.ws.rs.PathParam("idAlojamiento")Long id,@javax.ws.rs.PathParam("fec")String fecha)
+	@Path("deshabilitar/{idAlojamiento}")
+	public Response deshabilitar(@javax.ws.rs.PathParam("idAlojamiento") Long id)
 	{
+		System.out.println(1);
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
 			tm.deshabilitarAlojamiento(id);
@@ -99,7 +100,7 @@ public class AlojamientoService
 		return Response.status(200).build();
 	}
 	@PUT
-	@Path("/rehabilitar/{idAlojamiento}")
+	@Path("rehabilitar/{idAlojamiento}")
 	public Response rehabilitar(@javax.ws.rs.PathParam("idAlojamiento") Long id)
 	{
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());

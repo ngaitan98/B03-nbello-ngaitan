@@ -96,7 +96,7 @@ public class DAOContrato
 	}
 	public void actualizar(Contrato c) throws SQLException
 	{
-		String sql = String.format("UPDATE %1$s.CONTRATOS PRECIO = %3$s WHERE ID = %2$s", 
+		String sql = String.format("UPDATE %1$s.CONTRATOS SET PRECIO = %3$s WHERE ID = %2$s", 
 				USUARIO, 
 				c.getId(), 
 				c.getPrecio());

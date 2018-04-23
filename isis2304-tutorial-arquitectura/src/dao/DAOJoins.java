@@ -589,7 +589,7 @@ public class DAOJoins
 		ArrayList<Contrato> contratos = new ArrayList<Contrato>();
 		String sql = String.format("SELECT ID, FECHAINICIO, FECHAFIN,PRECIO,FECHACREACION,FINALIZADO,CANTIDADPERSONAS "
 				+ "FROM (SELECT * FROM %1$s.CONTRATOS)a INNER JOIN %1$s.CONTRATARON ON a.ID = %1$s.CONTRATARON.ID_CONTRATO  WHERE %1$s.CONTRATARON.ID_ALOJAMIENTO = %2$s"
-				+ "AND %1$s.CONTRATOS.FECHAINICIO > TO_DATE('%3$s','YYYY-MM-DD');",
+				+ "AND FECHAINICIO > TO_DATE('%3$s','YYYY-MM-DD')",
 				USUARIO,
 				idAlojamiento,
 				currentDate.toString());

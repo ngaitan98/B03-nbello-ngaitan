@@ -12,8 +12,6 @@ import javax.ws.rs.core.Response;
 import tm.AlohandesTransactionManager;
 
 @Path("/rfcs/")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class RFCSService {
 	
 	@Context
@@ -132,9 +130,8 @@ public class RFCSService {
 		return Response.status(200).build();
 	}
 	@GET 
-	@Path ("clientesfrecuentes")
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response clientesFrecuentes (Long id_alojamiento)
+	@Path ("clientesfrecuentes/{idAlojamiento}")
+	public Response clientesFrecuentes (@javax.ws.rs.PathParam("idAlojamiento")Long id_alojamiento)
 	{
 		System.out.println("g1");
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());

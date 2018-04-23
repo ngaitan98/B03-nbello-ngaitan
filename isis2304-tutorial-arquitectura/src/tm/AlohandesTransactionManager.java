@@ -1080,7 +1080,7 @@ public class AlohandesTransactionManager
 		}
 
 	}
-	public void getClientesFrecuentes(Long id_alojamiento) throw SQLException, Exception {
+	public void getClientesFrecuentes(Long id_alojamiento) throws SQLException, Exception {
 		DAORFCS rfcs = new DAORFCS();
 		try
 		{
