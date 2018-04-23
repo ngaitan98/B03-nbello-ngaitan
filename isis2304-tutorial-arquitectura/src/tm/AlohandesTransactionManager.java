@@ -1080,7 +1080,42 @@ public class AlohandesTransactionManager
 		}
 
 	}
-
+	public void getClientesFrecuentes(Long id_alojamiento) throw SQLException, Exception {
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.clientesFrecuentes(id_alojamiento);
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 
 			public ListaPersonaNormal darPersonasNormales() {
 				// TODO Auto-generated method stub
@@ -1179,6 +1214,8 @@ public class AlohandesTransactionManager
 				int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
 				return daysApart;
 			}
+
+			
 
 
 }

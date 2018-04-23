@@ -211,4 +211,23 @@ public class DAORFCS {
 
 		return rs;
 	}
+	public ResultSet clientesFrecuentes(Long id_alojamiento) throws SQLException, Exception
+	{
+		String sql = String.format("SELECT UNIQUE * FROM (SELECT UNIQUE %1$s.CLIENTES.* FROM ((SELECT ID AS ID_CONTRATO\r\n" + 
+				"FROM %1$s.CONTRATOS WHERE FECHAFIN - FECHAINICIO >14) NATURAL JOIN %1$s.CONTRATARON), %1$s.CLIENTES\r\n" + 
+				"WHERE ID_CLIENTE = CLIENTES.ID AND %1$s.CONTRATARON.ID_ALOJAMIENTO = %2$s\r\n" + 
+				"UNION ALL\r\n" + 
+				"SELECT UNIQUE %1$s.CLIENTES.* \r\n" + 
+				"FROM (SELECT ID_CLIENTE, COUNT(ID_CLIENTE) FROM %1$s.CONTRATARON WHERE ID_ALOJAMIENTO =  %2$s \r\n" + 
+				"group by ID_CLIENTE HAVING COUNT(ID_CLIENTE) > 2)a INNER JOIN %1$s.CLIENTES\r\n" + 
+				"ON %1$s.CLIENTES.ID = a.ID_CLIENTE\r\n" + 
+				"WHERE %1$s.ID_CLIENTE = CLIENTES.ID);",
+				USUARIO, id_alojamiento);
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		return rs;
+	}
 }
