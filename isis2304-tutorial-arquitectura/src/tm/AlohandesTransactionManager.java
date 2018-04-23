@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import dao.DAOJoins;
+import dao.DAORFCS;
 import vos.*;
 
 /**
@@ -767,6 +768,243 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
+	public void getdineroProveedores() throws Exception, SQLException {
+		
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.getDineroProveedores();
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		
+	}
+
+	public void getOfertasPopulares()throws Exception, SQLException  {
+		// TODO Auto-generated method stub
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.getOfertasPopulares();
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+
+	public void getIndiceAlojamiento() throws Exception, SQLException {
+		
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.IndiceAlojamientos();
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		
+	}
+
+	public void getAlojamientosDisponibles(String fechainicio, String fechafin, String servicio)throws SQLException, Exception {
+		// TODO Auto-generated method stub
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.alojamientosdisponibles(fechainicio, fechafin, fechafin);
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		
+	}
+
+	public void getUsoAlhoAndesOperarios() throws SQLException, Exception{
+		// TODO Auto-generated method stub
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.UsoAlhoAndesOperarios();
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		
+	}
+
+	public void getUsoAlhoAndesClilentes() throws SQLException, Exception {
+		// TODO Auto-generated method stub
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			System.out.println('a');
+			rfcs.getDineroProveedores();
+			rfcs.commit();
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		
+	}
+
+	
+	
+	
+	
 	public ListaPersonaNormal darPersonasNormales() {
 		// TODO Auto-generated method stub
 		return null;
@@ -865,4 +1103,5 @@ public class AlohandesTransactionManager
 		return daysApart;
 	}
 
+	
 }
