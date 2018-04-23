@@ -177,7 +177,7 @@ public class AlohandesTransactionManager
 				}
 			}
 			catch (SQLException exception) {
-				
+
 				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
 				exception.printStackTrace();
 				throw exception;
@@ -353,9 +353,7 @@ public class AlohandesTransactionManager
 		Date fi = parseDateTime(contrato.getFechainicio());
 		Date ff = parseDateTime(contrato.getFechafin());
 		Date fc = getCurrentDate();
-		System.out.println(fi);
-		System.out.println(ff);
-		System.out.println(fc);
+
 		contrato.setFechaCreacion(fc.toString());
 		contrato.setFechainicio(fi.toString());
 		contrato.setFechafin(ff.toString());
@@ -368,7 +366,7 @@ public class AlohandesTransactionManager
 			joins.setConn(this.conn);
 			joins.setAutoCommitFalse();
 			contrato.setId(joins.getCurrentIdContrato());
-			
+
 			if(diferenciaDias(fc, fi) < 0)
 			{
 				joins.rollBack();
@@ -385,8 +383,13 @@ public class AlohandesTransactionManager
 			{
 				//TODO verificar los que sobran y las fechas de fin.
 				joins.rollBack();
-				System.out.println("Holiwis Filters");
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
+				throw new Exception("Ya hay una reserva para estas fechas.");
+			}
+			if(joins.alojamientoDisponible(idAlojamiento))
+			{
+				joins.rollBack();
+				System.err.println("[EXCEPTION] Logic Exception:"   + "Lo sentimos el alojamiento no está disponible en este momento");
 				throw new Exception("Ya hay una reserva para estas fechas.");
 			}
 			joins.agregarContrato(idCliente, idAlojamiento, contrato);
@@ -700,7 +703,6 @@ public class AlohandesTransactionManager
 	}
 	public void cancelarReservaGrupal(Long id) throws Exception, SQLException
 	{
-		System.out.println("1111111111");
 		DAOJoins joins = new DAOJoins();
 		try
 		{
@@ -768,8 +770,88 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
+
+
+	public void deshabilitarAlojamiento(Long id) throws SQLException, Exception
+	{
+		DAOJoins joins = new DAOJoins();
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
+			joins.deshabilitarOferta(id, getCurrentDate());
+			joins.commit();
+		}
+		catch (SQLException sqlException) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+
+	}
+
+	public void habilitarAlojamiento(Long id) throws SQLException, Exception
+	{
+		DAOJoins joins = new DAOJoins();
+		try
+		{
+			this.conn = darConexion();
+			joins.setConn(this.conn);
+			joins.setAutoCommitFalse();
+			joins.rehabilitar(id);
+			joins.commit();
+		}
+		catch (SQLException sqlException) {
+			joins.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+
+			joins.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				joins.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 	public void getdineroProveedores() throws Exception, SQLException {
-		
+
 		DAORFCS rfcs = new DAORFCS();
 		try
 		{
@@ -804,9 +886,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-		
 	}
-
 	public void getOfertasPopulares()throws Exception, SQLException  {
 		// TODO Auto-generated method stub
 		DAORFCS rfcs = new DAORFCS();
@@ -843,10 +923,10 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-	}
 
+	}
 	public void getIndiceAlojamiento() throws Exception, SQLException {
-		
+
 		DAORFCS rfcs = new DAORFCS();
 		try
 		{
@@ -881,7 +961,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-		
+
 	}
 
 	public void getAlojamientosDisponibles(String fechainicio, String fechafin, String servicio)throws SQLException, Exception {
@@ -920,7 +1000,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-		
+
 	}
 
 	public void getUsoAlhoAndesOperarios() throws SQLException, Exception{
@@ -959,7 +1039,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-		
+
 	}
 
 	public void getUsoAlhoAndesClilentes() throws SQLException, Exception {
@@ -998,110 +1078,107 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-		
+
 	}
 
-	
-	
-	
-	
-	public ListaPersonaNormal darPersonasNormales() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	public PersonaNormal darPersonaNormal(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public ListaPersonaNormal darPersonasNormales() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public ListaHotel darHoteles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public PersonaNormal darPersonaNormal(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public Hotel darHotel(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public ListaHotel darHoteles() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public ListaHostal darHostales() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public Hotel darHotel(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public Hostal darHostal(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public ListaHostal darHostales() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public ListaDuenoVivienda darDuenosViviendas() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public Hostal darHostal(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public DuenoVivienda darDuenoVivienda(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public ListaDuenoVivienda darDuenosViviendas() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public ListaContrato darContratos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public DuenoVivienda darDuenoVivienda(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public Contrato darContrato(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public ListaContrato darContratos() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public ListaCliente darClientes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ListaServicio darServicios() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public Contrato darContrato(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public Servicio darServicio(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public ListaCliente darClientes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public ListaServicio darServicios() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public ListaAlojamientos darAlojamientos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public Servicio darServicio(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	public Alojamiento darAlojamiento(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public Date getCurrentDate()
-	{		
-		Calendar fechaActual = Calendar.getInstance();
-		return new Date(fechaActual.getTimeInMillis());
-	}
-	public static Date parseDateTime(String dateString) {
-	    if (dateString == null) return null;
-	    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-	    try {
-	        return new Date(fmt.parse(dateString).getTime());
-	    }
-	    catch (ParseException e) {
-	    	e.printStackTrace();
-	        System.out.println( "Could not parse datetime: " + dateString);
-	        return null;
-	    }
-	}
-	public Integer diferenciaDias(Date fecha1, Date fecha2)
-	{
-		System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
-		
-		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
-		return daysApart;
-	}
+			public ListaAlojamientos darAlojamientos() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	
+			public Alojamiento darAlojamiento(String id) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public Date getCurrentDate()
+			{		
+				Calendar fechaActual = Calendar.getInstance();
+				return new Date(fechaActual.getTimeInMillis());
+			}
+			public static Date parseDateTime(String dateString) {
+				if (dateString == null) return null;
+				DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					return new Date(fmt.parse(dateString).getTime());
+				}
+				catch (ParseException e) {
+					e.printStackTrace();
+					System.out.println( "Could not parse datetime: " + dateString);
+					return null;
+				}
+			}
+			public static Integer diferenciaDias(Date fecha1, Date fecha2)
+			{
+				System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+
+				int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+				return daysApart;
+			}
+
+
 }

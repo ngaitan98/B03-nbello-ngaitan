@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import tm.AlohandesTransactionManager;
+
 import java.sql.Date;
 
 import vos.*;
@@ -193,9 +196,6 @@ public class DAOJoins
 				ResultSet rs2 = prepStm2.executeQuery();getClass();
 				if(rs2.next())
 				{		
-					System.out.println(fecha);
-					System.out.println(rs2.getDate(1));
-					System.out.println(rs2.getDate(2));
 					if((fecha.after(rs2.getDate(1)) && fecha.before(rs2.getDate(2)))||
 							fecha.equals(rs2.getDate(1)) || fecha.equals(rs2.getDate(2)))
 					{
@@ -293,7 +293,7 @@ public class DAOJoins
 	}
 	public void agregarGrupal(ReservaGrupal rg, Date inicio, Date fin) throws Exception
 	{
-		ArrayList<Long> alojamientosDisponibles = findAlojamientosParaGrupales(rg.getTipo(), rg.getCanitadPersonas(), inicio, fin);
+		ArrayList<Long> alojamientosDisponibles = findAlojamientosParaGrupales(rg.getTipo(), inicio, fin);
 		if(alojamientosDisponibles.size() < rg.getCanitadPersonas())
 		{
 			throw new Exception("No hay suficientes habitaciones para la cantidad de clientes exigida");
@@ -328,12 +328,50 @@ public class DAOJoins
 	}
 	public void finalizarReservaGrupal(Long id, Double nuevoPrecio) throws SQLException
 	{
-		System.out.println("111111");
 		ArrayList<Long> contratos = contratosDeReserva(id);
 		grupales.finalizar(id);
 		for (Long i : contratos) {
 			finalizarContrato(i, nuevoPrecio);
 		}
+	}
+	public void deshabilitarOferta(Long idOferta, Date currentDate) throws SQLException, Exception
+	{
+		ArrayList<Contrato> afectados = contratosPorAlojamiento(idOferta, currentDate);
+		ArrayList<Alojamiento> disponibles = allAlojamientosPublicados();
+		for (Contrato c : afectados) 
+		{
+			Date inicio = AlohandesTransactionManager.parseDateTime(c.getFechainicio());
+			Date fin = AlohandesTransactionManager.parseDateTime(c.getFechafin());
+			boolean stop = false;
+			for (int i = 0; i < disponibles.size() && !stop; i++) 
+			{
+				Alojamiento actual = disponibles.get(i);
+				if(!estaOcupado(actual.getId(), inicio, fin) && (actual.getNumeroCupos() == c.getCanitadPersonas()) || (actual.getNumeroCupos() == c.getCanitadPersonas() + 1))
+				{
+					c.setPrecio(getPrecioAlojamiento(actual.getId()));
+					contratos.actualizar(c);	
+					String sql = String.format("UPDATE %1$s.CONTRATARON SET ID_ALOJAMIENTO = %2$s WHERE ID_CONTRATO = %3$s AND ID_ALOJAMIENTO = %4$s",
+							USUARIO,
+							actual.getId(),
+							c.getId(),
+							idOferta);
+					System.out.println(sql);
+					PreparedStatement prepStmt = conn.prepareStatement(sql);
+					recursos.add(prepStmt);
+					prepStmt.executeQuery();
+					stop = true;
+				}
+			}
+			if(stop == false)
+			{
+				finalizarContrato(c.getId(), 0.0);
+			}
+		}
+		ocuparAlojamiento(idOferta);
+	}
+	public void rehabilitar(Long id) throws SQLException, Exception
+	{
+		alojamientos.desAlojar(id);
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
@@ -513,10 +551,12 @@ public class DAOJoins
 		}
 		return ids;
 	}
-	public ArrayList<Long> findAlojamientosParaGrupales(String tipo, Integer cantidad, Date inicio, Date fin) throws Exception, SQLException
+	public ArrayList<Long> findAlojamientosParaGrupales(String tipo, Date inicio, Date fin) throws Exception, SQLException
 	{
 		ArrayList<Long> ids = new ArrayList<Long>();
-		String sql = String.format("SELECT ID FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND NUMERODECUPOS >= %3$s", USUARIO, tipo, cantidad);
+		String sql = String.format("SELECT ID FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = '%2$s' AND OCUPADA = '0'", 
+				USUARIO,
+				tipo);
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -530,5 +570,54 @@ public class DAOJoins
 			}
 		}
 		return ids;
+	}
+	public boolean alojamientoDisponible(Long id) throws SQLException
+	{
+		String sql = String.format("SELECT OCUPADA FROM %1$s.ALOJAMIENTOS WHERE ID = %2$s", USUARIO, id);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		if(result.next())
+		{
+			return result.getString(1).equals("0");
+		}
+		return false;
+	}
+	public ArrayList<Contrato> contratosPorAlojamiento(Long idAlojamiento, Date currentDate) throws SQLException
+	{
+		ArrayList<Contrato> contratos = new ArrayList<Contrato>();
+		String sql = String.format("SELECT ID, FECHAINICIO, FECHAFIN,PRECIO,FECHACREACION,FINALIZADO,CANTIDADPERSONAS "
+				+ "FROM (SELECT * FROM %1$s.CONTRATOS)a INNER JOIN %1$s.CONTRATARON ON a.ID = %1$s.CONTRATARON.ID_CONTRATO  WHERE %1$s.CONTRATARON.ID_ALOJAMIENTO = %2$s"
+				+ "AND %1$s.CONTRATOS.FECHAINICIO > TO_DATE('%3$s','YYYY-MM-DD');",
+				USUARIO,
+				idAlojamiento,
+				currentDate.toString());
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		while(result.next())
+		{
+			contratos.add(new Contrato(result.getLong(1), 
+					result.getDate(2).toString(), result.getDate(3).toString(), result.getDate(5).toString(), 
+					result.getDouble(4), result.getInt(7), Integer.parseInt(result.getString(6))));
+		}
+		return contratos;
+	}
+	public ArrayList<Alojamiento> allAlojamientosPublicados() throws SQLException
+	{		
+		ArrayList<Alojamiento> ids = new ArrayList<Alojamiento>();
+		String sql = String.format("SELECT ID, NUMERODECUPOS FROM %1$s.ALOJAMIENTOS WHERE OCUPADA = '0'", 
+				USUARIO);
+		System.out.println(sql);
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet result = prepStmt.executeQuery();
+		while(result.next())
+		{
+			ids.add(new Alojamiento(result.getLong(1), result.getInt(2), 0, "", "", 1, ""));
+		}
+		return ids; 
 	}
 }

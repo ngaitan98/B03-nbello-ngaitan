@@ -94,6 +94,18 @@ public class DAOContrato
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
+	public void actualizar(Contrato c) throws SQLException
+	{
+		String sql = String.format("UPDATE %1$s.CONTRATOS PRECIO = %3$s WHERE ID = %2$s", 
+				USUARIO, 
+				c.getId(), 
+				c.getPrecio());
+		System.out.println(sql);
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS AUXILIARES
 	//----------------------------------------------------------------------------------------------------------------------------------
