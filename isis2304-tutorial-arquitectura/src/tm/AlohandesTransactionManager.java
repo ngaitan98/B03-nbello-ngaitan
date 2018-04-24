@@ -848,16 +848,17 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
-	public void getdineroProveedores() throws Exception, SQLException {
+	public String getdineroProveedores() throws Exception, SQLException {
 
 		DAORFCS rfcs = new DAORFCS();
+		String resp ="";
 		try
 		{
 			this.conn = darConexion();
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			rfcs.getDineroProveedores();
+			resp =rfcs.getDineroProveedores();
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -884,6 +885,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
+		return resp;
 	}
 	public String getOfertasPopulares()throws Exception, SQLException  {
 		// TODO Auto-generated method stub

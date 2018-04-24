@@ -25,38 +25,39 @@ public class RFCSService {
 	}
 	@GET
 	@Path("dineroproveedores")
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.TEXT_PLAIN})
 	public Response dineroProveedores()
 	{
+		String resp ="";
 		System.out.println("a1");
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			 tm.getdineroProveedores();
+			 resp =tm.getdineroProveedores();
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		System.out.println("a2");
-		return Response.status(200).build();
+		return Response.status(200).entity(resp).build();
 	}
 	@GET 
 	@Path("ofertaspopulares")
-	@Produces({MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON})
 	public Response ofertasPopulares()
 	{
 		System.out.println("b1");
 		String resp = "";
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			 resp =tm.getOfertasPopulares();
+			tm.getOfertasPopulares();
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		System.out.println("b2");
-		return Response.status(200).entity(resp).build();
+		return Response.status(200).build();
 	}
 	@GET 
 	@Path("indiceAlojamiento")
