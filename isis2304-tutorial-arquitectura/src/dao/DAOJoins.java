@@ -157,6 +157,8 @@ public class DAOJoins
 		{
 			con.setPrecio(getPrecioAlojamiento(idAlojamiento));
 			contratos.addContrato(con);
+			System.out.println("ID:" + con.getId());
+			commit();
 			String sql = String.format("INSERT INTO %1$s.CONTRATARON VALUES (%2$s, %3$s, %4$s)", USUARIO, idAlojamiento, con.getId(), idCliente);
 			System.out.println(sql);
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
@@ -196,7 +198,7 @@ public class DAOJoins
 				ResultSet rs2 = prepStm2.executeQuery();getClass();
 				if(rs2.next())
 				{		
-					if((fecha.after(rs2.getDate(1)) && fecha.before(rs2.getDate(2)))||
+					if((fecha.before(rs2.getDate(1)) || fecha.before(rs2.getDate(2)))||
 							fecha.equals(rs2.getDate(1)) || fecha.equals(rs2.getDate(2)))
 					{
 						throw new Exception("Aún existen reservas o ofertas en curso para la fecha indicada");

@@ -51,7 +51,6 @@ public class ContratoService {
 	{
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			System.out.println(":)");
 			tm.cancelarReserva(id);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e) + "Hola").build();

@@ -386,7 +386,7 @@ public class AlohandesTransactionManager
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Ya hay una reserva para estas fechas.");
 				throw new Exception("Ya hay una reserva para estas fechas.");
 			}
-			if(joins.alojamientoDisponible(idAlojamiento))
+			if(!joins.alojamientoDisponible(idAlojamiento))
 			{
 				joins.rollBack();
 				System.err.println("[EXCEPTION] Logic Exception:"   + "Lo sentimos el alojamiento no está disponible en este momento");
@@ -537,8 +537,6 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			joins.setConn(this.conn);
 			joins.setAutoCommitFalse();
-			System.out.println(a);
-			System.out.println(parseDateTime(a));
 			joins.ocultarAlojamiento(idAlojamiento, parseDateTime(a));
 			joins.commit();
 		}
@@ -1214,8 +1212,4 @@ public class AlohandesTransactionManager
 				int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
 				return daysApart;
 			}
-
-			
-
-
 }
