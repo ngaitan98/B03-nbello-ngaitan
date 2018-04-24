@@ -937,7 +937,7 @@ public class AlohandesTransactionManager
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			rfcs.IndiceAlojamientos();
+			rfcs.getIndiceAlojamientos();
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -967,16 +967,17 @@ public class AlohandesTransactionManager
 
 	}
 
-	public void getAlojamientosDisponibles(String fechainicio, String fechafin, String servicio)throws SQLException, Exception {
+	public String getAlojamientosDisponibles(String fechainicio, String fechafin, String servicio)throws SQLException, Exception {
 		// TODO Auto-generated method stub
 		DAORFCS rfcs = new DAORFCS();
+		String resp = "";
 		try
 		{
 			this.conn = darConexion();
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			rfcs.alojamientosdisponibles(fechainicio, fechafin, fechafin);
+			 resp = rfcs.getAlojamientosdisponibles(fechainicio, fechafin, fechafin);
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -1003,19 +1004,20 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-
+		return resp;
 	}
 
-	public void getUsoAlhoAndesOperarios() throws SQLException, Exception{
+	public String getUsoAlhoAndesOperarios() throws SQLException, Exception{
 		// TODO Auto-generated method stub
 		DAORFCS rfcs = new DAORFCS();
+		String resp = "";
 		try
 		{
 			this.conn = darConexion();
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			rfcs.UsoAlhoAndesOperarios();
+			resp =rfcs.getUsoAlhoAndesOperarios();
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -1042,19 +1044,20 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-
+		return resp;
 	}
 
-	public void getUsoAlhoAndesClilentes() throws SQLException, Exception {
+	public String getUsoAlhoAndesClilentes() throws SQLException, Exception {
 		// TODO Auto-generated method stub
 		DAORFCS rfcs = new DAORFCS();
+		String resp = "";
 		try
 		{
 			this.conn = darConexion();
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			rfcs.getDineroProveedores();
+			resp = rfcs.getUsoAlhoAndesClientes();
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -1081,7 +1084,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-
+		return resp;
 	}
 	public void getClientesFrecuentes(Long id_alojamiento) throws SQLException, Exception {
 		DAORFCS rfcs = new DAORFCS();

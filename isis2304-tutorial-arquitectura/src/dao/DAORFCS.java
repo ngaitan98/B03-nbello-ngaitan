@@ -123,7 +123,7 @@ public class DAORFCS {
 	
 	public String getOfertasPopulares() throws SQLException, Exception
 	{
-		String sql = String.format(" SELECT COUNT( %1$s.CONTRATARON.ID_CONTRATO) AS VENTAS,  %1$s.CONTRATARON.ID_ALOJAMIENTO AS ALOJAMIENTO FROM %1$s.CONTRATARON WHERE ROWNUM <= 20 group by  %1$s.CONTRATARON.ID_ALOJAMIENTO order by ventas desc",
+		String sql = String.format("SELECT COUNT(%1$s.CONTRATARON.ID_CONTRATO) AS VENTAS, %1$s.CONTRATARON.ID_ALOJAMIENTO AS ALOJAMIENTO FROM %1$sCONTRATARON WHERE ROWNUM <= 20 group by %1$s.CONTRATARON.ID_ALOJAMIENTO order by ventas desc;",
 				USUARIO);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
@@ -133,9 +133,9 @@ public class DAORFCS {
 		return rs.getString(0);
 	}
 	
-	public ResultSet IndiceAlojamientos() throws SQLException, Exception
+	public ResultSet getIndiceAlojamientos() throws SQLException, Exception
 	{
-		String sql = String.format("Select %1$s.alojamientoS.Id as Alojamiento, ocupada from  %1$s.alojamientoS",
+		String sql = String.format("Select %1$s.ALOJAMIENTOS.Id as Alojamiento, %1$s.ALOJAMIENTOS.ocupada from alojamientoS;",
 				USUARIO);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
@@ -145,65 +145,66 @@ public class DAORFCS {
 		return rs;
 	}
 	
-	public ResultSet alojamientosdisponibles( String fechainicio, String fechafin, String servicio) throws SQLException, Exception
+	public String getAlojamientosdisponibles( String fechainicio, String fechafin, String servicio) throws SQLException, Exception
 	{
-		String sql = String.format("select * from (" + 
-				" select j.*, servicios.nombre as nombre, servicios.costoagregado as costoagregado from (" + 
-				" (select h.*, tienen.id_servicio as servicio from (" + 
-				" (select %1$s.alojamientos.* from (" + 
-				" %1$s.alojamientos inner join (" + 
-				" select  %1$s.contrataron.id_alojamiento as alojamiento from(  %1$s.contrataron inner join (SELECT * FROM  %1$s.CONTRATOS WHERE  FECHAFIN < to_date('%2$s', 'dd/mm/yy') OR FECHAINICIO > to_date('%3$s' , 'dd/mm/yy'))" + 
-				" f on  %1$s.contrataron.id_contrato = f.id))g on  %1$s.alojamientos.id = g.alojamiento) where ocupada = '0')h inner join" + 
-				" %1$s.tienen on h.id =  %1$s.tienen.id_alojamiento))j inner join" + 
-				" %1$s.servicios on j.servicio =  %1$s.servicios.id ) ) where nombre like '%%4$s' ;",
+		String sql = String.format("select * from (\n" + 
+				"select j.*, %1$s.servicios.nombre as nombre, %1$s.servicios.costoagregado as costoagregado from (\n" + 
+				"(select h.*, %1$s.tienen.id_servicio as servicio from (\n" + 
+				"(select %1$s.alojamientos.* from (\n" + 
+				"%1$s.alojamientos inner join (\n" + 
+				"select %1$s.contrataron.id_alojamiento as alojamiento from( %1$s.contrataron inner join (SELECT * FROM %1$s.CONTRATOS WHERE  %1$s.CONTRATOS.FECHAFIN < to_date( %2$s, 'dd/mm/yy') OR %1$s.CONTRATOSFECHAINICIO > to_date( %3$s , 'dd/mm/yy'))\n" + 
+				"f on  %1$s.contrataron.id_contrato = f.id))g on  %1$s.alojamientos.id = g.alojamiento) where ocupada = '0')h inner join\n" + 
+				" %1$s.tienen on h.id =  %1$s.tienen.id_alojamiento))j inner join\n" + 
+				" %1$s.servicios on j.servicio =  %1$s.servicios.id ) ) where nombre like '%'+ %4$s. ;",
 				USUARIO, fechainicio,fechafin,servicio);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		return rs;
+		return rs.toString() ;
 	}
-	public ResultSet UsoAlhoAndesOperarios() throws SQLException, Exception
+	public String getUsoAlhoAndesOperarios() throws SQLException, Exception
 	{
 		String sql = String.format("SELECT * FROM" + 
 				"(SELECT * FROM (" + 
-				" SELECT %1$s.DUENOVIVIENDA.ID AS OPERADOR%1$s.,OFRECEN.TIPO AS TIPO, %1$s.DUENOVIVIENDA.NOMBRE AS NOMBRE," + 
-				" %1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
-				" %1$s.OFRECEN INNER JOIN %1$s.DUENOVIVIENDA ON %1$s.DUENOVIVIENDA.ID=%1$s.OFRECEN.ID_OPERADOR)" + 
-				" UNION" + 
-				" SELECT * FROM (" + 
-				" SELECT %1$s.HOSTALES.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.HOSTALES.NOMBRE AS NOMBRE," + 
-				" %1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
-				" %1$s.OFRECEN INNER JOIN %1$s.HOSTALES ON %1$s.HOSTALES.ID=%1$s.OFRECEN.ID_OPERADOR))" + 
-				" UNION" + 
-				" SELECT *FROM" + 
-				" (SELECT * FROM (" + 
-				" SELECT %1$s.HOTELES.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.HOTELES.NOMBRE AS NOMBRE," + 
-				 "%1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
-				" %1$s.OFRECEN INNER JOIN %1$s.HOTELES ON %1$s.HOTELES.ID=%1$s.OFRECEN.ID_OPERADOR)" + 
-				" UNION" + 
-				" SELECT * FROM (" + 
-				" SELECT %1$s.PERSONASNORMALES.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.PERSONASNORMALES.NOMBRE AS NOMBRE," + 
-				" %1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
-				" %1$s.OFRECEN INNER JOIN %1$s.PERSONASNORMALES ON %1$s.PERSONASNORMALES.ID=%1$s.OFRECEN.ID_OPERADOR))",
+				"SELECT %1$s.DUENOVIVIENDA.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.DUENOVIVIENDA.NOMBRE AS NOMBRE," + 
+				"%1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
+				"%1$s.OFRECEN INNER JOIN %1$s.DUENOVIVIENDA ON %1$s.DUENOVIVIENDA.ID=%1$s.OFRECEN.ID_OPERADOR)" + 
+				"UNION" + 
+				"SELECT * FROM (" + 
+				"SELECT %1$s.HOSTALES.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.HOSTALES.NOMBRE AS NOMBRE," + 
+				"%1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
+				"%1$s.OFRECEN INNER JOIN %1$s.HOSTALES ON %1$s.HOSTALES.ID=%1$s.OFRECEN.ID_OPERADOR))" + 
+				"UNION" + 
+				"SELECT *FROM" + 
+				"(SELECT * FROM (" + 
+				"SELECT %1$s.HOTELES.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.HOTELES.NOMBRE AS NOMBRE," + 
+				"%1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
+				"%1$s.OFRECEN INNER JOIN %1$s.HOTELES ON %1$s.HOTELES.ID=%1$s.OFRECEN.ID_OPERADOR)" + 
+				"UNION" + 
+				"SELECT * FROM (" + 
+				"SELECT %1$s.PERSONASNORMALES.ID AS OPERADOR,%1$s.OFRECEN.TIPO AS TIPO, %1$s.PERSONASNORMALES.NOMBRE AS NOMBRE," + 
+				"%1$s.OFRECEN.ID_ALOJAMIENTO AS ALOJAMIENTO FROM " + 
+				"%1$s.OFRECEN INNER JOIN %1$s.PERSONASNORMALES ON %1$s.PERSONASNORMALES.ID=%1$s.OFRECEN.ID_OPERADOR));" + 
+				"",
 				USUARIO);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		return rs;
+		return rs.toString();
 	}
-	public void UsoAlhoAndesClientes() throws SQLException, Exception
+	public String getUsoAlhoAndesClientes() throws SQLException, Exception
 	{
 		String sql = String.format("Select" + 
 				"f.ID,f.NOMBRE,f.ALOJAMIENTO,f.CONTRATO, g.FECHAINICIO,g.FECHAFIN,g.PRECIO AS DINERO_PAGADO,g.FINALIZADO,g.CANTIDADPERSONAS" + 
-				" FROM" + 
+				"FROM" + 
 				"((SELECT " + 
-				" %1$s.CLIENTES.ID, %1$s.CLIENTES.NOMBRE,  %1$s.CONTRATARON.ID_ALOJAMIENTO AS ALOJAMIENTO, %1$s.CONTRATARON.ID_CONTRATO AS CONTRATO" + 
-				" FROM %1$s.CLIENTES INNER JOIN  %1$s.CONTRATARON ON  %1$s.CLIENTES.ID= %1$s.CONTRATARON.ID_CLIENTE) f " + 
-				" INNER JOIN ( %1$s.CONTRATOS)g ON f.CONTRATO=g.ID);",
+				"%1$s.CLIENTES.ID,%1$s.CLIENTES.NOMBRE,%1$s. CONTRATARON.ID_ALOJAMIENTO AS ALOJAMIENTO,%1$s.CONTRATARON.ID_CONTRATO AS CONTRATO" + 
+				"FROM %1$s.CLIENTES INNER JOIN %1$s.CONTRATARON ON %1$s.CLIENTES.ID=%1$s.CONTRATARON.ID_CLIENTE) f " + 
+				"INNER JOIN (%1$s.CONTRATOS)g ON f.CONTRATO=g.ID);",
 				USUARIO);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
@@ -213,6 +214,7 @@ public class DAORFCS {
 		{
 			System.out.println(rs.getLong(1));
 		}
+		return rs.toString();
 	}
 	public void clientesFrecuentes(Long id_alojamiento) throws SQLException, Exception
 	{

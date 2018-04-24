@@ -43,25 +43,26 @@ public class RFCSService {
 	}
 	@GET 
 	@Path("ofertaspopulares")
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.TEXT_PLAIN})
 	public Response ofertasPopulares()
 	{
 		System.out.println("b1");
 		String resp = "";
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			tm.getOfertasPopulares();
+			 resp =tm.getOfertasPopulares();
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
+		System.out.println(resp);
 		System.out.println("b2");
-		return Response.status(200).build();
+		return Response.status(200).entity(resp).build();
 	}
 	@GET 
-	@Path("indiceAlojamiento")
-	@Produces({MediaType.APPLICATION_JSON})
+	@Path("indicealojamiento")
+	@Produces({MediaType.TEXT_PLAIN})
 	public Response IndiceAlojamiento()
 	{
 		System.out.println("c1");
@@ -78,58 +79,63 @@ public class RFCSService {
 		
 	}
 	@GET 
-	@Path("alojamientosDisponibles")
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response alojamientosDisponibles(String fechainicio, String fechafin, String servicio)
+	@Path("alojamientosdisponibles")
+	@Produces({MediaType.TEXT_PLAIN})
+	public Response alojamientosDisponibles()
 	{
+		String fechainicio = "23/10/17";
+		String fechafin = "23/10/30";
+		String servicio = "gimnasio";
+		String resp ="";
 		System.out.println("d1");
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			 tm.getAlojamientosDisponibles(fechainicio, fechafin,servicio);
+			resp= tm.getAlojamientosDisponibles(fechainicio, fechafin,servicio);
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		System.out.println("d2");
-		return Response.status(200).build();
+		return Response.status(200).entity(resp).build();
 	}
 	
 	@GET 
 	@Path("usoalhoandesoperarios")
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.TEXT_PLAIN})
 	public Response usoAlhoAndesOperarios()
 	{
 		System.out.println("e1");
+		String resp = "";
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			 tm.getUsoAlhoAndesOperarios();
+			 resp =tm.getUsoAlhoAndesOperarios();
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		System.out.println("e2");
-		return Response.status(200).build();
+		return Response.status(200).entity(resp).build();
 	}
 	
 	@GET 
 	@Path ("usoalhoandesclientes")
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.TEXT_PLAIN})
 	public Response usoAlhoAndesClientes()
 	{
 		System.out.println("f1");
+		String resp = "";
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			 tm.getUsoAlhoAndesClilentes();
+			  resp = tm.getUsoAlhoAndesClilentes();
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		System.out.println("f2");
-		return Response.status(200).build();
+		return Response.status(200).entity(resp).build();
 	}
 	@GET 
 	@Path ("clientesfrecuentes/{idAlojamiento}")
