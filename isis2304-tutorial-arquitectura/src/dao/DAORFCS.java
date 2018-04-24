@@ -120,7 +120,7 @@ public class DAORFCS {
 		return rs;
 	}
 	
-	public ResultSet getOfertasPopulares() throws SQLException, Exception
+	public String getOfertasPopulares() throws SQLException, Exception
 	{
 		String sql = String.format(" SELECT COUNT( %1$s.CONTRATARON.ID_CONTRATO) AS VENTAS,  %1$s.CONTRATARON.ID_ALOJAMIENTO AS ALOJAMIENTO FROM %1$s.CONTRATARON WHERE ROWNUM <= 20 group by  %1$s.CONTRATARON.ID_ALOJAMIENTO order by ventas desc",
 				USUARIO);
@@ -129,7 +129,7 @@ public class DAORFCS {
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
-		return rs;
+		return rs.toString();
 	}
 	
 	public ResultSet IndiceAlojamientos() throws SQLException, Exception

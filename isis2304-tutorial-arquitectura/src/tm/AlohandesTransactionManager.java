@@ -887,17 +887,19 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
-	public void getOfertasPopulares()throws Exception, SQLException  {
+	public String getOfertasPopulares()throws Exception, SQLException  {
 		// TODO Auto-generated method stub
 		DAORFCS rfcs = new DAORFCS();
+		String resp ="";
 		try
 		{
 			this.conn = darConexion();
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			rfcs.getOfertasPopulares();
+			resp =rfcs.getOfertasPopulares();
 			rfcs.commit();
+			return resp;
 		}
 		catch (SQLException sqlException) {
 			rfcs.rollBack();
@@ -923,6 +925,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
+		
 
 	}
 	public void getIndiceAlojamiento() throws Exception, SQLException {
