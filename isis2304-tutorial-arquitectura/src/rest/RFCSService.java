@@ -42,20 +42,21 @@ public class RFCSService {
 	}
 	@GET 
 	@Path("ofertaspopulares")
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.TEXT_PLAIN})
 	public Response ofertasPopulares()
 	{
 		System.out.println("b1");
+		String resp = "";
 		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
 		try {
-			 tm.getOfertasPopulares();
+			 resp =tm.getOfertasPopulares();
 		}
 		catch (Exception e)
 		{
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		System.out.println("b2");
-		return Response.status(200).build();
+		return Response.status(200).entity(resp).build();
 	}
 	@GET 
 	@Path("indiceAlojamiento")
