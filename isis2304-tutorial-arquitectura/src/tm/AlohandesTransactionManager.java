@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Properties;
 
@@ -925,7 +926,7 @@ public class AlohandesTransactionManager
 				throw exception;
 			}
 		}
-		
+
 
 	}
 	public void getIndiceAlojamiento() throws Exception, SQLException {
@@ -977,7 +978,7 @@ public class AlohandesTransactionManager
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
 			System.out.println('a');
-			 resp = rfcs.getAlojamientosdisponibles(fechainicio, fechafin, fechafin);
+			resp = rfcs.getAlojamientosdisponibles(fechainicio, fechafin, fechafin);
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -1093,8 +1094,8 @@ public class AlohandesTransactionManager
 			this.conn = darConexion();
 			rfcs.setConn(this.conn);
 			rfcs.setAutoCommitFalse();
-			System.out.println('a');
-			rfcs.clientesFrecuentes(id_alojamiento);
+			//rfcs.clientesFrecuentes(id_alojamiento);
+			rfcs.loadOfrecen();
 			rfcs.commit();
 		}
 		catch (SQLException sqlException) {
@@ -1122,102 +1123,174 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
-
-			public ListaPersonaNormal darPersonasNormales() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public PersonaNormal darPersonaNormal(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ListaHotel darHoteles() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Hotel darHotel(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ListaHostal darHostales() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Hostal darHostal(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ListaDuenoVivienda darDuenosViviendas() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public DuenoVivienda darDuenoVivienda(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ListaContrato darContratos() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Contrato darContrato(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ListaCliente darClientes() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			public ListaServicio darServicios() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Servicio darServicio(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ListaAlojamientos darAlojamientos() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Alojamiento darAlojamiento(String id) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			public Date getCurrentDate()
-			{		
-				Calendar fechaActual = Calendar.getInstance();
-				return new Date(fechaActual.getTimeInMillis());
-			}
-			public static Date parseDateTime(String dateString) {
-				if (dateString == null) return null;
-				DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-				try {
-					return new Date(fmt.parse(dateString).getTime());
-				}
-				catch (ParseException e) {
-					e.printStackTrace();
-					System.out.println( "Could not parse datetime: " + dateString);
-					return null;
+	
+	 public ArrayList<Cliente> consumoEnAlojandes(Long id_alojamiento, String fechaIncio, String fechaFin, String orderByParams) throws SQLException, Exception {
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			ArrayList<Cliente> answ = rfcs.consumoEnAlojandes(id_alojamiento, fechaIncio, fechaFin, orderByParams);
+			rfcs.commit();
+			return answ;
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
 				}
 			}
-			public static Integer diferenciaDias(Date fecha1, Date fecha2)
-			{
-				System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
-
-				int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
-				return daysApart;
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
 			}
+		}
+	} 
+	 public ArrayList<Cliente> consumoEnAlojandes2(Long id_alojamiento, String fechaIncio, String fechaFin, String orderByParams) throws SQLException, Exception {
+		DAORFCS rfcs = new DAORFCS();
+		try
+		{
+			this.conn = darConexion();
+			rfcs.setConn(this.conn);
+			rfcs.setAutoCommitFalse();
+			ArrayList<Cliente> answ = rfcs.consumoEnAlojande2s(id_alojamiento, fechaIncio, fechaFin, orderByParams);
+			rfcs.commit();
+			return answ;
+		}
+		catch (SQLException sqlException) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			rfcs.rollBack();
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public ListaPersonaNormal darPersonasNormales() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public PersonaNormal darPersonaNormal(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaHotel darHoteles() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Hotel darHotel(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaHostal darHostales() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Hostal darHostal(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaDuenoVivienda darDuenosViviendas() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public DuenoVivienda darDuenoVivienda(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaContrato darContratos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Contrato darContrato(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaCliente darClientes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ListaServicio darServicios() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Servicio darServicio(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListaAlojamientos darAlojamientos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Alojamiento darAlojamiento(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Date getCurrentDate()
+	{		
+		Calendar fechaActual = Calendar.getInstance();
+		return new Date(fechaActual.getTimeInMillis());
+	}
+	public static Date parseDateTime(String dateString) {
+		if (dateString == null) return null;
+		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return new Date(fmt.parse(dateString).getTime());
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+			System.out.println( "Could not parse datetime: " + dateString);
+			return null;
+		}
+	}
+	public static Integer diferenciaDias(Date fecha1, Date fecha2)
+	{
+		System.out.println( (fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+
+		int daysApart = (int)((fecha2.getTime() - fecha1.getTime()) / (1000*60*60*24));
+		return daysApart;
+	}
 }

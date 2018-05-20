@@ -35,7 +35,7 @@ public class Cliente
 	//----------------------------------------------------------------------------------------------------------------------------------
 	public Cliente ( @JsonProperty(value = "id") long id, @JsonProperty(value = "login") String login, @JsonProperty (value = "password") String password, 
 			@JsonProperty(value = "nombre") String nombre, @JsonProperty (value = "correo") String correo, @JsonProperty(value = "documento") String documento, 
-			@JsonProperty(value = "contratos") ArrayList<Contrato> contratos)
+			@JsonProperty(value = "contratos") ArrayList<Contrato> arrayList)
 	{
 		this.id = id;
 		this.login = login;
@@ -43,7 +43,7 @@ public class Cliente
 		this.nombre = nombre;
 		this.correo = correo;
 		this.documento = documento;
-		this.contratos = contratos;
+		this.contratos = arrayList;
 	}
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE LA CLASE
