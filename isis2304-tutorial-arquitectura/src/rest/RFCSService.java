@@ -195,4 +195,34 @@ public class RFCSService {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 	}
+	@GET 
+	@Path ("consultarFuncionamiento")
+	public Response consultarFuncionamiento()
+	{
+		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+		try {
+			tm.consultarFuncionamiento();
+			return Response.status(200).build();
+
+		}
+		catch (Exception e)
+		{
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+	}
+	@GET 
+	@Path ("buenosClientes")
+	public Response buenosClientes()
+	{
+		AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+		try {
+			tm.buenosClientes();
+			return Response.status(200).build();
+
+		}
+		catch (Exception e)
+		{
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+	}
 }

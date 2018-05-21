@@ -61,7 +61,7 @@ public class DAORFCS {
 		System.out.println("rollback");
 		conn.rollback();
 	}
-	
+
 	public String getDineroProveedores () throws SQLException, Exception
 	{
 		String sql = String.format("SELECT * FROM " + 
@@ -121,14 +121,14 @@ public class DAORFCS {
 				"(SELECT * FROM ISIS2304A471810.CONTRATOS WHERE ISIS2304A471810.CONTRATOS.FINALIZADO ='1')k\n" + 
 				"INNER JOIN (ISIS2304A471810.CONTRATARON)j ON j.ID_CONTRATO = k.ID)))n ON n.ALOJAMIENTO = m.ALOJAMIENTO))B\n" + 
 				"INNER JOIN (ISIS2304A471810.OFRECEN) ON ISIS2304A471810.OFRECEN.ID_ALOJAMIENTO = B.ALOJAMIENTO))c INNER JOIN ISIS2304A471810.HOTELES ON  ISIS2304A471810.HOTELES.ID = c.OPERADOR)));", USUARIO);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		return rs.toString();
 	}
-	
+
 	public String getOfertasPopulares() throws SQLException, Exception
 	{
 		String sql = String.format("SELECT COUNT(%1$s.CONTRATARON.ID_CONTRATO) AS VENTAS, %1$s.CONTRATARON.ID_ALOJAMIENTO AS ALOJAMIENTO FROM %1$sCONTRATARON WHERE ROWNUM <= 20 group by %1$s.CONTRATARON.ID_ALOJAMIENTO order by ventas desc;",
@@ -144,19 +144,19 @@ public class DAORFCS {
 		}
 		return resp;
 	}
-	
+
 	public ResultSet getIndiceAlojamientos() throws SQLException, Exception
 	{
 		String sql = String.format("Select %1$s.ALOJAMIENTOS.Id as Alojamiento, %1$s.ALOJAMIENTOS.ocupada from alojamientoS;",
 				USUARIO);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		return rs;
 	}
-	
+
 	public String getAlojamientosdisponibles( String fechainicio, String fechafin, String servicio) throws SQLException, Exception
 	{
 		String sql = String.format("select * from (\n" + 
@@ -169,7 +169,7 @@ public class DAORFCS {
 				" %1$s.tienen on h.id =  %1$s.tienen.id_alojamiento))j inner join\n" + 
 				" %1$s.servicios on j.servicio =  %1$s.servicios.id ) ) where nombre like '%'+ %4$s. ;",
 				USUARIO, fechainicio,fechafin,servicio);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
@@ -201,7 +201,7 @@ public class DAORFCS {
 				"%1$s.OFRECEN INNER JOIN %1$s.PERSONASNORMALES ON %1$s.PERSONASNORMALES.ID=%1$s.OFRECEN.ID_OPERADOR));" + 
 				"",
 				USUARIO);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
@@ -218,7 +218,7 @@ public class DAORFCS {
 				"FROM %1$s.CLIENTES INNER JOIN %1$s.CONTRATARON ON %1$s.CLIENTES.ID=%1$s.CONTRATARON.ID_CLIENTE) f " + 
 				"INNER JOIN (%1$s.CONTRATOS)g ON f.CONTRATO=g.ID);",
 				USUARIO);
-		
+
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
@@ -251,6 +251,7 @@ public class DAORFCS {
 	}
 	public ArrayList<Cliente> consumoEnAlojandes(Long idAlojamiento, String fechaInicio, String fechaFin, String orderByParams) throws SQLException 
 	{
+		Long t1 = System.currentTimeMillis();
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		if(idAlojamiento > -1)
 		{
@@ -284,10 +285,13 @@ public class DAORFCS {
 				rs2Cliente(rs);
 			}
 		}
+		Long t2 = System.currentTimeMillis();
+		System.out.println("Se han gastado " + new Double((t2-t1)/100).toString() + " segundos.");
 		return clientes;
 	}
 	public ArrayList<Cliente> consumoEnAlojande2s(Long idAlojamiento, String fechaInicio, String fechaFin, String orderByParams) throws SQLException 
 	{
+		Long t1 = System.currentTimeMillis();
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		if(idAlojamiento > -1)
 		{
@@ -318,10 +322,140 @@ public class DAORFCS {
 			ResultSet rs = prepStmt.executeQuery();
 			while(rs.next())
 			{
+				System.out.println(rs.toString());
 				rs2Cliente(rs);
 			}
 		}
+		Long t2 = System.currentTimeMillis();
+		System.out.println("Se han gastado " + new Double((t2-t1)/100).toString() + " segundos.");
 		return clientes;
+	}
+	public void consultarFuncionamiento() throws SQLException
+	{
+		Date fi = new Date(new Long("1514782800000"));
+		Date ff = new Date(new Long("1546318800000"));
+		System.out.println(fi);
+		int i = 1;
+		while(fi.getTime() < ff.getTime())
+		{
+			Date fit = fi;
+			fi = new Date(fi.getTime() + new Long(604800000));
+			System.out.println("Semana " + i + "---------------------------------");
+			//Para alojamiento mas ocupado
+			String sql = String.format("SELECT * FROM (SELECT ID_ALOJAMIENTO AS ID, COUNT(ID_ALOJAMIENTO) AS CONTCONTRATOS FROM %1$s.CONTRATARON NATURAL JOIN (SELECT ID AS ID_CONTRATO, FECHAINICIO "
+					+"FROM %1$s.CONTRATOS WHERE FECHAINICIO BETWEEN '%2$s' AND '%3$s' OR FECHAFIN BETWEEN '%2$s' AND '%3$s') WHERE ROWNUM = 1 GROUP BY ID_ALOJAMIENTO ORDER BY CONTCONTRATOS DESC)" 
+					+"NATURAL JOIN %1$s.ALOJAMIENTOS", USUARIO, dateParser(fit), dateParser(fi));
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+			System.out.println("Alojamiento Más demandado:");
+			if(rs.next())
+			{
+				System.out.println("ID: " + rs.getLong(1));
+			}
+			else
+			{
+				System.out.println("No hay reservas para esta semana ");
+			}
+			//Para menos ocupado
+			sql = String.format("SELECT * FROM (SELECT ID_ALOJAMIENTO AS ID, COUNT(ID_ALOJAMIENTO) AS CONTCONTRATOS FROM %1$s.CONTRATARON NATURAL JOIN (SELECT ID AS ID_CONTRATO, FECHAINICIO "
+					+"FROM %1$s.CONTRATOS WHERE FECHAINICIO BETWEEN '%2$s' AND '%3$s' OR FECHAFIN BETWEEN '%2$s' AND '%3$s') WHERE ROWNUM = 1 GROUP BY ID_ALOJAMIENTO ORDER BY CONTCONTRATOS ASC) " 
+					+"NATURAL JOIN %1$s.ALOJAMIENTOS", USUARIO, dateParser(fit), dateParser(fi));
+			prepStmt = conn.prepareStatement(sql);
+			rs = prepStmt.executeQuery();
+			System.out.println("Alojamiento menos demandado:");
+			if(rs.next())
+			{
+				System.out.println("ID: " + rs.getLong(1));
+			}
+			else
+			{
+				System.out.println("No hay reservas para esta semana ");
+			}
+			//Menor operador
+			sql = String.format("SELECT ID_OPERADOR, TIPO FROM (SELECT ID_ALOJAMIENTO, COUNT(ID_ALOJAMIENTO) AS CONTCONTRATOS FROM %1$s.CONTRATARON " + 
+					"NATURAL JOIN (SELECT ID AS ID_CONTRATO, FECHAINICIO " +
+					"FROM %1$s.CONTRATOS WHERE FECHAINICIO BETWEEN '%2$s' AND '%3$s' OR FECHAFIN BETWEEN '%2$s' AND '%3$s') WHERE ROWNUM = 1 GROUP BY ID_ALOJAMIENTO ORDER BY CONTCONTRATOS ASC) " +
+					"NATURAL JOIN %1$s.OFRECEN", USUARIO, dateParser(fit), dateParser(fi));
+			prepStmt = conn.prepareStatement(sql);
+			rs = prepStmt.executeQuery();
+			System.out.println("Operador menos efectivo");
+			if(rs.next())
+			{
+				if(rs.getString(2).equals("HOTEL") || rs.getString(2).equals("HOSTAL"))
+				{		
+					sql = String.format("SELECT * FROM %1$s.%2$sES WHERE ID = %3$s", USUARIO, rs.getString(2), rs.getLong(1));
+				}
+				else if(rs.getString(2).equals("PERSONANORMAL"))
+				{
+					sql = String.format("SELECT * FROM %1$s.PERSONASNORMALES WHERE ID = %3$s", USUARIO, rs.getString(2), rs.getLong(1));
+				}
+				else
+				{
+					sql = String.format("SELECT * FROM %1$s.%2$s WHERE ID = %3$s", USUARIO, rs.getString(2), rs.getLong(1));
+				}
+				prepStmt = conn.prepareStatement(sql);
+				rs = prepStmt.executeQuery();
+				if(rs.next())
+				{
+					System.out.println("ID: " + rs.getLong(1) + "  NOMBRE: "+ rs.getString(4) + " LOGIN: "+ rs.getString(2));
+				}
+			}
+			else
+			{
+				System.out.println("No hay reservas para esta semana ");
+			}
+			//Mayor operador
+			System.out.println("Operador mas efectivo");
+			sql = String.format("SELECT ID_OPERADOR, TIPO FROM (SELECT ID_ALOJAMIENTO, COUNT(ID_ALOJAMIENTO) AS CONTCONTRATOS FROM %1$s.CONTRATARON " + 
+					"NATURAL JOIN (SELECT ID AS ID_CONTRATO, FECHAINICIO " +
+					"FROM %1$s.CONTRATOS WHERE FECHAINICIO BETWEEN '%2$s' AND '%3$s' OR FECHAFIN BETWEEN '%2$s' AND '%3$s') WHERE ROWNUM = 1 GROUP BY ID_ALOJAMIENTO ORDER BY CONTCONTRATOS DESC) " +
+					"NATURAL JOIN %1$s.OFRECEN ", USUARIO, dateParser(fit), dateParser(fi));
+			prepStmt = conn.prepareStatement(sql);
+			rs = prepStmt.executeQuery();
+			if(rs.next())
+			{
+				if(rs.getString(2).equals("HOTEL") || rs.getString(2).equals("HOSTAL"))
+				{					
+					sql = String.format("SELECT * FROM %1$s.%2$sES WHERE ID = %3$s", USUARIO, rs.getString(2), rs.getLong(1));
+				}
+				else if(rs.getString(2).equals("PERSONANORMAL"))
+				{
+					sql = String.format("SELECT * FROM %1$s.PERSONASNORMALES WHERE ID = %3$s", USUARIO, rs.getString(2), rs.getLong(1));
+				}
+				else
+				{
+					sql = String.format("SELECT * FROM %1$s.%2$s WHERE ID = %3$s", USUARIO, rs.getString(2), rs.getLong(1));
+				}
+				prepStmt = conn.prepareStatement(sql);
+				rs = prepStmt.executeQuery();
+				if(rs.next())
+				{
+					System.out.println("ID: " + rs.getLong(1) + "  NOMBRE: "+ rs.getString(4) + " LOGIN: "+ rs.getString(2));
+				}
+			}
+			else
+			{
+				System.out.println("No hay reservas para esta semana ");
+			}
+			i++;
+		}
+
+	}
+	public void buenosClientes() throws SQLException
+	{
+		String sql = String.format("SELECT UNIQUE * FROM (SELECT * FROM((SELECT ID_CLIENTE AS ID FROM (SELECT * FROM %1$s.CONTRATOS WHERE PRECIO >= 150*3000) " + 
+				"a INNER JOIN %1$s.CONTRATARON ON " + 
+				"CONTRATARON.ID_CONTRATO = a.ID) NATURAL JOIN %1$s.CLIENTES) " +
+				"UNION ALL " +
+				"SELECT * FROM((SELECT ID_CLIENTE AS ID FROM (SELECT * FROM %1$s.ALOJAMIENTOS WHERE TIPOALOJAMIENTO = 'SUITE') " + 
+				"b INNER JOIN %1$s.CONTRATARON ON " + 
+				"CONTRATARON.ID_ALOJAMIENTO = b.ID) NATURAL JOIN %1$s.CLIENTES))", USUARIO);
+		PreparedStatement p = conn.prepareStatement(sql);
+		ResultSet rs = p.executeQuery();
+		while(rs.next())
+		{
+			rs2Cliente(rs);
+		}
 	}
 	public void loadOfrecen() throws Exception
 	{
@@ -341,5 +475,10 @@ public class DAORFCS {
 	{
 		Cliente c = new Cliente(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), new ArrayList<Contrato>());
 		System.out.println("NOMBRE: " + c.getNombre() + " ID: " + c.getId() + " Correo: " + c.getCorreo());
+	}
+	private String dateParser(Date d)
+	{
+		String resp[] = d.toString().split("-");
+		return resp[2] + "/" + resp[1] + "/" + resp[0];
 	}
 }

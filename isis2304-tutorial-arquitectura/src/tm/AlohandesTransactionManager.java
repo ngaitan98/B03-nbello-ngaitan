@@ -1196,6 +1196,76 @@ public class AlohandesTransactionManager
 			}
 		}
 	}
+	 public void consultarFuncionamiento() throws SQLException, Exception {
+			DAORFCS rfcs = new DAORFCS();
+			try
+			{
+				this.conn = darConexion();
+				rfcs.setConn(this.conn);
+				rfcs.setAutoCommitFalse();
+				rfcs.consultarFuncionamiento();
+				rfcs.commit();
+			}
+			catch (SQLException sqlException) {
+				rfcs.rollBack();
+				System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+				sqlException.printStackTrace();
+				throw sqlException;
+			} 
+			catch (Exception exception) {
+				rfcs.rollBack();
+				System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			} 
+			finally {
+				try {
+					if(this.conn!=null){
+						this.conn.close();					
+					}
+				}
+				catch (SQLException exception) {
+					System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+		}
+	 public void buenosClientes() throws SQLException, Exception {
+			DAORFCS rfcs = new DAORFCS();
+			try
+			{
+				this.conn = darConexion();
+				rfcs.setConn(this.conn);
+				rfcs.setAutoCommitFalse();
+				rfcs.buenosClientes();
+				rfcs.commit();
+			}
+			catch (SQLException sqlException) {
+				rfcs.rollBack();
+				System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+				sqlException.printStackTrace();
+				throw sqlException;
+			} 
+			catch (Exception exception) {
+				rfcs.rollBack();
+				System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			} 
+			finally {
+				try {
+					if(this.conn!=null){
+						this.conn.close();					
+					}
+				}
+				catch (SQLException exception) {
+					System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+		}
 	public ListaPersonaNormal darPersonasNormales() {
 		// TODO Auto-generated method stub
 		return null;
@@ -1276,7 +1346,7 @@ public class AlohandesTransactionManager
 	}
 	public static Date parseDateTime(String dateString) {
 		if (dateString == null) return null;
-		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat fmt = new SimpleDateFormat("dd-mm-yyyy");
 		try {
 			return new Date(fmt.parse(dateString).getTime());
 		}
